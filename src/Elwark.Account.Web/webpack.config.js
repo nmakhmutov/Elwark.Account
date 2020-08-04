@@ -45,10 +45,10 @@ module.exports = {
         ]
     },
     plugins: [
-        new CopyPlugin(
-            [
+        new CopyPlugin({
+            patterns: [
                 {from: './Client/fonts/', to: 'fonts'}
-            ],
-        ),
+            ]
+        })
     ]
 }
