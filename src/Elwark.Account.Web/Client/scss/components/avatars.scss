@@ -1,0 +1,73 @@
+.avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+  border-radius: 50%;
+  justify-content: center;
+
+  img {
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+  }
+}
+
+.avatar-edit {
+  width: 180px;
+  height: 180px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+  border-radius: 50%;
+  justify-content: center;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.5s ease;
+  }
+
+  &:hover .overlay {
+    display: block;
+    background: rgba(0, 0, 0, .3);
+  }
+
+  img {
+    position: absolute;
+    left: 0;
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+  }
+
+  .button {
+    position: absolute;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .35s ease;
+  }
+
+  &:hover .button {
+    opacity: 1;
+  }
+}

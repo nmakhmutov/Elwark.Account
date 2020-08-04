@@ -1,0 +1,159 @@
+@using Elwark.Account.Web.Services.IdentityService.Model
+@using Elwark.Account.Web.Pages.Identities.Components.Models
+@using Elwark.People.Abstractions
+
+<div class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+
+            <div class="col-auto">
+                <IdentityIcon Type="@Item.Identification.Type"/>
+            </div>
+
+            <div class="col text-right">
+                @Item.Identification.Type
+            </div>
+
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
+            <span>@Item.Identification.Value</span>
+            @if (Item.ConfirmedAt.HasValue)
+            {
+                <i class="fas fa-check-circle text-success"></i>
+            }
+        </h5>
+
+        @if (Item.ConfirmedAt.HasValue && Item.Identification is Identification.Email)
+        {
+            if (Item.Notification is Notification.PrimaryEmail)
+            {
+                <p class="card-subtitle">
+                    <strong>
+                        <em>Primary email</em>
+                    </strong>
+                </p>
+            }
+            else
+            {
+                <select class="form-control" @onchange="NotificationTypeHandler" disabled="@_isLoading">
+                    @foreach (var notification in _notifications)
+                    {
+                        <option value="@notification" selected="@(Item.Notification.Type == notification)">@notification</option>
+                    }
+                </select>
+            }
+        }
+        else if (Item.ConfirmedAt is null)
+        {
+            if (_showConfirmationInput)
+            {
+                <EditForm Model="_confirmationModel" OnValidSubmit="@ConfirmationHandler">
+                    <FluentValidator/>
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <InputNumber @bind-Value="_confirmationModel.Code" class="form-control" placeholder="Code"/>
+                            <div class="input-group-append">
+                                <LoadingButton IsLoading="@_isLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
+                            </div>
+                        </div>
+                        <ValidationMessage For="@(() => _confirmationModel.Code)"/>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <LoadingButton IsLoading="@_isLoading" Title="Confirm" Icon="fa-check" OnClick="@CodeRequestHandler"/>
+            }
+        }
+
+    </div>
+
+    <div class="card-footer border-top-0 pt-0">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+                <small class="text-muted">Added @Item.CreatedAt.ToString("d")</small>
+            </div>
+            <div class="col-auto">
+                @if (Item.Notification.Type != NotificationType.PrimaryEmail)
+                {
+                    <button class="btn" @onclick="@DeleteHandler" disabled="@_isLoading">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private bool _showConfirmationInput;
+    private bool _isLoading;
+
+    private IdentityConfirmationInputModel _confirmationModel = new IdentityConfirmationInputModel();
+
+    private readonly NotificationType[] _notifications =
+    {
+        NotificationType.None,
+        NotificationType.PrimaryEmail,
+        NotificationType.SecondaryEmail
+    };
+
+    [Parameter]
+    public IdentityModel Item { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<IdentityId> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<IdentityId> OnCodeRequest { get; set; }
+
+    [Parameter]
+    public EventCallback<(IdentityId, long)> OnConfirm { get; set; }
+
+    [Parameter]
+    public EventCallback<(IdentityId, NotificationType)> OnNotificationTypeChange { get; set; }
+
+    private async Task DeleteHandler()
+    {
+        _isLoading = true;
+
+        if (OnDelete.HasDelegate)
+            await OnDelete.InvokeAsync(Item.IdentityId);
+
+        _isLoading = false;
+    }
+
+    private async Task CodeRequestHandler()
+    {
+        _isLoading = true;
+
+        if (OnCodeRequest.HasDelegate)
+            await OnCodeRequest.InvokeAsync(Item.IdentityId);
+
+        _isLoading = false;
+        _showConfirmationInput = true;
+    }
+
+    private async Task ConfirmationHandler()
+    {
+        _isLoading = true;
+
+        if (OnConfirm.HasDelegate)
+            await OnConfirm.InvokeAsync((Item.IdentityId, _confirmationModel.Code.GetValueOrDefault(0)));
+
+        _isLoading = false;
+    }
+
+    private async Task NotificationTypeHandler(ChangeEventArgs e)
+    {
+        _isLoading = true;
+
+        if (OnNotificationTypeChange.HasDelegate)
+            await OnNotificationTypeChange.InvokeAsync((Item.IdentityId, Enum.Parse<NotificationType>(e.Value.ToString())));
+        
+        _isLoading = false;
+    }
+}

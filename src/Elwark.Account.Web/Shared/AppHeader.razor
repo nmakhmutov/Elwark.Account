@@ -1,0 +1,36 @@
+@using Elwark.Account.Web.Services.AccountService.Model
+<header class="app-header">
+    <div class="top-nav">
+        <nav class="navbar navbar-expand-md navbar-light bg-faded">
+            <button @onclick="ToggleSidebar" type="button" class="m-r sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="ml-auto">
+                <div class="media align-items-center">
+                    @if (Account is {})
+                    {
+                        <div class="media-body mr-2 text-dark">
+                            @Account.FullName
+                        </div>
+                        
+                        <div class="avatar">
+                            <img src="@Account.Picture" alt="@Account.FullName">
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+<div id="nprogress-container"></div>
+
+@code
+{
+    [Parameter]
+    public EventCallback ToggleSidebar { get; set; }
+
+    [CascadingParameter]
+    private AccountModel? Account { get; set; }
+}

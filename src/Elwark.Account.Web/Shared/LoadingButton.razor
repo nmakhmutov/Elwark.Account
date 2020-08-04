@@ -1,0 +1,26 @@
+<button type="@Type" class="@ClassName" disabled="@IsLoading" @onclick="@OnClick">
+    <i class="fas @(IsLoading ? "fa-sync-alt fa-spin" : Icon)"></i>
+    @Title
+</button>
+
+@code{
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string Icon { get; set; } = null!;
+
+    [Parameter]
+    public string Title { get; set; } = "Update";
+
+    [Parameter]
+    public string Type { get; set; } = "button";
+
+    [Parameter]
+    public string ClassName { get; set; } = "btn btn-outline-primary";
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+}

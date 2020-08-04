@@ -1,0 +1,37 @@
+<CascadingAuthenticationState>
+    <CascadingBlazoredModal>
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                    <NotAuthorized>
+                        @if (context.User.Identity.IsAuthenticated)
+                        {
+                            <div class="m-t-xxl text-center">
+                                <h1 class="error-number">Sorry</h1>
+                                <h3 class="m-b">You're not authorized to reach this page.</h3>
+                            </div>
+                        }
+                        else
+                        {
+                            <RedirectToLogin/>
+                        }
+                    </NotAuthorized>
+                    <Authorizing>
+                        <div class="m-t-xxl text-center">
+                            <h3 class="m-b">Authentication in progress</h3>
+                        </div>
+                    </Authorizing>
+                </AuthorizeRouteView>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <div class="m-t-xxl text-center">
+                        <h1 class="error-number">404</h1>
+                        <h3 class="m-b">Sorry but we couldnt find this page. It doesn't exist!</h3>
+                        <NavLink href="">Home</NavLink>
+                    </div>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingBlazoredModal>
+</CascadingAuthenticationState>

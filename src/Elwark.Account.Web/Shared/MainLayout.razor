@@ -1,0 +1,55 @@
+﻿@inherits LayoutComponentBase
+
+@inject IElwarkStorageClient StorageClient
+@using Elwark.Storage.Client
+@using Elwark.Account.Web.State
+@inject AccountStateProvider AccountStateProvider
+@inject IAccountService AccountService
+@inject IToaster Toaster
+@implements IDisposable
+
+<ToastContainer/>
+<div class="app @SidebarCollapsedClass">
+    <div class="app-body">
+        <Sidebar
+            LogoText="Account"
+            LogoImage="@StorageClient.Static.Icons.Elwark.White.Size192x192.Path"
+            IsSidebarCollapsed="@_sidebarCollapsed"
+            ToggleSidebar="@ToggleSideCollapse"/>
+        <Page>
+            <CascadingValue Value="AccountStateProvider.Account">
+                <AppHeader
+                    ToggleSidebar="@ToggleSideCollapse"/>
+                <PageContent>
+                    @Body
+                </PageContent>
+            </CascadingValue>
+        </Page>
+    </div>
+    <Footer>
+        <span>©@(DateTime.Today.Year) Elwark</span>
+    </Footer>
+</div>
+
+@code {
+    bool _sidebarCollapsed;
+    string SidebarCollapsedClass => _sidebarCollapsed ? "side-menu-collapsed" : string.Empty;
+
+    void ToggleSideCollapse() =>
+        _sidebarCollapsed = !_sidebarCollapsed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AccountStateProvider.OnChange += StateHasChanged;
+
+        var result = await AccountService.GetAsync();
+        if (result.IsSuccess)
+            AccountStateProvider.Update(result.Data);
+        else
+            Toaster.Error(result.Error?.Detail);
+    }
+
+    public void Dispose() =>
+        AccountStateProvider.OnChange -= StateHasChanged;
+
+}

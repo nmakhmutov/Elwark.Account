@@ -1,0 +1,12 @@
+@inject IElwarkStorageClient StorageClient;
+
+@using Elwark.Storage.Client
+@inherits InputSelect<Gender>
+
+<InputSelect Value="Value"
+             ValueChanged="@((Gender s) => ValueChanged.InvokeAsync(s))"
+             ValueExpression="ValueExpression"
+             AdditionalAttributes="AdditionalAttributes">
+    <option value="@Gender.Male">Male</option>
+    <option value="@Gender.Female">Female</option>
+</InputSelect>

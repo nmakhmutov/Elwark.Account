@@ -1,0 +1,28 @@
+@using System.Globalization
+@using Elwark.Storage.Client
+@inject IElwarkStorageClient StorageClient;
+
+@inherits InputSelect<string>
+
+<InputSelect Value="Value"
+             ValueChanged="@((string s) => ValueChanged.InvokeAsync(s))"
+             ValueExpression="ValueExpression"
+             AdditionalAttributes="AdditionalAttributes">
+    @foreach (var language in Languages)
+    {
+        var lang = language.TwoLetterISOLanguageName;
+        <option value="@lang">
+            @language.EnglishName (@language.NativeName)
+        </option>
+    }
+</InputSelect>
+
+@code {
+
+    private static readonly CultureInfo[] Languages =
+    {
+        new CultureInfo("en"),
+        new CultureInfo("ru")
+    };
+
+}

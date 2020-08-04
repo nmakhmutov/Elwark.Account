@@ -1,0 +1,171 @@
+@page "/identities"
+@using Elwark.Account.Web.Services.IdentityService.Model
+@using Elwark.Account.Web.Pages.Identities.Components.Models
+@using System.Net.Mail
+@using Elwark.People.Abstractions
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IToaster Toaster
+@inject IIdentityService IdentityService
+@inject IModalService Modal
+
+@attribute [Authorize]
+
+<div class="container">
+    <div class="row justify-content-between m-b">
+        <div class="col-auto mr-auto">
+            <h2 class="mb-0">Identities</h2>
+            <p class="text-muted">
+                Manage your identities witch allow you log in to your account.
+            </p>
+        </div>
+        <div class="col-auto">
+            <button @onclick="@OpenAddIdentityDialog" class="btn btn-outline-success">
+                <i class="fas fa-plus"></i>
+                Add
+            </button>
+        </div>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <PageLoading/>
+    }
+    else
+    {
+        <div class="row mb-3 justify-content-end">
+            <div class="col-2">
+                <div class="btn-toolbar float-right">
+                    <div class="btn-group">
+                        <button type="button"
+                                @onclick="@(e => SetView(ViewType.List))"
+                                class="btn @GetViewButtonClasses(ViewType.List)">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button type="button"
+                                @onclick="@(e => SetView(ViewType.Grid))"
+                                class="btn @GetViewButtonClasses(ViewType.Grid)">
+                            <i class="fas fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @switch (_view)
+            {
+                case ViewType.List:
+                    break;
+                    
+                case ViewType.Grid:
+                    foreach (var item in Model)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <IdentityCard
+                                Item="@item"
+                                OnCodeRequest="@SendCode"
+                                OnConfirm="@ConfirmIdentity"
+                                OnDelete="@DeleteIdentity"
+                                OnNotificationTypeChange="@NotificationTypeChange"/>
+                        </div>
+                    }
+                    break;
+            }
+        </div>
+    }
+
+</div>
+
+@code {
+    private ViewType _view = ViewType.List;
+
+    private List<IdentityModel> Model { get; set; } = new List<IdentityModel>();
+
+    protected override Task OnInitializedAsync() =>
+        LoadAsync();
+
+    private async Task DeleteIdentity(IdentityId id)
+    {
+        var result = await IdentityService.DeleteAsync(id);
+        if (result.IsSuccess)
+        {
+            Model.RemoveAll(x => x.IdentityId == id);
+            Toaster.Success("Identity removed");
+        }
+        else
+        {
+            Toaster.Error(result.Error?.Detail);
+        }
+    }
+
+    private async Task SendCode(IdentityId id)
+    {
+        var result = await IdentityService.SendCodeAsync(id);
+        if (result.IsSuccess)
+        {
+            Toaster.Success("Confirmation code sent");
+        }
+        else
+        {
+            Toaster.Error(result.Error?.Detail);
+        }
+    }
+
+    private async Task ConfirmIdentity((IdentityId id, long code) value)
+    {
+        var (id, code) = value;
+        var result = await IdentityService.ConfirmAsync(id, code);
+        if (result.IsSuccess)
+        {
+            await LoadAsync();
+            Toaster.Success("Identity confirmed");
+        }
+        else
+        {
+            Toaster.Error(result.Error?.Detail);
+        }
+    }
+
+    private async Task NotificationTypeChange((IdentityId id, NotificationType type) value)
+    {
+        var (id, type) = value;
+        var result = await IdentityService.ChangeNotificationTypeAsync(id, type);
+        if (result.IsSuccess)
+        {
+            await LoadAsync();
+            Toaster.Success("Notification type changed");
+        }
+        else
+        {
+            Toaster.Error(result.Error?.Detail);
+        }
+    }
+
+    private async Task OpenAddIdentityDialog()
+    {
+        var modal = Modal.Show<AddIdentityModal>("Add identity", new ModalOptions
+        {
+            Position = ModalPosition.Center
+        });
+
+        if ((await modal.Result).Cancelled)
+            return;
+
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var data = await IdentityService.GetAsync();
+
+        if (data.IsSuccess)
+            Model = data.Data.OrderBy(x => x.CreatedAt).ThenBy(x => x.Identification).ToList();
+        else
+            Toaster.Error(data.Error?.Detail);
+    }
+
+    private string GetViewButtonClasses(ViewType viewType) =>
+        viewType == _view ? "btn-primary" : "btn-secondary";
+
+    private void SetView(ViewType viewType) => _view = viewType;
+}
