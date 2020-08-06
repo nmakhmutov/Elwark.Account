@@ -1,7 +1,7 @@
 using System;
 using Elwark.People.Abstractions;
 
-namespace Elwark.Account.Web.Services.IdentityService.Model
+namespace Elwark.Account.Shared.IdentityService.Model
 {
     public class IdentityModel
     {

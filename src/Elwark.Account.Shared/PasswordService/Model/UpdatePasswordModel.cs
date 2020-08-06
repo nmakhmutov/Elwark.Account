@@ -1,20 +1,20 @@
 using FluentValidation;
 
-namespace Elwark.Account.Web.Services.PasswordService.Model
+namespace Elwark.Account.Shared.PasswordService.Model
 {
-    public class CreatePasswordModel
+    public class UpdatePasswordModel
     {
-        public long? Code { get; set; }
+        public string? Current { get; set; }
 
         public string? Password { get; set; }
 
         public string? Confirmation { get; set; }
-        
-        public class Validator : AbstractValidator<CreatePasswordModel>
+
+        public class Validator : AbstractValidator<UpdatePasswordModel>
         {
             public Validator()
             {
-                RuleFor(x => x.Code)
+                RuleFor(x => x.Current)
                     .NotEmpty();
 
                 RuleFor(x => x.Password)

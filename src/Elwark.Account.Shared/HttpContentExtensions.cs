@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Elwark.Account.Web.Services
+namespace Elwark.Account.Shared
 {
     public static class HttpContentExtensions
     {

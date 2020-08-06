@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Elwark.People.Abstractions;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Web.Services.IdentityService
+namespace Elwark.Account.Shared.IdentityService
 {
     public class IdentityService : IIdentityService
     {

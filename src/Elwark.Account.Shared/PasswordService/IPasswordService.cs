@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Elwark.Account.Web.Services.PasswordService.Model;
+using Elwark.Account.Shared.PasswordService.Model;
 
-namespace Elwark.Account.Web.Services.PasswordService
+namespace Elwark.Account.Shared.PasswordService
 {
     public interface IPasswordService
     {

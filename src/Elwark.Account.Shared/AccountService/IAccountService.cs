@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Elwark.Account.Web.Services.AccountService.Model;
+using Elwark.Account.Shared.AccountService.Model;
 
-namespace Elwark.Account.Web.Services.AccountService
+namespace Elwark.Account.Shared.AccountService
 {
     public interface IAccountService
     {

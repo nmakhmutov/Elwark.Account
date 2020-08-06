@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Elwark.Account.Web.Services.AccountService.Model;
+using Elwark.Account.Shared.AccountService.Model;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Web.Services.AccountService
+namespace Elwark.Account.Shared.AccountService
 {
     public class AccountService : IAccountService
     {

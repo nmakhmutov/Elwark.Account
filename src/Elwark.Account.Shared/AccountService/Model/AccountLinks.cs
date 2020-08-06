@@ -1,7 +1,7 @@
 using System;
 using FluentValidation;
 
-namespace Elwark.Account.Web.Services.AccountService.Model
+namespace Elwark.Account.Shared.AccountService.Model
 {
     public class AccountLinks
     {

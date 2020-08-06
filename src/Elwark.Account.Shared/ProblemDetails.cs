@@ -1,7 +1,6 @@
-using System;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Web.Services
+namespace Elwark.Account.Shared
 {
     public class ProblemDetails
     {

@@ -1,7 +1,8 @@
 @page "/identities"
-@using Elwark.Account.Web.Services.IdentityService.Model
 @using Elwark.Account.Web.Pages.Identities.Components.Models
 @using System.Net.Mail
+@using Elwark.Account.Shared.IdentityService
+@using Elwark.Account.Shared.IdentityService.Model
 @using Elwark.People.Abstractions
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IToaster Toaster
@@ -15,7 +16,7 @@
         <div class="col-auto mr-auto">
             <h2 class="mb-0">Identities</h2>
             <p class="text-muted">
-                Manage your identities witch allow you log in to your account.
+                Manage your identities which allow you log in to your account.
             </p>
         </div>
         <div class="col-auto">

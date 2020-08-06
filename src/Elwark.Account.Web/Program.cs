@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Blazored.Modal;
+using Elwark.Account.Shared.AccountService;
+using Elwark.Account.Shared.AccountService.Model;
+using Elwark.Account.Shared.IdentityService;
+using Elwark.Account.Shared.PasswordService;
+using Elwark.Account.Shared.PasswordService.Model;
+using Elwark.Account.Web.Handlers;
 using Elwark.Account.Web.Pages.Identities.Components.Models;
 using Elwark.Account.Web.Pages.Profile.Components;
-using Elwark.Account.Web.Services;
-using Elwark.Account.Web.Services.AccountService;
-using Elwark.Account.Web.Services.AccountService.Model;
-using Elwark.Account.Web.Services.IdentityService;
-using Elwark.Account.Web.Services.PasswordService;
-using Elwark.Account.Web.Services.PasswordService.Model;
 using Elwark.Account.Web.State;
 using Elwark.Storage.Client;
 using FluentValidation;
@@ -70,20 +70,17 @@ namespace Elwark.Account.Web
         {
             services.AddTransient<AuthorizationDelegatingHandler>();
 
-            services
-                .AddHttpClient<IAccountService, AccountService>(client =>
+            services.AddHttpClient<IAccountService, AccountService>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
-            services
-                .AddHttpClient<IPasswordService, PasswordService>(client =>
+            services.AddHttpClient<IPasswordService, PasswordService>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
-            services
-                .AddHttpClient<IIdentityService, IdentityService>(client =>
+            services.AddHttpClient<IIdentityService, IdentityService>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();

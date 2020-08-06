@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-namespace Elwark.Account.Web.Services
+namespace Elwark.Account.Web.Handlers
 {
     public class AuthorizationDelegatingHandler : DelegatingHandler
     {

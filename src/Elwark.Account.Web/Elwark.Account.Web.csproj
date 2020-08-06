@@ -26,4 +26,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Elwark.Account.Shared\Elwark.Account.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

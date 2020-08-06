@@ -1,10 +1,10 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Elwark.Account.Web.Services.PasswordService.Model;
+using Elwark.Account.Shared.PasswordService.Model;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Web.Services.PasswordService
+namespace Elwark.Account.Shared.PasswordService
 {
     public class PasswordService : IPasswordService
     {

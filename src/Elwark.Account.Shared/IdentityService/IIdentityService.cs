@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Elwark.People.Abstractions;
 
-namespace Elwark.Account.Web.Services.IdentityService
+namespace Elwark.Account.Shared.IdentityService
 {
     public interface IIdentityService
     {

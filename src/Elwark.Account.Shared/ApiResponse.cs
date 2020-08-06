@@ -1,4 +1,4 @@
-namespace Elwark.Account.Web.Services
+namespace Elwark.Account.Shared
 {
     public class ApiResponse : ApiResponse<bool>
     {

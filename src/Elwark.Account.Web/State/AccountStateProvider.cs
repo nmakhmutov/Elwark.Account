@@ -1,5 +1,5 @@
 using System;
-using Elwark.Account.Web.Services.AccountService.Model;
+using Elwark.Account.Shared.AccountService.Model;
 
 namespace Elwark.Account.Web.State
 {
