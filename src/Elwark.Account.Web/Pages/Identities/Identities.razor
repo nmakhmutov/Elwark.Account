@@ -8,6 +8,7 @@
 @inject IToaster Toaster
 @inject IIdentityService IdentityService
 @inject IModalService Modal
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 @attribute [Authorize]
 
@@ -33,17 +34,33 @@
     }
     else
     {
-        <div class="row mb-3 justify-content-end">
-            <div class="col-2">
+        <div class="row mb-3 justify-content-between">
+
+            <div class="col-12 col-sm-5 col-md-3">
+                <div class="form-group row">
+                    <label for="sort" class="col-sm-2 col-form-label">Sort</label>
+                    <div class="col-sm-10">
+                        <select value="@Sort" id="sort" @onchange="@SortChanged" class="form-control">
+                            <option value="@IdentitiesSort.None">None</option>
+                            <option value="@IdentitiesSort.AddedAsc">By date added ascending</option>
+                            <option value="@IdentitiesSort.AddedDesc">By date added descending</option>
+                            <option value="@IdentitiesSort.TypeAsc">By type ascending</option>
+                            <option value="@IdentitiesSort.TypeDesc">By type descending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-2">
                 <div class="btn-toolbar float-right">
                     <div class="btn-group">
                         <button type="button"
-                                @onclick="@(e => SetView(ViewType.List))"
+                                @onclick="@(e => SetViewAsync(ViewType.List))"
                                 class="btn @GetViewButtonClasses(ViewType.List)">
                             <i class="fas fa-list"></i>
                         </button>
                         <button type="button"
-                                @onclick="@(e => SetView(ViewType.Grid))"
+                                @onclick="@(e => SetViewAsync(ViewType.Grid))"
                                 class="btn @GetViewButtonClasses(ViewType.Grid)">
                             <i class="fas fa-th"></i>
                         </button>
@@ -57,7 +74,7 @@
             {
                 case ViewType.List:
                     break;
-                    
+
                 case ViewType.Grid:
                     foreach (var item in Model)
                     {
@@ -79,11 +96,22 @@
 
 @code {
     private ViewType _view = ViewType.List;
+    private IdentitiesSort Sort { get; set; } = IdentitiesSort.None;
 
     private List<IdentityModel> Model { get; set; } = new List<IdentityModel>();
 
-    protected override Task OnInitializedAsync() =>
-        LoadAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadViewAsync();
+        await LoadIdentitiesAsync();
+        SortIdentities();
+    }
+
+    private void SortChanged(ChangeEventArgs e)
+    {
+        Sort = Enum.Parse<IdentitiesSort>(e.Value.ToString());
+        SortIdentities();
+    }
 
     private async Task DeleteIdentity(IdentityId id)
     {
@@ -118,7 +146,7 @@
         var result = await IdentityService.ConfirmAsync(id, code);
         if (result.IsSuccess)
         {
-            await LoadAsync();
+            await LoadIdentitiesAsync();
             Toaster.Success("Identity confirmed");
         }
         else
@@ -133,7 +161,8 @@
         var result = await IdentityService.ChangeNotificationTypeAsync(id, type);
         if (result.IsSuccess)
         {
-            await LoadAsync();
+            await LoadIdentitiesAsync();
+            SortIdentities();
             Toaster.Success("Notification type changed");
         }
         else
@@ -152,10 +181,10 @@
         if ((await modal.Result).Cancelled)
             return;
 
-        await LoadAsync();
+        await LoadIdentitiesAsync();
     }
 
-    private async Task LoadAsync()
+    private async Task LoadIdentitiesAsync()
     {
         var data = await IdentityService.GetAsync();
 
@@ -165,8 +194,43 @@
             Toaster.Error(data.Error?.Detail);
     }
 
+    private void SortIdentities()
+    {
+        Model = Sort switch
+        {
+            IdentitiesSort.None => Model.OrderBy(x => x.IdentityId).ToList(),
+            
+            IdentitiesSort.TypeAsc => Model.OrderBy(x => x.Identification.Type)
+                .ThenBy(x => x.IdentityId)
+                .ToList(),
+                
+            IdentitiesSort.TypeDesc => Model.OrderByDescending(x => x.Identification.Type)
+                .ThenBy(x => x.IdentityId)
+                .ToList(),
+                
+            IdentitiesSort.AddedAsc => Model.OrderBy(x => x.CreatedAt)
+                .ThenBy(x => x.IdentityId)
+                .ToList(),
+            
+            IdentitiesSort.AddedDesc => Model.OrderByDescending(x => x.CreatedAt)
+                .ThenBy(x => x.IdentityId)
+                .ToList(),
+            
+            _ => throw new ArgumentOutOfRangeException()
+            };
+    }
+
     private string GetViewButtonClasses(ViewType viewType) =>
         viewType == _view ? "btn-primary" : "btn-secondary";
 
-    private void SetView(ViewType viewType) => _view = viewType;
+    private async Task SetViewAsync(ViewType viewType)
+    {
+        await localStorage.SetItemAsync("identities_view", _view = viewType);
+    }
+
+    private async Task LoadViewAsync()
+    {
+        _view = await localStorage.GetItemAsync<ViewType>("identities_view");
+    }
+
 }

@@ -17,6 +17,7 @@
         <PackageReference Include="Accelist.FluentValidation.Blazor" Version="3.0.0" />
         <PackageReference Include="Sotsera.Blazor.Toaster" Version="3.0.0" />
         <PackageReference Include="Blazored.Modal" Version="5.0.2" />
+        <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
         <PackageReference Include="Elwark.People.Abstractions" Version="3.1.0" />
     </ItemGroup>
 

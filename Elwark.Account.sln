@@ -4,6 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{10A779CC-7AB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elwark.Account.Web", "src\Elwark.Account.Web\Elwark.Account.Web.csproj", "{A51568B1-7773-4E74-85FD-B7B6A1B026BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elwark.Account.Shared", "src\Elwark.Account.Shared\Elwark.Account.Shared.csproj", "{3F5F3318-FE9D-472A-9BCC-A54F65704FBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +16,13 @@ Global
 		{A51568B1-7773-4E74-85FD-B7B6A1B026BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A51568B1-7773-4E74-85FD-B7B6A1B026BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A51568B1-7773-4E74-85FD-B7B6A1B026BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F5F3318-FE9D-472A-9BCC-A54F65704FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F5F3318-FE9D-472A-9BCC-A54F65704FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F5F3318-FE9D-472A-9BCC-A54F65704FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F5F3318-FE9D-472A-9BCC-A54F65704FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A51568B1-7773-4E74-85FD-B7B6A1B026BF} = {10A779CC-7ABC-42DD-A23E-CA0F2A094363}
+		{3F5F3318-FE9D-472A-9BCC-A54F65704FBD} = {10A779CC-7ABC-42DD-A23E-CA0F2A094363}
 	EndGlobalSection
 EndGlobal

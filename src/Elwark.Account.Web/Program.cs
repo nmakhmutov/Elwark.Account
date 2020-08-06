@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Blazored.Modal;
 using Elwark.Account.Shared.AccountService;
 using Elwark.Account.Shared.AccountService.Model;
@@ -37,7 +38,8 @@ namespace Elwark.Account.Web
                     configuration.HideTransitionDuration = 600;
                     configuration.ShowProgressBar = false;
                 })
-                .AddBlazoredModal();
+                .AddBlazoredModal()
+                .AddBlazoredLocalStorage();
 
             builder.Services
                 .AddSingleton<AccountStateProvider>()
