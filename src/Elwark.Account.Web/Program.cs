@@ -8,9 +8,10 @@ using Elwark.Account.Shared.IdentityService;
 using Elwark.Account.Shared.PasswordService;
 using Elwark.Account.Shared.PasswordService.Model;
 using Elwark.Account.Web.Handlers;
-using Elwark.Account.Web.Pages.Identities.Components.Models;
+using Elwark.Account.Web.Models;
 using Elwark.Account.Web.Pages.Profile.Components;
 using Elwark.Account.Web.State;
+using Elwark.Account.Web.ViewModels;
 using Elwark.Storage.Client;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -27,7 +28,12 @@ namespace Elwark.Account.Web
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
             
-            builder.Services.AddHttpClientServices(builder.Configuration);
+            builder.Services
+                .AddSingleton<AccountStateProvider>()
+                .AddValidators()
+                .AddViewModels()
+                .AddHttpClientServices(builder.Configuration);
+            
             builder.Services.AddToaster(configuration =>
                 {
                     configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -40,10 +46,6 @@ namespace Elwark.Account.Web
                 })
                 .AddBlazoredModal()
                 .AddBlazoredLocalStorage();
-
-            builder.Services
-                .AddSingleton<AccountStateProvider>()
-                .AddValidators();
 
             builder.Services
                 .AddOidcAuthentication(options =>
@@ -59,6 +61,9 @@ namespace Elwark.Account.Web
 
     public static class ProgramExtensions
     {
+        public static IServiceCollection AddViewModels(this IServiceCollection services) =>
+            services.AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
+        
         public static IServiceCollection AddValidators(this IServiceCollection services) =>
             services.AddTransient<IValidator<UpdatePasswordModel>, UpdatePasswordModel.Validator>()
                 .AddTransient<IValidator<CreatePasswordModel>, CreatePasswordModel.Validator>()

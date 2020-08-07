@@ -1,0 +1,111 @@
+@page "/identities"
+@using Blazored.LocalStorage
+@using Elwark.Account.Web.Models
+@using Elwark.Account.Web.ViewModels
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService Modal
+@inject ILocalStorageService LocalStorage
+@inject IIdentitiesViewModel ViewModel;
+
+@attribute [Authorize]
+
+<div class="container">
+    <div class="row justify-content-between m-b">
+        <div class="col-auto mr-auto">
+            <h2 class="mb-0">Identities</h2>
+            <p class="text-muted">
+                Manage your identities which allow you log in to your account.
+            </p>
+        </div>
+        <div class="col-auto">
+            <button @onclick="@OpenAddIdentityDialog" class="btn btn-outline-success">
+                <i class="fas fa-plus"></i>
+                Add
+            </button>
+        </div>
+    </div>
+
+    @if (ViewModel.Identities.Count == 0)
+    {
+        <PageLoading/>
+    }
+    else
+    {
+        <div class="row mb-3 justify-content-between">
+
+            <div class="col-12 col-sm-5 col-md-3">
+                <div class="form-group row">
+                    <label for="sort" class="col-sm-2 col-form-label">Sort</label>
+                    <div class="col-sm-10">
+                        <select @bind="ViewModel.Sorting" id="sort" class="form-control">
+                            <option value="@IdentitySorting.None">None</option>
+                            <option value="@IdentitySorting.AddedAsc">By date added ascending</option>
+                            <option value="@IdentitySorting.AddedDesc">By date added descending</option>
+                            <option value="@IdentitySorting.TypeAsc">By type ascending</option>
+                            <option value="@IdentitySorting.TypeDesc">By type descending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-2">
+                <div class="btn-toolbar float-right">
+                    <div class="btn-group">
+                        <button type="button"
+                                @onclick="@(e => ViewModel.View = ViewType.List)"
+                                class="btn @GetViewButtonClasses(ViewType.List)">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button type="button"
+                                @onclick="@(e => ViewModel.View = ViewType.Grid)"
+                                class="btn @GetViewButtonClasses(ViewType.Grid)">
+                            <i class="fas fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @switch (ViewModel.View)
+            {
+                case ViewType.List:
+                    break;
+
+                case ViewType.Grid:
+                    foreach (var item in ViewModel.Identities)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <IdentityCard
+                                Item="@item"
+                                OnCodeRequest="@(request => ViewModel.SendConfirmationCodeAsync(request))"
+                                OnConfirm="@(request => ViewModel.ConfirmIdentityAsync(request))"
+                                OnDelete="@(request => ViewModel.DeleteIdentityAsync(request))"
+                                OnNotificationTypeChange="@(request => ViewModel.ChangeNotificationTypeAsync(request))"/>
+                        </div>
+                    }
+                    break;
+            }
+        </div>
+    }
+
+</div>
+
+@code {
+
+    protected override Task OnInitializedAsync() => 
+        ViewModel.InitAsync();
+
+    private async Task OpenAddIdentityDialog()
+    {
+        var modal = Modal.Show<AddIdentityModal>("Add identity", new ModalOptions
+        {
+            Position = ModalPosition.Center
+        });
+
+        await modal.Result;
+    }
+
+    private string GetViewButtonClasses(ViewType viewType) =>
+        viewType == ViewModel.View ? "btn-primary" : "btn-secondary";
+}

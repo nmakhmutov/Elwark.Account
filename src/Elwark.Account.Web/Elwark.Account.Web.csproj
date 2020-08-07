@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <RazorLangVersion>3.0</RazorLangVersion>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,6 +22,30 @@
 
     <ItemGroup>
       <Content Update="Shared\LoadingButton.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\AddIdentityModal.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\IdentityCard.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\IdentityIcon.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\CountrySelect.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\GenderSelect.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\LanguageSelect.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\TimezoneSelect.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Pages\Identities.razor">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </Content>
     </ItemGroup>

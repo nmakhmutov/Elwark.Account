@@ -5,9 +5,9 @@ namespace Elwark.Account.Web.State
 {
     public class AccountStateProvider
     {
-        public AccountModel? Account { get; set; }
+        public AccountModel Account { get; set; }
         
-        public event Action? OnChange;
+        public event Action OnChange;
 
         public void Update(AccountModel account)
         {

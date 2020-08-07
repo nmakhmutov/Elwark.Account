@@ -1,20 +1,16 @@
-@using Microsoft.Extensions.Configuration
-@using Elwark.Account.Web.Pages.Identities.Components.Models
-@using Elwark.People.Abstractions
-@using Elwark.Account.Shared.IdentityService
-@inject IConfiguration Configuration
+@using Elwark.Account.Web.Models
+@using Elwark.Account.Web.ViewModels
 @inject NavigationManager NavigationManager
-@inject IIdentityService IdentityService
-@inject IToaster Toaster
+@inject IIdentitiesViewModel ViewModel;
 
 <div class="container">
     <div class="row justify-content-between border-bottom">
-        @foreach (var item in Identifiers)
+        @foreach (var item in ViewModel.GetAttachLinks(NavigationManager.Uri))
         {
             <div class="col-4 pb-3">
-                <a href="@AttachLink(item)" class="d-flex flex-column align-items-center text-decoration-none">
-                    <IdentityIcon Type="@item"/>
-                    <span class="text-muted mt-2">@item</span>
+                <a href="@item.Link" class="d-flex flex-column align-items-center text-decoration-none">
+                    <IdentityIcon Type="@item.Type"/>
+                    <span class="text-muted mt-2">@item.Type</span>
                 </a>
             </div>
         }
@@ -45,39 +41,23 @@
     [CascadingParameter]
     BlazoredModalInstance BlazoredModal { get; set; } = null!;
 
-    private static readonly IdentificationType[] Identifiers =
-    {
-        IdentificationType.Google,
-        IdentificationType.Facebook,
-        IdentificationType.Microsoft
-    };
-
     private bool _isCodeLoading;
 
     private readonly EmailIdentityInputModel _model = new EmailIdentityInputModel();
 
-    private Uri AttachLink(IdentificationType type)
-    {
-        var host = new Uri(Configuration["Urls:IdentitySite"]);
-        return new Uri(host, $"/attach/provider/{type}?returnUrl={NavigationManager.Uri}");
-    }
-
     private async Task OnAddedEmail()
     {
         _isCodeLoading = true;
-
-        var result = await IdentityService.AddAsync(new Identification.Email(_model.Email));
+        var result = await ViewModel.AddIdentityAsync(new AddIdentityRequest(new Identification.Email(_model.Email)));
 
         _isCodeLoading = false;
 
-        if (result.IsSuccess)
+        if (result)
         {
-            Toaster.Success("Email has been added");
             await BlazoredModal.Close(ModalResult.Ok(true));
             return;
         }
 
-        Toaster.Error(result.Error?.Detail);
         await BlazoredModal.Close(ModalResult.Cancel());
     }
 

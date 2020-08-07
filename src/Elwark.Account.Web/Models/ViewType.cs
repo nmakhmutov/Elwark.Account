@@ -1,4 +1,4 @@
-namespace Elwark.Account.Web.Pages.Identities.Components.Models
+namespace Elwark.Account.Web.Models
 {
     public enum ViewType
     {
