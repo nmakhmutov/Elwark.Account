@@ -62,7 +62,11 @@ namespace Elwark.Account.Web
     public static class ProgramExtensions
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
-            services.AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
+            services
+                .AddScoped<ISecurityViewModel, SecurityViewModel>()
+                .AddScoped<ICreatePasswordViewModel, CreatePasswordViewModel>()
+                .AddScoped<IUpdatePasswordViewModel, UpdatePasswordViewModel>()
+                .AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
         
         public static IServiceCollection AddValidators(this IServiceCollection services) =>
             services.AddTransient<IValidator<UpdatePasswordModel>, UpdatePasswordModel.Validator>()

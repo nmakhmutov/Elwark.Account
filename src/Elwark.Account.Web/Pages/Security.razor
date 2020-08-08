@@ -1,0 +1,60 @@
+@page "/security"
+@using Elwark.Account.Web.ViewModels
+@inject ISecurityViewModel SecurityViewModel
+@inject ICreatePasswordViewModel CreatePasswordViewModel
+@implements IDisposable
+
+@attribute [Authorize]
+
+<div class="container">
+    <div class="row justify-content-between m-b">
+        <div class="col-auto mr-auto">
+            <h2 class="mb-0">Security</h2>
+            <p class="text-muted">
+                Manage your password.
+            </p>
+        </div>
+    </div>
+
+    @if (SecurityViewModel.IsPasswordAvailable is null)
+    {
+        <PageLoading/>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-6">
+                @if (SecurityViewModel.IsPasswordAvailable.Value)
+                {
+                    <UpdatePassword/>
+                }
+                else
+                {
+                    <CreatePassword/>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SecurityViewModel.LoadAsync();
+        
+        CreatePasswordViewModel.OnChanged += ChangeState;
+    }
+
+    private void ChangeState()
+    {
+        SecurityViewModel.PasswordAdded();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        CreatePasswordViewModel.OnChanged -= ChangeState;
+    }
+
+}
