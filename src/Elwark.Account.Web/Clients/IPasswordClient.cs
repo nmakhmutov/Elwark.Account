@@ -1,13 +1,17 @@
 using System.Threading.Tasks;
-using Elwark.Account.Shared.PasswordService.Model;
+using Elwark.Account.Shared;
+using Elwark.Account.Shared.Password;
 
-namespace Elwark.Account.Shared.PasswordService
+namespace Elwark.Account.Web.Clients
 {
-    public interface IPasswordService
+    public interface IPasswordClient
     {
         Task<ApiResponse<bool>> IsAvailableAsync();
-        Task<ApiResponse> SendCodeAsync();
+        
+        Task<ApiResponse> RequestConfirmationAsync();
+        
         Task<ApiResponse> CreateAsync(CreatePasswordModel model);
+        
         Task<ApiResponse> UpdateAsync(UpdatePasswordModel model);
     }
 }

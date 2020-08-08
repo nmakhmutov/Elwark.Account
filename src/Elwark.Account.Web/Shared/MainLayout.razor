@@ -17,19 +17,18 @@
             LogoImage="@StorageClient.Static.Icons.Elwark.White.Size192x192.Path"
             IsSidebarCollapsed="@_sidebarCollapsed"
             ToggleSidebar="@ToggleSideCollapse"/>
-        <Page>
+        <div class="page-content">
             <CascadingValue Value="AccountStateProvider.Account">
-                <AppHeader
-                    ToggleSidebar="@ToggleSideCollapse"/>
-                <PageContent>
+                <AppHeader ToggleSidebar="@ToggleSideCollapse"/>
+                <main class="primary-content" tabIndex="-1" role="main">
                     @Body
-                </PageContent>
+                </main>
             </CascadingValue>
-        </Page>
+        </div>
     </div>
-    <Footer>
+    <footer class="app-footer">
         <span>©@(DateTime.Today.Year) Elwark</span>
-    </Footer>
+    </footer>
 </div>
 
 @code {

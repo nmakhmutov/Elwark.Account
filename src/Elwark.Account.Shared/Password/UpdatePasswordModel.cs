@@ -1,14 +1,10 @@
 using FluentValidation;
 
-namespace Elwark.Account.Shared.PasswordService.Model
+namespace Elwark.Account.Shared.Password
 {
-    public class UpdatePasswordModel
+    public class UpdatePasswordModel : PasswordModel
     {
         public string? Current { get; set; }
-
-        public string? Password { get; set; }
-
-        public string? Confirmation { get; set; }
 
         public class Validator : AbstractValidator<UpdatePasswordModel>
         {
@@ -19,6 +15,7 @@ namespace Elwark.Account.Shared.PasswordService.Model
 
                 RuleFor(x => x.Password)
                     .NotEmpty()
+                    .NotEqual(x => x.Password).WithMessage("Current and new passwords cannot be equals")
                     .MinimumLength(6);
                 
                 RuleFor(x => x.Confirmation)

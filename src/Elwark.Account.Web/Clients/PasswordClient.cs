@@ -1,16 +1,17 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Elwark.Account.Shared.PasswordService.Model;
+using Elwark.Account.Shared;
+using Elwark.Account.Shared.Password;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Shared.PasswordService
+namespace Elwark.Account.Web.Clients
 {
-    public class PasswordService : IPasswordService
+    public class PasswordClient : IPasswordClient
     {
         private readonly HttpClient _httpClient;
 
-        public PasswordService(HttpClient httpClient) =>
+        public PasswordClient(HttpClient httpClient) =>
             _httpClient = httpClient;
 
         public async Task<ApiResponse<bool>> IsAvailableAsync()
@@ -20,7 +21,7 @@ namespace Elwark.Account.Shared.PasswordService
             return await result.GetResultAsync<bool>();
         }
 
-        public async Task<ApiResponse> SendCodeAsync()
+        public async Task<ApiResponse> RequestConfirmationAsync()
         {
             var result = await _httpClient.PostAsync("accounts/me/password/code", new StringContent(string.Empty));
 

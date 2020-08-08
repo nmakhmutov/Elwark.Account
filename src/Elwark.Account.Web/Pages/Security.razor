@@ -1,8 +1,5 @@
 @page "/security"
-@using Elwark.Account.Web.ViewModels
-@inject ISecurityViewModel SecurityViewModel
-@inject ICreatePasswordViewModel CreatePasswordViewModel
-@implements IDisposable
+@inject PasswordState State
 
 @attribute [Authorize]
 
@@ -16,7 +13,7 @@
         </div>
     </div>
 
-    @if (SecurityViewModel.IsPasswordAvailable is null)
+    @if (State.IsPasswordAvailable is null)
     {
         <PageLoading/>
     }
@@ -24,13 +21,19 @@
     {
         <div class="row">
             <div class="col-md-6">
-                @if (SecurityViewModel.IsPasswordAvailable.Value)
+                @if (State.IsPasswordAvailable.Value)
                 {
-                    <UpdatePassword/>
+                    <UpdatePassword
+                        Model="@State.UpdateModel" IsLoading="@State.IsLoading" OnUpdate="@State.UpdateAsync"/>
                 }
                 else
                 {
-                    <CreatePassword/>
+                    <CreatePassword 
+                        Model="@State.CreateModel" 
+                        IsLoading="@State.IsLoading"
+                        OnCreate="@State.CreateAsync"
+                        IsCodeSending="@State.IsCodeSending"
+                        OnConfirmationRequest="@State.RequestConfirmationAsync"/>
                 }
             </div>
         </div>
@@ -39,22 +42,7 @@
 
 @code{
 
-    protected override async Task OnInitializedAsync()
-    {
-        await SecurityViewModel.LoadAsync();
-        
-        CreatePasswordViewModel.OnChanged += ChangeState;
-    }
-
-    private void ChangeState()
-    {
-        SecurityViewModel.PasswordAdded();
-        StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        CreatePasswordViewModel.OnChanged -= ChangeState;
-    }
+    protected override Task OnInitializedAsync() =>
+        State.InitializeAsync();
 
 }

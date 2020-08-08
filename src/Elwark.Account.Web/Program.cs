@@ -6,8 +6,8 @@ using Elwark.Account.Shared.AccountService;
 using Elwark.Account.Shared.AccountService.Model;
 using Elwark.Account.Shared.IdentityService;
 using Elwark.Account.Shared.IdentityService.Model;
-using Elwark.Account.Shared.PasswordService;
-using Elwark.Account.Shared.PasswordService.Model;
+using Elwark.Account.Shared.Password;
+using Elwark.Account.Web.Clients;
 using Elwark.Account.Web.Handlers;
 using Elwark.Account.Web.Pages.Profile.Components;
 using Elwark.Account.Web.State;
@@ -63,9 +63,7 @@ namespace Elwark.Account.Web
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
             services
-                .AddScoped<ISecurityViewModel, SecurityViewModel>()
-                .AddScoped<ICreatePasswordViewModel, CreatePasswordViewModel>()
-                .AddScoped<IUpdatePasswordViewModel, UpdatePasswordViewModel>()
+                .AddScoped<PasswordState>()
                 .AddTransient<IIdentityViewModel, IdentityViewModel>()
                 .AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
         
@@ -87,7 +85,7 @@ namespace Elwark.Account.Web
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
-            services.AddHttpClient<IPasswordService, PasswordService>(client =>
+            services.AddHttpClient<IPasswordClient, PasswordClient>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();

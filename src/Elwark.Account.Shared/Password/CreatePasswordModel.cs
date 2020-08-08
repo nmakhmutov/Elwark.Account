@@ -1,15 +1,11 @@
 using FluentValidation;
 
-namespace Elwark.Account.Shared.PasswordService.Model
+namespace Elwark.Account.Shared.Password
 {
-    public class CreatePasswordModel
+    public class CreatePasswordModel : PasswordModel
     {
         public long? Code { get; set; }
 
-        public string? Password { get; set; }
-
-        public string? Confirmation { get; set; }
-        
         public class Validator : AbstractValidator<CreatePasswordModel>
         {
             public Validator()
