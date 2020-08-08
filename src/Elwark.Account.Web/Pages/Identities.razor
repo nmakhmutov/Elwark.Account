@@ -76,12 +76,7 @@
                     foreach (var item in ViewModel.Identities)
                     {
                         <div class="col-12 col-sm-6 col-md-4">
-                            <IdentityCard
-                                Item="@item"
-                                OnCodeRequest="@(request => ViewModel.SendConfirmationCodeAsync(request))"
-                                OnConfirm="@(request => ViewModel.ConfirmIdentityAsync(request))"
-                                OnDelete="@(request => ViewModel.DeleteIdentityAsync(request))"
-                                OnNotificationTypeChange="@(request => ViewModel.ChangeNotificationTypeAsync(request))"/>
+                            <IdentityCard Item="@item" />
                         </div>
                     }
                     break;

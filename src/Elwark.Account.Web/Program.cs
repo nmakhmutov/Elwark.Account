@@ -66,6 +66,7 @@ namespace Elwark.Account.Web
                 .AddScoped<ISecurityViewModel, SecurityViewModel>()
                 .AddScoped<ICreatePasswordViewModel, CreatePasswordViewModel>()
                 .AddScoped<IUpdatePasswordViewModel, UpdatePasswordViewModel>()
+                .AddTransient<IIdentityViewModel, IdentityViewModel>()
                 .AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
         
         public static IServiceCollection AddValidators(this IServiceCollection services) =>

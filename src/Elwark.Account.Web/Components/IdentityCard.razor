@@ -1,31 +1,33 @@
 @using Elwark.Account.Shared.IdentityService.Model
+@using Elwark.Account.Web.ViewModels
+@inject IIdentityViewModel ViewModel
 
 <div class="card">
     <div class="card-header">
         <div class="row align-items-center">
 
             <div class="col-auto">
-                <IdentityIcon Type="@Item.Identification.Type"/>
+                <IdentityIcon Type="@ViewModel.Identification.Type"/>
             </div>
 
             <div class="col text-right">
-                @Item.Identification.Type
+                @ViewModel.Identification.Type
             </div>
 
         </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">
-            <span>@Item.Identification.Value</span>
-            @if (Item.ConfirmedAt.HasValue)
+            <span>@ViewModel.Identification.Value</span>
+            @if (ViewModel.ConfirmedAt.HasValue)
             {
                 <i class="fas fa-check-circle text-success"></i>
             }
         </h5>
 
-        @if (Item.ConfirmedAt.HasValue && Item.Identification is Identification.Email)
+        @if (ViewModel.ConfirmedAt.HasValue && ViewModel.Identification is Identification.Email)
         {
-            if (Item.Notification is Notification.PrimaryEmail)
+            if (ViewModel.Notification is Notification.PrimaryEmail)
             {
                 <p class="card-subtitle">
                     <strong>
@@ -35,17 +37,21 @@
             }
             else
             {
-                <select class="form-control" @onchange="NotificationTypeHandler" disabled="@_isLoading">
+                <select class="form-control"
+                        @onchange="@(e => ViewModel.ChangeNotificationTypeAsync(Enum.Parse<NotificationType>(e.Value.ToString())))"
+                        disabled="@ViewModel.IsLoading">
+
                     @foreach (var notification in _notifications)
                     {
-                        <option value="@notification" selected="@(Item.Notification.Type == notification)">@notification</option>
+                        <option value="@notification" selected="@(ViewModel.Notification.Type == notification)">@notification</option>
                     }
+
                 </select>
             }
         }
-        else if (Item.ConfirmedAt is null)
+        else if (ViewModel.ConfirmedAt is null)
         {
-            if (_showConfirmationInput)
+            if (ViewModel.IsConfirmationCodeSent)
             {
                 <EditForm Model="_confirmationModel" OnValidSubmit="@ConfirmationHandler">
                     <FluentValidator/>
@@ -53,7 +59,7 @@
                         <div class="input-group mb-3">
                             <InputNumber @bind-Value="_confirmationModel.Code" class="form-control" placeholder="Code"/>
                             <div class="input-group-append">
-                                <LoadingButton IsLoading="@_isLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
+                                <LoadingButton IsLoading="@ViewModel.IsLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
                             </div>
                         </div>
                         <ValidationMessage For="@(() => _confirmationModel.Code)"/>
@@ -62,7 +68,7 @@
             }
             else
             {
-                <LoadingButton IsLoading="@_isLoading" Title="Confirm" Icon="fa-check" OnClick="@CodeRequestHandler"/>
+                <LoadingButton IsLoading="@ViewModel.IsLoading" Title="Confirm" Icon="fa-check" OnClick="@(() => ViewModel.SendConfirmationCodeAsync())"/>
             }
         }
 
@@ -71,12 +77,12 @@
     <div class="card-footer border-top-0 pt-0">
         <div class="row align-items-center justify-content-between">
             <div class="col-auto">
-                <small class="text-muted">Added @Item.CreatedAt.ToString("d")</small>
+                <small class="text-muted">Added @ViewModel.CreatedAt.ToString("d")</small>
             </div>
             <div class="col-auto">
-                @if (Item.Notification.Type != NotificationType.PrimaryEmail)
+                @if (ViewModel.Notification.Type != NotificationType.PrimaryEmail)
                 {
-                    <button class="btn" @onclick="@DeleteHandler" disabled="@_isLoading">
+                    <button class="btn" @onclick="@(() => ViewModel.DeleteIdentityAsync())" disabled="@ViewModel.IsLoading">
                         <i class="fas fa-trash"></i>
                     </button>
                 }
@@ -87,9 +93,6 @@
 
 @code
 {
-    private bool _showConfirmationInput;
-    private bool _isLoading;
-
     private ConfirmIdentityModel _confirmationModel = new ConfirmIdentityModel();
 
     private readonly NotificationType[] _notifications =
@@ -100,74 +103,19 @@
     };
 
     [Parameter]
-    public IdentityModel Item { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<IdentityId> OnDelete { get; set; }
-
-    [Parameter]
-    public EventCallback<IdentityId> OnCodeRequest { get; set; }
-
-    [Parameter]
-    public EventCallback<ConfirmIdentityModel> OnConfirm { get; set; }
-
-    [Parameter]
-    public EventCallback<ChangeNotificationTypeModel> OnNotificationTypeChange { get; set; }
+    public IdentityModel Item { get; set; }
 
     protected override void OnInitialized()
     {
+        ViewModel.Init(Item);
         _confirmationModel = new ConfirmIdentityModel
         {
             Id = Item.IdentityId
         };
     }
 
-    private async Task DeleteHandler()
-    {
-        _isLoading = true;
-
-        if (OnDelete.HasDelegate)
-            await OnDelete.InvokeAsync(Item.IdentityId);
-
-        _isLoading = false;
-    }
-
-    private async Task CodeRequestHandler()
-    {
-        _isLoading = true;
-
-        if (OnCodeRequest.HasDelegate)
-            await OnCodeRequest.InvokeAsync(Item.IdentityId);
-
-        _isLoading = false;
-        _showConfirmationInput = true;
-    }
-
     private async Task ConfirmationHandler()
     {
-        _isLoading = true;
-
-        if (OnConfirm.HasDelegate)
-            await OnConfirm.InvokeAsync(new ConfirmIdentityModel
-            {
-                Id = Item.IdentityId,
-                Code = _confirmationModel.Code.GetValueOrDefault(0)
-            });
-
-        _isLoading = false;
-    }
-
-    private async Task NotificationTypeHandler(ChangeEventArgs e)
-    {
-        _isLoading = true;
-
-        if (OnNotificationTypeChange.HasDelegate)
-            await OnNotificationTypeChange.InvokeAsync(new ChangeNotificationTypeModel
-            {
-                Id = Item.IdentityId,
-                Type = Enum.Parse<NotificationType>(e.Value.ToString())
-            });
-
-        _isLoading = false;
+        await ViewModel.ConfirmIdentityAsync(_confirmationModel.Code.GetValueOrDefault(0));
     }
 }

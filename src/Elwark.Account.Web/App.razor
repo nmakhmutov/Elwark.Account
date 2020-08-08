@@ -4,21 +4,11 @@
             <Found Context="routeData">
                 <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                     <NotAuthorized>
-                        @if (context.User.Identity.IsAuthenticated)
-                        {
-                            <div class="m-t-xxl text-center">
-                                <h1 class="error-number">Sorry</h1>
-                                <h3 class="m-b">You're not authorized to reach this page.</h3>
-                            </div>
-                        }
-                        else
-                        {
-                            <RedirectToLogin/>
-                        }
+                        <RedirectToLogin/>
                     </NotAuthorized>
                     <Authorizing>
                         <div class="m-t-xxl text-center">
-                            <h3 class="m-b">Authentication in progress</h3>
+                            <h3 class="m-b">Please wait...</h3>
                         </div>
                     </Authorizing>
                 </AuthorizeRouteView>

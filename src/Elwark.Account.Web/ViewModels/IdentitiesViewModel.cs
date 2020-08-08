@@ -24,14 +24,6 @@ namespace Elwark.Account.Web.ViewModels
 
         Task<bool> AddIdentityAsync(AddIdentityModel model);
 
-        Task<bool> SendConfirmationCodeAsync(IdentityId id);
-
-        Task<bool> ConfirmIdentityAsync(ConfirmIdentityModel request);
-
-        Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeModel request);
-
-        Task<bool> DeleteIdentityAsync(IdentityId id);
-        
         IReadOnlyCollection<AttachLinkModel> GetAttachLinks(string returnUrl);
     }
 
@@ -133,68 +125,7 @@ namespace Elwark.Account.Web.ViewModels
 
             return result.IsSuccess;
         }
-
-        public async Task<bool> SendConfirmationCodeAsync(IdentityId id)
-        {
-            var result = await _identityService.SendCodeAsync(id);
-
-            if (result.IsSuccess)
-                _toaster.Success("Confirmation code sent");
-            else
-                _toaster.Error(result.Error?.Detail);
-
-            return result.IsSuccess;
-        }
-
-        public async Task<bool> ConfirmIdentityAsync(ConfirmIdentityModel request)
-        {
-            var result = await _identityService.ConfirmAsync(request);
-            if (result.IsSuccess)
-            {
-                await LoadAsync();
-                _toaster.Success("Identity confirmed");
-            }
-            else
-            {
-                _toaster.Error(result.Error?.Detail);
-            }
-
-            return result.IsSuccess;
-        }
-
-        public async Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeModel request)
-        {
-            var result = await _identityService.ChangeNotificationTypeAsync(request);
-            if (result.IsSuccess)
-            {
-                await LoadAsync();
-                _toaster.Success("Notification type changed");
-            }
-            else
-            {
-                _toaster.Error(result.Error?.Detail);
-            }
-
-            return result.IsSuccess;
-        }
-
-        public async Task<bool> DeleteIdentityAsync(IdentityId id)
-        {
-            var result = await _identityService.DeleteAsync(id);
-
-            if (result.IsSuccess)
-            {
-                _identities.RemoveAll(x => x.IdentityId == id);
-                _toaster.Success("Identity removed");
-            }
-            else
-            {
-                _toaster.Error(result.Error?.Detail);
-            }
-
-            return result.IsSuccess;
-        }
-
+        
         public IReadOnlyCollection<AttachLinkModel> GetAttachLinks(string returnUrl)
         {
             var host = new Uri(_configuration["Urls:IdentitySite"]);
