@@ -5,10 +5,10 @@ using Blazored.Modal;
 using Elwark.Account.Shared.AccountService;
 using Elwark.Account.Shared.AccountService.Model;
 using Elwark.Account.Shared.IdentityService;
+using Elwark.Account.Shared.IdentityService.Model;
 using Elwark.Account.Shared.PasswordService;
 using Elwark.Account.Shared.PasswordService.Model;
 using Elwark.Account.Web.Handlers;
-using Elwark.Account.Web.Models;
 using Elwark.Account.Web.Pages.Profile.Components;
 using Elwark.Account.Web.State;
 using Elwark.Account.Web.ViewModels;
@@ -72,9 +72,9 @@ namespace Elwark.Account.Web
             services.AddTransient<IValidator<UpdatePasswordModel>, UpdatePasswordModel.Validator>()
                 .AddTransient<IValidator<CreatePasswordModel>, CreatePasswordModel.Validator>()
                 .AddTransient<IValidator<AccountModel>, AccountModel.Validator>()
-                .AddTransient<IValidator<EmailIdentityInputModel>, EmailIdentityInputModel.Validator>()
+                .AddTransient<IValidator<AddIdentityModel>, AddIdentityModel.Validator>()
                 .AddTransient<IValidator<PictureInputModel>, PictureInputModel.Validator>()
-                .AddTransient<IValidator<IdentityConfirmationInputModel>, IdentityConfirmationInputModel.Validator>();
+                .AddTransient<IValidator<ConfirmIdentityModel>, ConfirmIdentityModel.Validator>();
 
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services,
             IConfiguration configuration)

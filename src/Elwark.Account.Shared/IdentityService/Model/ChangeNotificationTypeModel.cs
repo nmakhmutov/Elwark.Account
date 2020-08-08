@@ -1,8 +1,8 @@
 using Elwark.People.Abstractions;
 
-namespace Elwark.Account.Web.Models
+namespace Elwark.Account.Shared.IdentityService.Model
 {
-    public class ChangeNotificationTypeRequest
+    public class ChangeNotificationTypeModel
     {
         public IdentityId Id { get; set; }
         

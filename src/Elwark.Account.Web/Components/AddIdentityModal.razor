@@ -1,5 +1,6 @@
 @using Elwark.Account.Web.Models
 @using Elwark.Account.Web.ViewModels
+@using Elwark.Account.Shared.IdentityService.Model
 @inject NavigationManager NavigationManager
 @inject IIdentitiesViewModel ViewModel;
 
@@ -43,12 +44,12 @@
 
     private bool _isCodeLoading;
 
-    private readonly EmailIdentityInputModel _model = new EmailIdentityInputModel();
+    private readonly AddIdentityModel _model = new AddIdentityModel();
 
     private async Task OnAddedEmail()
     {
         _isCodeLoading = true;
-        var result = await ViewModel.AddIdentityAsync(new AddIdentityRequest(new Identification.Email(_model.Email)));
+        var result = await ViewModel.AddIdentityAsync(_model);
 
         _isCodeLoading = false;
 

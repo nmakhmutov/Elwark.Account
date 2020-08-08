@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Elwark.Account.Shared.IdentityService.Model;
 using Elwark.People.Abstractions;
 using Newtonsoft.Json;
 
@@ -14,16 +15,16 @@ namespace Elwark.Account.Shared.IdentityService
         public IdentityService(HttpClient httpClient) =>
             _httpClient = httpClient;
 
-        public async Task<ApiResponse<IReadOnlyCollection<Model.IdentityModel>>> GetAsync()
+        public async Task<ApiResponse<IReadOnlyCollection<IdentityModel>>> GetAsync()
         {
             var data = await _httpClient.GetAsync("accounts/me/identities");
 
-            return await data.GetResultAsync<IReadOnlyCollection<Model.IdentityModel>>();
+            return await data.GetResultAsync<IReadOnlyCollection<IdentityModel>>();
         }
 
-        public async Task<ApiResponse> AddAsync(Identification.Email email)
+        public async Task<ApiResponse> AddAsync(AddIdentityModel model)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(email), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(model.EmailIdentification), Encoding.UTF8, "application/json");
             var data = await _httpClient.PostAsync("accounts/me/attach/email", content);
 
             return await data.GetResultAsync();
@@ -37,17 +38,17 @@ namespace Elwark.Account.Shared.IdentityService
             return await data.GetResultAsync();
         }
 
-        public async Task<ApiResponse> ConfirmAsync(IdentityId id, long code)
+        public async Task<ApiResponse> ConfirmAsync(ConfirmIdentityModel model)
         {
-            var data = await _httpClient.PutAsync($"accounts/me/identities/{id}/confirm/{code}",
+            var data = await _httpClient.PutAsync($"accounts/me/identities/{model.Id}/confirm/{model.Code}",
                 new StringContent(string.Empty));
 
             return await data.GetResultAsync();
         }
 
-        public async Task<ApiResponse> ChangeNotificationTypeAsync(IdentityId id, NotificationType type)
+        public async Task<ApiResponse> ChangeNotificationTypeAsync(ChangeNotificationTypeModel model)
         {
-            var data = await _httpClient.PutAsync($"accounts/me/identities/{id}/notification/{type}",
+            var data = await _httpClient.PutAsync($"accounts/me/identities/{model.Id}/notification/{model.Type}",
                 new StringContent(string.Empty));
 
             return await data.GetResultAsync();

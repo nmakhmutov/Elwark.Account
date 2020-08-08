@@ -1,5 +1,4 @@
 @using Elwark.Account.Shared.IdentityService.Model
-@using Elwark.Account.Web.Models
 
 <div class="card">
     <div class="card-header">
@@ -91,7 +90,7 @@
     private bool _showConfirmationInput;
     private bool _isLoading;
 
-    private IdentityConfirmationInputModel _confirmationModel = new IdentityConfirmationInputModel();
+    private ConfirmIdentityModel _confirmationModel = new ConfirmIdentityModel();
 
     private readonly NotificationType[] _notifications =
     {
@@ -104,23 +103,31 @@
     public IdentityModel Item { get; set; } = null!;
 
     [Parameter]
-    public EventCallback<DeleteIdentityRequest> OnDelete { get; set; }
+    public EventCallback<IdentityId> OnDelete { get; set; }
 
     [Parameter]
-    public EventCallback<SendConfirmationCodeRequest> OnCodeRequest { get; set; }
+    public EventCallback<IdentityId> OnCodeRequest { get; set; }
 
     [Parameter]
-    public EventCallback<ConfirmIdentityRequest> OnConfirm { get; set; }
+    public EventCallback<ConfirmIdentityModel> OnConfirm { get; set; }
 
     [Parameter]
-    public EventCallback<ChangeNotificationTypeRequest> OnNotificationTypeChange { get; set; }
+    public EventCallback<ChangeNotificationTypeModel> OnNotificationTypeChange { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _confirmationModel = new ConfirmIdentityModel
+        {
+            Id = Item.IdentityId
+        };
+    }
 
     private async Task DeleteHandler()
     {
         _isLoading = true;
 
         if (OnDelete.HasDelegate)
-            await OnDelete.InvokeAsync(new DeleteIdentityRequest {Id = Item.IdentityId});
+            await OnDelete.InvokeAsync(Item.IdentityId);
 
         _isLoading = false;
     }
@@ -130,7 +137,7 @@
         _isLoading = true;
 
         if (OnCodeRequest.HasDelegate)
-            await OnCodeRequest.InvokeAsync(new SendConfirmationCodeRequest {Id = Item.IdentityId});
+            await OnCodeRequest.InvokeAsync(Item.IdentityId);
 
         _isLoading = false;
         _showConfirmationInput = true;
@@ -141,7 +148,7 @@
         _isLoading = true;
 
         if (OnConfirm.HasDelegate)
-            await OnConfirm.InvokeAsync(new ConfirmIdentityRequest
+            await OnConfirm.InvokeAsync(new ConfirmIdentityModel
             {
                 Id = Item.IdentityId,
                 Code = _confirmationModel.Code.GetValueOrDefault(0)
@@ -155,7 +162,7 @@
         _isLoading = true;
 
         if (OnNotificationTypeChange.HasDelegate)
-            await OnNotificationTypeChange.InvokeAsync(new ChangeNotificationTypeRequest
+            await OnNotificationTypeChange.InvokeAsync(new ChangeNotificationTypeModel
             {
                 Id = Item.IdentityId,
                 Type = Enum.Parse<NotificationType>(e.Value.ToString())

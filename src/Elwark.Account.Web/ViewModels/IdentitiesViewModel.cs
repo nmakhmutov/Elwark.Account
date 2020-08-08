@@ -22,15 +22,15 @@ namespace Elwark.Account.Web.ViewModels
 
         Task InitAsync();
 
-        Task<bool> AddIdentityAsync(AddIdentityRequest request);
+        Task<bool> AddIdentityAsync(AddIdentityModel model);
 
-        Task<bool> SendConfirmationCodeAsync(SendConfirmationCodeRequest request);
+        Task<bool> SendConfirmationCodeAsync(IdentityId id);
 
-        Task<bool> ConfirmIdentityAsync(ConfirmIdentityRequest request);
+        Task<bool> ConfirmIdentityAsync(ConfirmIdentityModel request);
 
-        Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeRequest request);
+        Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeModel request);
 
-        Task<bool> DeleteIdentityAsync(DeleteIdentityRequest request);
+        Task<bool> DeleteIdentityAsync(IdentityId id);
         
         IReadOnlyCollection<AttachLinkModel> GetAttachLinks(string returnUrl);
     }
@@ -48,6 +48,7 @@ namespace Elwark.Account.Web.ViewModels
         
         private IdentitySorting _sorting = IdentitySorting.None;
         private ViewType _view = ViewType.List;
+        
         private List<IdentityModel> _identities = new List<IdentityModel>();
 
         private readonly IIdentityService _identityService;
@@ -117,9 +118,9 @@ namespace Elwark.Account.Web.ViewModels
                 _toaster.Error(data.Error?.Detail);
         }
 
-        public async Task<bool> AddIdentityAsync(AddIdentityRequest request)
+        public async Task<bool> AddIdentityAsync(AddIdentityModel model)
         {
-            var result = await _identityService.AddAsync(request.Email);
+            var result = await _identityService.AddAsync(model);
             if (result.IsSuccess)
             {
                 _toaster.Success("Email has been added");
@@ -133,9 +134,9 @@ namespace Elwark.Account.Web.ViewModels
             return result.IsSuccess;
         }
 
-        public async Task<bool> SendConfirmationCodeAsync(SendConfirmationCodeRequest request)
+        public async Task<bool> SendConfirmationCodeAsync(IdentityId id)
         {
-            var result = await _identityService.SendCodeAsync(request.Id);
+            var result = await _identityService.SendCodeAsync(id);
 
             if (result.IsSuccess)
                 _toaster.Success("Confirmation code sent");
@@ -145,9 +146,9 @@ namespace Elwark.Account.Web.ViewModels
             return result.IsSuccess;
         }
 
-        public async Task<bool> ConfirmIdentityAsync(ConfirmIdentityRequest request)
+        public async Task<bool> ConfirmIdentityAsync(ConfirmIdentityModel request)
         {
-            var result = await _identityService.ConfirmAsync(request.Id, request.Code);
+            var result = await _identityService.ConfirmAsync(request);
             if (result.IsSuccess)
             {
                 await LoadAsync();
@@ -161,9 +162,9 @@ namespace Elwark.Account.Web.ViewModels
             return result.IsSuccess;
         }
 
-        public async Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeRequest request)
+        public async Task<bool> ChangeNotificationTypeAsync(ChangeNotificationTypeModel request)
         {
-            var result = await _identityService.ChangeNotificationTypeAsync(request.Id, request.Type);
+            var result = await _identityService.ChangeNotificationTypeAsync(request);
             if (result.IsSuccess)
             {
                 await LoadAsync();
@@ -177,13 +178,13 @@ namespace Elwark.Account.Web.ViewModels
             return result.IsSuccess;
         }
 
-        public async Task<bool> DeleteIdentityAsync(DeleteIdentityRequest request)
+        public async Task<bool> DeleteIdentityAsync(IdentityId id)
         {
-            var result = await _identityService.DeleteAsync(request.Id);
+            var result = await _identityService.DeleteAsync(id);
 
             if (result.IsSuccess)
             {
-                _identities.RemoveAll(x => x.IdentityId == request.Id);
+                _identities.RemoveAll(x => x.IdentityId == id);
                 _toaster.Success("Identity removed");
             }
             else
