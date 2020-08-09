@@ -1,4 +1,7 @@
-@using Elwark.Account.Shared.AccountService.Model
+@using Elwark.Account.Shared.Account
+@inject AccountState AccountState
+@implements IDisposable;
+
 <header class="app-header">
     <div class="top-nav">
         <nav class="navbar navbar-expand-md navbar-light bg-faded">
@@ -15,7 +18,7 @@
                         </div>
                         
                         <div class="avatar">
-                            <img src="@Account.Picture" alt="@Account.FullName">
+                            <img src="@Account.Picture" alt="@AccountState.Account.FullName">
                         </div>
                     }
                 </div>
@@ -24,13 +27,17 @@
         </nav>
     </div>
 </header>
-<div id="nprogress-container"></div>
 
 @code
 {
     [Parameter]
     public EventCallback ToggleSidebar { get; set; }
 
-    [CascadingParameter]
-    private AccountModel Account { get; set; }
+    private AccountModel Account => AccountState.Account;
+
+    protected override void OnInitialized() => 
+        AccountState.OnChange += StateHasChanged;
+
+    public void Dispose() =>
+        AccountState.OnChange -= StateHasChanged;
 }

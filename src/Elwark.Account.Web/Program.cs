@@ -2,8 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Blazored.Modal;
-using Elwark.Account.Shared.AccountService;
-using Elwark.Account.Shared.AccountService.Model;
+using Elwark.Account.Shared.Account;
 using Elwark.Account.Shared.Identity;
 using Elwark.Account.Shared.Password;
 using Elwark.Account.Web.Clients;
@@ -60,7 +59,7 @@ namespace Elwark.Account.Web
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
             services
-                .AddSingleton<AccountStateProvider>()
+                .AddSingleton<AccountState>()
                 .AddScoped<PasswordState>()
                 .AddScoped<IdentitiesState>();
         
@@ -77,7 +76,7 @@ namespace Elwark.Account.Web
         {
             services.AddTransient<AuthorizationDelegatingHandler>();
 
-            services.AddHttpClient<IAccountService, AccountService>(client =>
+            services.AddHttpClient<IAccountClient, AccountClient>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();

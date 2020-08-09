@@ -2,16 +2,17 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Elwark.Account.Shared.AccountService.Model;
+using Elwark.Account.Shared;
+using Elwark.Account.Shared.Account;
 using Newtonsoft.Json;
 
-namespace Elwark.Account.Shared.AccountService
+namespace Elwark.Account.Web.Clients
 {
-    public class AccountService : IAccountService
+    public class AccountClient : IAccountClient
     {
         private readonly HttpClient _httpClient;
 
-        public AccountService(HttpClient httpClient) =>
+        public AccountClient(HttpClient httpClient) =>
             _httpClient = httpClient;
 
         public async Task<ApiResponse<AccountModel>> GetAsync()
@@ -34,7 +35,7 @@ namespace Elwark.Account.Shared.AccountService
             return await result.GetResultAsync<AccountModel>();
         }
 
-        public async Task<ApiResponse> UpdatePictureAsync(Uri? picture)
+        public async Task<ApiResponse> UpdatePictureAsync(Uri picture)
         {
             var content = new StringContent(
                 JsonConvert.SerializeObject(new {picture}),

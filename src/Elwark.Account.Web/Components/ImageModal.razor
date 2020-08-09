@@ -1,8 +1,6 @@
-@using Elwark.Account.Web.State
-@using Elwark.Account.Shared.AccountService
-@inject IAccountService AccountService
-@inject IToaster Toaster
-@inject AccountStateProvider AccountStateProvider
+@using Elwark.Account.Web.Clients
+@inject IAccountClient AccountClient
+@inject AccountState State
 
 <div class="container">
     <div class="row justify-content-center align-items-center mb-2">
@@ -22,7 +20,7 @@
                     <div class="input-group mb-3">
                         <InputText type="text" @bind-Value="_model.Picture" class="form-control" placeholder="e.g. https://image.store/profile.png"/>
                         <div class="input-group-append">
-                            <LoadingButton IsLoading="@_isLoading" Title="Save" Icon="fa-image" Type="submit"/>
+                            <LoadingButton IsLoading="@State.IsLoading" Title="Save" Icon="fa-image" Type="submit"/>
                         </div>
                     </div>
                     <ValidationMessage For="@(() => _model.Picture)"/>
@@ -35,39 +33,21 @@
 
 @code {
 
-    private bool _isLoading;
     private PictureInputModel _model = new PictureInputModel();
 
     private string Image => string.IsNullOrWhiteSpace(_model.Picture)
         ? Picture
         : _model.Picture;
 
-    [CascadingParameter] 
+    [CascadingParameter]
     private BlazoredModalInstance BlazoredModal { get; set; } = null!;
 
-    [Parameter] 
+    [Parameter]
     public string Picture { get; set; } = null!;
 
     private async Task OnChangeImage()
     {
-        _isLoading = true;
-
-        var result = await AccountService.UpdatePictureAsync(new Uri(_model.Picture));
-
-        if (result.IsSuccess)
-        {
-            var account = AccountStateProvider.Account;
-            account!.Picture = _model.Picture;
-            AccountStateProvider.Update(account);
-
-            await BlazoredModal.Close(ModalResult.Ok(true));
-        }
-        else
-        {
-            Toaster.Error(result.Error?.Detail);
-        }
-
-        _isLoading = false;
+        await State.UpdatePictureAsync(new Uri(_model.Picture));
     }
 
 }

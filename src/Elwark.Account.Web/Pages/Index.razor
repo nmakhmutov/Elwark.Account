@@ -1,10 +1,9 @@
 ﻿@page "/"
-@using Elwark.Account.Web.State
-@using Elwark.Account.Shared.AccountService
-@using Elwark.Account.Shared.AccountService.Model
-@inject IAccountService AccountService
+@using Elwark.Account.Web.Clients
+@using Elwark.Account.Shared.Account
+@inject IAccountClient AccountClient
 @inject IToaster Toaster
-@inject AccountStateProvider AccountStateProvider
+@inject AccountState State
 
 @attribute [Authorize]
 
@@ -14,7 +13,7 @@
 }
 else
 {
-    <EditForm Model="@Account" OnValidSubmit="@HandleValidSubmit" class="container">
+    <EditForm Model="@Account" OnValidSubmit="@State.UpdateAsync" class="container">
         <FluentValidator/>
 
         <div class="row justify-content-between m-b">
@@ -25,7 +24,7 @@ else
                 </p>
             </div>
             <div class="col-auto">
-                <LoadingButton IsLoading="@_isLoading" Icon="fa-edit" Type="submit"/>
+                <LoadingButton IsLoading="@State.IsLoading" Icon="fa-edit" Type="submit"/>
             </div>
         </div>
 
@@ -196,31 +195,10 @@ else
 
 @code{
 
-    [CascadingParameter]
-    private AccountModel Account { get; set; } = null!;
+    private AccountModel Account => State.Account;
 
     [CascadingParameter]
     private IModalService Modal { get; set; } = null!;
-
-    private bool _isLoading;
-
-    private async Task HandleValidSubmit()
-    {
-        _isLoading = true;
-
-        var result = await AccountService.UpdateAsync(Account!);
-        if (result.IsSuccess)
-        {
-            AccountStateProvider.Update(result.Data);
-            Toaster.Success("Updated");
-        }
-        else
-        {
-            Toaster.Error(result.Error?.Detail);
-        }
-
-        _isLoading = false;
-    }
 
     private void OnImageDialogOpen()
     {

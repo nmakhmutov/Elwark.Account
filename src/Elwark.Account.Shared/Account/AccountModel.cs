@@ -2,7 +2,7 @@ using System;
 using Elwark.People.Abstractions;
 using FluentValidation;
 
-namespace Elwark.Account.Shared.AccountService.Model
+namespace Elwark.Account.Shared.Account
 {
     public class AccountModel
     {
