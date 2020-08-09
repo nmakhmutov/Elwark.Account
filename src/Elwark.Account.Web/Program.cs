@@ -4,14 +4,12 @@ using Blazored.LocalStorage;
 using Blazored.Modal;
 using Elwark.Account.Shared.AccountService;
 using Elwark.Account.Shared.AccountService.Model;
-using Elwark.Account.Shared.IdentityService;
-using Elwark.Account.Shared.IdentityService.Model;
+using Elwark.Account.Shared.Identity;
 using Elwark.Account.Shared.Password;
 using Elwark.Account.Web.Clients;
 using Elwark.Account.Web.Handlers;
 using Elwark.Account.Web.Pages.Profile.Components;
 using Elwark.Account.Web.State;
-using Elwark.Account.Web.ViewModels;
 using Elwark.Storage.Client;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -29,7 +27,6 @@ namespace Elwark.Account.Web
             builder.RootComponents.Add<App>("app");
             
             builder.Services
-                .AddSingleton<AccountStateProvider>()
                 .AddValidators()
                 .AddViewModels()
                 .AddHttpClientServices(builder.Configuration);
@@ -63,9 +60,9 @@ namespace Elwark.Account.Web
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
             services
+                .AddSingleton<AccountStateProvider>()
                 .AddScoped<PasswordState>()
-                .AddTransient<IIdentityViewModel, IdentityViewModel>()
-                .AddScoped<IIdentitiesViewModel, IdentitiesViewModel>();
+                .AddScoped<IdentitiesState>();
         
         public static IServiceCollection AddValidators(this IServiceCollection services) =>
             services.AddTransient<IValidator<UpdatePasswordModel>, UpdatePasswordModel.Validator>()
@@ -90,7 +87,7 @@ namespace Elwark.Account.Web
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
-            services.AddHttpClient<IIdentityService, IdentityService>(client =>
+            services.AddHttpClient<IIdentityClient, IdentityClient>(client =>
                     client.BaseAddress = new Uri(configuration["Urls:PeopleApi"])
                 )
                 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();

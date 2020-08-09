@@ -1,7 +1,8 @@
 using System;
 using Elwark.People.Abstractions;
+using Newtonsoft.Json;
 
-namespace Elwark.Account.Shared.IdentityService.Model
+namespace Elwark.Account.Shared.Identity
 {
     public class IdentityModel
     {
@@ -14,5 +15,11 @@ namespace Elwark.Account.Shared.IdentityService.Model
         public DateTimeOffset? ConfirmedAt { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
+
+        public bool IsConfirmed => ConfirmedAt.HasValue;
+        
+        public bool IsLoading { get; set; }
+        
+        public bool IsConfirmationCodeSent { get; set; }
     }
 }

@@ -1,33 +1,32 @@
-@using Elwark.Account.Shared.IdentityService.Model
-@using Elwark.Account.Web.ViewModels
-@inject IIdentityViewModel ViewModel
+@using Elwark.Account.Shared.Identity
+@using System.Diagnostics
 
 <div class="card">
     <div class="card-header">
         <div class="row align-items-center">
 
             <div class="col-auto">
-                <IdentityIcon Type="@ViewModel.Identification.Type"/>
+                <IdentityIcon Type="@Item.Identification.Type"/>
             </div>
 
             <div class="col text-right">
-                @ViewModel.Identification.Type
+                @Item.Identification.Type
             </div>
 
         </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">
-            <span>@ViewModel.Identification.Value</span>
-            @if (ViewModel.ConfirmedAt.HasValue)
+            <span>@Item.Identification.Value</span>
+            @if (Item.IsConfirmed)
             {
                 <i class="fas fa-check-circle text-success"></i>
             }
         </h5>
 
-        @if (ViewModel.ConfirmedAt.HasValue && ViewModel.Identification is Identification.Email)
+        @if (Item.IsConfirmed)
         {
-            if (ViewModel.Notification is Notification.PrimaryEmail)
+            if (Item.Notification is Notification.PrimaryEmail)
             {
                 <p class="card-subtitle">
                     <strong>
@@ -35,23 +34,25 @@
                     </strong>
                 </p>
             }
-            else
+            else if (Item.Identification is Identification.Email)
             {
                 <select class="form-control"
-                        @onchange="@(e => ViewModel.ChangeNotificationTypeAsync(Enum.Parse<NotificationType>(e.Value.ToString())))"
-                        disabled="@ViewModel.IsLoading">
+                        @onchange="@(e => OnChangeNotification.InvokeAsync(Enum.Parse<NotificationType>(e.Value.ToString())))"
+                        disabled="@Item.IsLoading">
 
                     @foreach (var notification in _notifications)
                     {
-                        <option value="@notification" selected="@(ViewModel.Notification.Type == notification)">@notification</option>
+                        <option value="@notification" selected="@(Item.Notification.Type == notification)">
+                            @GetNotificationTypeLabel(notification)
+                        </option>
                     }
 
                 </select>
             }
         }
-        else if (ViewModel.ConfirmedAt is null)
+        else
         {
-            if (ViewModel.IsConfirmationCodeSent)
+            if (Item.IsConfirmationCodeSent)
             {
                 <EditForm Model="_confirmationModel" OnValidSubmit="@ConfirmationHandler">
                     <FluentValidator/>
@@ -59,7 +60,7 @@
                         <div class="input-group mb-3">
                             <InputNumber @bind-Value="_confirmationModel.Code" class="form-control" placeholder="Code"/>
                             <div class="input-group-append">
-                                <LoadingButton IsLoading="@ViewModel.IsLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
+                                <LoadingButton IsLoading="@Item.IsLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
                             </div>
                         </div>
                         <ValidationMessage For="@(() => _confirmationModel.Code)"/>
@@ -68,7 +69,11 @@
             }
             else
             {
-                <LoadingButton IsLoading="@ViewModel.IsLoading" Title="Confirm" Icon="fa-check" OnClick="@(() => ViewModel.SendConfirmationCodeAsync())"/>
+                <LoadingButton
+                    IsLoading="@Item.IsLoading"
+                    Title="Confirm"
+                    Icon="fa-check"
+                    OnClick="@OnSendConfirmationCode"/>
             }
         }
 
@@ -77,12 +82,12 @@
     <div class="card-footer border-top-0 pt-0">
         <div class="row align-items-center justify-content-between">
             <div class="col-auto">
-                <small class="text-muted">Added @ViewModel.CreatedAt.ToString("d")</small>
+                <small class="text-muted">Added @Item.CreatedAt.ToString("d")</small>
             </div>
             <div class="col-auto">
-                @if (ViewModel.Notification.Type != NotificationType.PrimaryEmail)
+                @if (Item.Notification.Type != NotificationType.PrimaryEmail)
                 {
-                    <button class="btn" @onclick="@(() => ViewModel.DeleteIdentityAsync())" disabled="@ViewModel.IsLoading">
+                    <button class="btn" @onclick="@OnDelete" disabled="@Item.IsLoading">
                         <i class="fas fa-trash"></i>
                     </button>
                 }
@@ -105,17 +110,29 @@
     [Parameter]
     public IdentityModel Item { get; set; }
 
-    protected override void OnInitialized()
-    {
-        ViewModel.Init(Item);
-        _confirmationModel = new ConfirmIdentityModel
-        {
-            Id = Item.IdentityId
-        };
-    }
+    [Parameter]
+    public EventCallback<NotificationType> OnChangeNotification { get; set; }
+
+    [Parameter]
+    public EventCallback OnSendConfirmationCode { get; set; }
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<long> OnConfirm { get; set; }
 
     private async Task ConfirmationHandler()
     {
-        await ViewModel.ConfirmIdentityAsync(_confirmationModel.Code.GetValueOrDefault(0));
+        await OnConfirm.InvokeAsync(_confirmationModel.Code.GetValueOrDefault(0));
     }
+
+    private static string GetNotificationTypeLabel(NotificationType type) =>
+        type switch
+        {
+            NotificationType.None => "None",
+            NotificationType.PrimaryEmail => "Primary email",
+            NotificationType.SecondaryEmail => "Secondary email",
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
 }
