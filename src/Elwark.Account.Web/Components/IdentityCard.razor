@@ -1,5 +1,4 @@
 @using Elwark.Account.Shared.Identity
-@using System.Diagnostics
 
 <div class="card">
     <div class="card-header">
@@ -54,16 +53,16 @@
         {
             if (Item.IsConfirmationCodeSent)
             {
-                <EditForm Model="_confirmationModel" OnValidSubmit="@ConfirmationHandler">
+                <EditForm Model="ConfirmationModel" OnValidSubmit="@(() => OnConfirm.InvokeAsync(ConfirmationModel.Code.GetValueOrDefault(0)))">
                     <FluentValidator/>
                     <div class="form-group">
                         <div class="input-group mb-3">
-                            <InputNumber @bind-Value="_confirmationModel.Code" class="form-control" placeholder="Code"/>
+                            <InputNumber @bind-Value="ConfirmationModel.Code" class="form-control" placeholder="Code"/>
                             <div class="input-group-append">
                                 <LoadingButton IsLoading="@Item.IsLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
                             </div>
                         </div>
-                        <ValidationMessage For="@(() => _confirmationModel.Code)"/>
+                        <ValidationMessage For="@(() => ConfirmationModel.Code)"/>
                     </div>
                 </EditForm>
             }
@@ -98,7 +97,7 @@
 
 @code
 {
-    private ConfirmIdentityModel _confirmationModel = new ConfirmIdentityModel();
+    private ConfirmIdentityModel ConfirmationModel { get; set; } = new ConfirmIdentityModel();
 
     private readonly NotificationType[] _notifications =
     {
@@ -121,11 +120,6 @@
 
     [Parameter]
     public EventCallback<long> OnConfirm { get; set; }
-
-    private async Task ConfirmationHandler()
-    {
-        await OnConfirm.InvokeAsync(_confirmationModel.Code.GetValueOrDefault(0));
-    }
 
     private static string GetNotificationTypeLabel(NotificationType type) =>
         type switch

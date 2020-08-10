@@ -7,13 +7,14 @@ using Elwark.Account.Shared.Identity;
 using Elwark.Account.Shared.Password;
 using Elwark.Account.Web.Clients;
 using Elwark.Account.Web.Handlers;
-using Elwark.Account.Web.Pages.Profile.Components;
+using Elwark.Account.Web.Models;
 using Elwark.Account.Web.State;
 using Elwark.Storage.Client;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Sotsera.Blazor.Toaster.Core.Models;
 
 namespace Elwark.Account.Web
@@ -24,12 +25,15 @@ namespace Elwark.Account.Web
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-            
+            builder.Logging.SetMinimumLevel(builder.HostEnvironment.IsDevelopment()
+                ? LogLevel.Trace
+                : LogLevel.Critical);
+
             builder.Services
                 .AddValidators()
                 .AddViewModels()
                 .AddHttpClientServices(builder.Configuration);
-            
+
             builder.Services.AddToaster(configuration =>
                 {
                     configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -62,7 +66,7 @@ namespace Elwark.Account.Web
                 .AddSingleton<AccountState>()
                 .AddScoped<PasswordState>()
                 .AddScoped<IdentitiesState>();
-        
+
         public static IServiceCollection AddValidators(this IServiceCollection services) =>
             services.AddTransient<IValidator<UpdatePasswordModel>, UpdatePasswordModel.Validator>()
                 .AddTransient<IValidator<CreatePasswordModel>, CreatePasswordModel.Validator>()

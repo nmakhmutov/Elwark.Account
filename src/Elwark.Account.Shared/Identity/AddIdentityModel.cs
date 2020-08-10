@@ -10,7 +10,7 @@ namespace Elwark.Account.Shared.Identity
         {
             public Validator()
             {
-                CascadeMode = CascadeMode.StopOnFirstFailure;
+                CascadeMode = CascadeMode.Stop;
                 
                 RuleFor(x => x.Email)
                     .NotEmpty()

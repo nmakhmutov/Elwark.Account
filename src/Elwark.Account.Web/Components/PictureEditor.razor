@@ -1,0 +1,39 @@
+@using Elwark.Account.Shared.Account
+@using Elwark.Account.Web.Models
+@inject AccountState AccountState
+
+<EditForm Model="Model" OnValidSubmit="@(() => AccountState.UpdatePictureAsync(new Uri(Model.Picture)))">
+    <FluentValidator/>
+
+    <div class="row align-items-center justify-content-center">
+
+        <div class="col-12 col-sm-6 col-md-5 mb-3">
+            <img class="profile-picture" src="@Account.Picture" alt="Profile picture">
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-7 d-flex flex-column align-items-center justify-content-center">
+
+            <div class="form-group w-100">
+                <InputText type="text" @bind-Value="Model.Picture" class="form-control" placeholder="e.g. https://image.store/profile.png"/>
+                <ValidationMessage For="@(() => Model.Picture)"/>
+            </div>
+
+            <div class="form-group">
+                <LoadingButton
+                    IsLoading="@AccountState.IsLoading"
+                    Title="Save image"
+                    Icon="fa-image"
+                    Type="submit"/>
+            </div>
+
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    private AccountModel Account => AccountState.Account;
+
+    private PictureInputModel Model { get; set; } = new PictureInputModel();
+
+}

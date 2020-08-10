@@ -1,7 +1,7 @@
 using System;
 using FluentValidation;
 
-namespace Elwark.Account.Web.Pages.Profile.Components
+namespace Elwark.Account.Web.Models
 {
     public class PictureInputModel
     {
@@ -11,6 +11,8 @@ namespace Elwark.Account.Web.Pages.Profile.Components
         {
             public Validator()
             {
+                CascadeMode = CascadeMode.Stop;
+                
                 RuleFor(x => x.Picture)
                     .NotEmpty()
                     .Must(x => Uri.TryCreate(x, UriKind.Absolute, out _)).WithMessage("Incorrect url");

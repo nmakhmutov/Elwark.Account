@@ -24,7 +24,9 @@
                 @if (State.IsPasswordAvailable.Value)
                 {
                     <UpdatePassword
-                        Model="@State.UpdateModel" IsLoading="@State.IsLoading" OnUpdate="@State.UpdateAsync"/>
+                        Model="@State.UpdateModel" 
+                        IsLoading="@State.IsLoading" 
+                        OnUpdate="@State.UpdateAsync"/>
                 }
                 else
                 {

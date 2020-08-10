@@ -1,8 +1,5 @@
 ﻿@page "/"
-@using Elwark.Account.Web.Clients
 @using Elwark.Account.Shared.Account
-@inject IAccountClient AccountClient
-@inject IToaster Toaster
 @inject AccountState State
 
 @attribute [Authorize]
@@ -30,13 +27,6 @@ else
 
         <div class="row">
             <div class="col-md-6">
-                <div class="avatar-edit mx-auto mb-2">
-                    <img src="@(Account.Picture)" alt="@Account.FullName"/>
-                    <div class="overlay"></div>
-                    <div class="button">
-                        <button type="button" @onclick="@OnImageDialogOpen" class="btn btn-outline-light">Change</button>
-                    </div>
-                </div>
 
                 <div class="card">
                     <div class="card-body">
@@ -67,6 +57,12 @@ else
                     </div>
                 </div>
 
+                <div class="card">
+                    <div class="card-body">
+                        <PictureEditor/>
+                    </div>
+                </div>
+                
             </div>
             <div class="col-md-6">
 
@@ -196,22 +192,5 @@ else
 @code{
 
     private AccountModel Account => State.Account;
-
-    [CascadingParameter]
-    private IModalService Modal { get; set; } = null!;
-
-    private void OnImageDialogOpen()
-    {
-        var parameters = new ModalParameters();
-        parameters.Add("Picture", Account?.Picture);
-
-        Modal.Show<ImageModal>("Picture",
-            parameters,
-            new ModalOptions
-            {
-                DisableBackgroundCancel = true,
-                Position = ModalPosition.Center
-            });
-    }
 
 }
