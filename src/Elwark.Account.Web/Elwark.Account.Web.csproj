@@ -19,9 +19,18 @@
         <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
         <PackageReference Include="Elwark.People.Abstractions" Version="3.1.0" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <ProjectReference Include="..\Elwark.Account.Shared\Elwark.Account.Shared.csproj" />
+        <ProjectReference Include="..\Elwark.Account.Shared\Elwark.Account.Shared.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Content Include="assets\scss\components\buttons.scss" />
+    </ItemGroup>
+
+    <Target Name="NpmBuild" BeforeTargets="AfterBuild" Condition="'$(Configuration)' == 'Debug'">
+        <Exec Command="npm install" />
+        <Exec Command="npm run build" />
+    </Target>
 
 </Project>

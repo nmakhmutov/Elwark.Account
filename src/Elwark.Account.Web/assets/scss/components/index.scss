@@ -1,0 +1,25 @@
+@import 'vars';
+@import 'mixins';
+@import 'global';
+@import 'typography';
+@import 'colors';
+@import 'loaders';
+@import 'tables';
+@import 'cards';
+@import 'switches';
+@import 'labels';
+@import 'forms';
+@import 'checkbox';
+@import 'avatars';
+@import 'subnav';
+@import 'headerNav';
+@import 'sidebarNav';
+@import 'slide-panel';
+@import 'sidepanel';
+@import 'blazor-error';
+@import 'buttons';
+
+//page
+@import 'page';
+@import 'footer';
+@import 'utilities';

@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Elwark.Account.Shared.Account;
 using Elwark.Account.Web.Clients;
-using Microsoft.Extensions.DependencyInjection;
 using Sotsera.Blazor.Toaster;
 
 namespace Elwark.Account.Web.State
@@ -10,15 +9,21 @@ namespace Elwark.Account.Web.State
     public class AccountState
     {
         private readonly IAccountClient _client;
-        private readonly IServiceProvider _provider;
+        private readonly IToaster _toaster;
+        private readonly AccountStore _store;
 
-        public AccountState(IAccountClient client, IServiceProvider provider)
+        public AccountState(IAccountClient client, IToaster toaster, AccountStore store)
         {
             _client = client;
-            _provider = provider;
+            _toaster = toaster;
+            _store = store;
         }
 
-        public AccountModel Account { get; set; }
+        public AccountModel Account
+        {
+            get => _store.Account;
+            set => _store.Account = value;
+        }
 
         public bool IsLoading { get; set; }
 
@@ -37,7 +42,7 @@ namespace Elwark.Account.Web.State
             }
             else
             {
-                SendError(result.Error?.Detail);
+                _toaster.Error(result.Error?.Detail);
             }
         }
 
@@ -50,11 +55,12 @@ namespace Elwark.Account.Web.State
             if (result.IsSuccess)
             {
                 Account = result.Data;
+                _toaster.Success("Account updated");
                 NotifyStateChanged();
             }
             else
             {
-                SendError(result.Error?.Detail);
+                _toaster.Error(result.Error?.Detail);
             }
         }
 
@@ -67,23 +73,16 @@ namespace Elwark.Account.Web.State
             if (result.IsSuccess)
             {
                 Account.Picture = picture.ToString();
+                _toaster.Success("Picture updated");
                 NotifyStateChanged();
             }
             else
             {
-                SendError(result.Error?.Detail);
+                _toaster.Error(result.Error?.Detail);
             }
         }
 
         private void NotifyStateChanged() =>
             OnChange?.Invoke();
-
-        private void SendError(string error)
-        {
-            using var scope = _provider.CreateScope();
-
-            scope.ServiceProvider.GetService<IToaster>()
-                .Error(error);
-        }
     }
 }

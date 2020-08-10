@@ -7,7 +7,7 @@
         <Sidebar
             LogoText="Account"
             LogoImage="@StorageClient.Static.Icons.Elwark.White.Size192x192.Path"
-            IsSidebarCollapsed="@_sidebarCollapsed"
+            IsSidebarCollapsed="@SidebarCollapsed"
             ToggleSidebar="@ToggleSideCollapse"/>
         <div class="page-content">
             <AppHeader ToggleSidebar="@ToggleSideCollapse"/>
@@ -23,12 +23,12 @@
 
 @code {
 
-    bool _sidebarCollapsed;
+    private bool SidebarCollapsed { get; set; }
 
     string SidebarCollapsedClass =>
-        _sidebarCollapsed ? "side-menu-collapsed" : string.Empty;
+        SidebarCollapsed ? "side-menu-collapsed" : string.Empty;
 
     void ToggleSideCollapse() =>
-        _sidebarCollapsed = !_sidebarCollapsed;
+        SidebarCollapsed = !SidebarCollapsed;
     
 }

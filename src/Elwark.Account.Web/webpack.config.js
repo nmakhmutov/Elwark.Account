@@ -2,10 +2,10 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './Client/index.js',
+    entry: './assets/index.js',
     output: {
         path: path.resolve(__dirname, "wwwroot"),
-        filename: 'js/bundle.js'
+        filename: 'bundle.js'
     },
     module: {
         rules: [
@@ -15,7 +15,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name: 'css/styles.css'
+                            name: 'styles.css'
                         }
                     },
                     {
@@ -47,7 +47,7 @@ module.exports = {
     plugins: [
         new CopyPlugin({
             patterns: [
-                {from: './Client/fonts/', to: 'fonts'}
+                {from: './node_modules/@fortawesome/fontawesome-free/webfonts', to: 'fonts'}
             ]
         })
     ]

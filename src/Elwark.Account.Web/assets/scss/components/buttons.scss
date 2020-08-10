@@ -1,0 +1,14 @@
+.btn {
+  border-radius: $btnBorderRadius;
+  transition: all $btnTransitionSpeed ease;
+
+  &:focus,
+  &:hover {
+    outline: none !important;
+    box-shadow: none;
+  }
+
+  &.btn-secondary {
+    @include defaultButtonStyle;
+  }
+}

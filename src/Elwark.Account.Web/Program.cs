@@ -63,7 +63,8 @@ namespace Elwark.Account.Web
     {
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
             services
-                .AddSingleton<AccountState>()
+                .AddSingleton<AccountStore>()
+                .AddScoped<AccountState>()
                 .AddScoped<PasswordState>()
                 .AddScoped<IdentitiesState>();
 

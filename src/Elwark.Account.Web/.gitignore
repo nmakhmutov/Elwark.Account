@@ -1,4 +1,4 @@
-wwwroot/css
 wwwroot/fonts
-wwwroot/js
 wwwroot/appsettings.*.json
+wwwroot/bundle.js
+wwwroot/styles.css
