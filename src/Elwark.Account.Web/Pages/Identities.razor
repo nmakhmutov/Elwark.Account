@@ -62,14 +62,24 @@
             </div>
         </div>
 
-        <div class="row">
-            @switch (State.View)
-            {
-                case ViewType.List:
-                    break;
 
-                case ViewType.Grid:
-                    foreach (var item in State.Identities)
+        @switch (State.View)
+        {
+            case ViewType.List:
+                foreach (var item in State.Identities)
+                {
+                    <IdentityRow
+                        Item="@item"
+                        OnChangeNotification="@((NotificationType type) => State.ChangeNotificationTypeAsync(item, type))"
+                        OnSendConfirmationCode="@(() => State.SendConfirmationCodeAsync(item))"
+                        OnDelete="@(() => State.DeleteAsync(item))"
+                        OnConfirm="@((long code) => State.ConfirmAsync(item, code))"/>
+                }
+                break;
+
+            case ViewType.Grid:
+                <div class="row">
+                    @foreach (var item in State.Identities)
                     {
                         <div class="col-12 col-sm-6 col-md-4">
                             <IdentityCard
@@ -80,9 +90,9 @@
                                 OnConfirm="@((long code) => State.ConfirmAsync(item, code))"/>
                         </div>
                     }
-                    break;
-            }
-        </div>
+                </div>
+                break;
+        }
     }
 
 </div>

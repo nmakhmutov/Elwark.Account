@@ -17,17 +17,12 @@ namespace Elwark.Account.Web.State
         private const string ViewKey = "identities.view";
         private const string SortingKey = "identities.sorting";
 
-        private readonly IIdentityClient _client;
-        private readonly IToaster _toaster;
-        private readonly ILocalStorageService _localStorage;
-        private readonly IConfiguration _configuration;
-
-        private List<IdentityModel> _identities = new List<IdentityModel>();
-        private IdentitySorting _sorting = IdentitySorting.None;
-        private ViewType _view = ViewType.List;
-
-        private event Action ViewChanged;
-        private event Action SortingChanged;
+        public static readonly NotificationType[] NotificationTypes =
+        {
+            NotificationType.None,
+            NotificationType.PrimaryEmail,
+            NotificationType.SecondaryEmail
+        };
 
         private static readonly IdentificationType[] Identifiers =
         {
@@ -35,6 +30,15 @@ namespace Elwark.Account.Web.State
             IdentificationType.Facebook,
             IdentificationType.Microsoft
         };
+
+        private readonly IIdentityClient _client;
+        private readonly IConfiguration _configuration;
+        private readonly ILocalStorageService _localStorage;
+        private readonly IToaster _toaster;
+
+        private List<IdentityModel> _identities = new List<IdentityModel>();
+        private IdentitySorting _sorting = IdentitySorting.None;
+        private ViewType _view = ViewType.List;
 
         public IdentitiesState(IIdentityClient client, IToaster toaster, ILocalStorageService localStorage,
             IConfiguration configuration)
@@ -74,6 +78,18 @@ namespace Elwark.Account.Web.State
             }
         }
 
+        private event Action ViewChanged;
+        private event Action SortingChanged;
+
+        public static string GetNotificationTypeLabel(NotificationType type) =>
+            type switch
+            {
+                NotificationType.None => "None",
+                NotificationType.PrimaryEmail => "Primary email",
+                NotificationType.SecondaryEmail => "Secondary email",
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+
         public async Task InitializeAsync()
         {
             _view = await _localStorage.GetItemAsync<ViewType>(ViewKey);
@@ -104,9 +120,7 @@ namespace Elwark.Account.Web.State
                 await LoadAsync();
             }
             else
-            {
                 _toaster.Error(result.Error?.Detail);
-            }
 
             return result.IsSuccess;
         }
@@ -131,9 +145,7 @@ namespace Elwark.Account.Web.State
                 model.IsConfirmationCodeSent = true;
             }
             else
-            {
                 _toaster.Error(result.Error?.Detail);
-            }
 
             return result.IsSuccess;
         }
@@ -150,9 +162,7 @@ namespace Elwark.Account.Web.State
                 _toaster.Success("Identity confirmed");
             }
             else
-            {
                 _toaster.Error(result.Error?.Detail);
-            }
 
             return result.IsSuccess;
         }
@@ -169,9 +179,7 @@ namespace Elwark.Account.Web.State
                 _toaster.Success("Notification type changed");
             }
             else
-            {
                 _toaster.Error(result.Error?.Detail);
-            }
 
             return result.IsSuccess;
         }
@@ -188,9 +196,7 @@ namespace Elwark.Account.Web.State
                 _toaster.Success("Identity removed");
             }
             else
-            {
                 _toaster.Error(result.Error?.Detail);
-            }
 
             return result.IsSuccess;
         }
@@ -222,9 +228,7 @@ namespace Elwark.Account.Web.State
         private void OnViewChanged() =>
             ViewChanged?.Invoke();
 
-        private void OnSortingChanged()
-        {
+        private void OnSortingChanged() =>
             SortingChanged?.Invoke();
-        }
     }
 }
