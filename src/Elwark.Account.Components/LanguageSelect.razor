@@ -1,6 +1,4 @@
 @using System.Globalization
-@inject IElwarkStorageClient StorageClient;
-
 @inherits InputSelect<string>
 
 <InputSelect Value="Value"
@@ -9,8 +7,7 @@
              AdditionalAttributes="AdditionalAttributes">
     @foreach (var language in Languages)
     {
-        var lang = language.TwoLetterISOLanguageName;
-        <option value="@lang">
+        <option value="@language.TwoLetterISOLanguageName">
             @language.EnglishName (@language.NativeName)
         </option>
     }

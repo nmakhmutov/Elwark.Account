@@ -21,7 +21,32 @@
     </ItemGroup>
     
     <ItemGroup>
+        <ProjectReference Include="..\Elwark.Account.Components\Elwark.Account.Components.csproj" />
         <ProjectReference Include="..\Elwark.Account.Shared\Elwark.Account.Shared.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Update="Shared\AddIdentityModal.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\CreatePassword.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\IdentityCard.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\IdentityIcon.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\IdentityRow.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\PictureEditor.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Shared\UpdatePassword.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
     </ItemGroup>
 
     <Target Name="NpmBuild" BeforeTargets="AfterBuild" Condition="'$(Configuration)' == 'Debug'">

@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using Elwark.Account.Shared.Account
+@using System.Globalization
 @inject AccountState State
+@inject IElwarkStorageClient StorageClient
 
 @attribute [Authorize]
 
@@ -62,7 +64,7 @@ else
                         <PictureEditor/>
                     </div>
                 </div>
-                
+
             </div>
             <div class="col-md-6">
 
@@ -99,7 +101,11 @@ else
 
                         <div class="form-group">
                             <label>Country</label>
-                            <CountrySelect @bind-Value="Account.CountryCode" class="form-control"/>
+                            <DictionarySelect
+                                @bind-Value="Account.CountryCode"
+                                 Values="@_countries"
+                                 IsOptional="true"
+                                 class="form-control"/>
                             <ValidationMessage For="@(() => Account.CountryCode)"/>
                         </div>
 
@@ -111,7 +117,11 @@ else
 
                         <div class="form-group">
                             <label>Time zone</label>
-                            <TimezoneSelect @bind-Value="Account.Timezone" class="form-control"/>
+                            <DictionarySelect
+                                @bind-Value="Account.Timezone"
+                                 Values="@_timezones"
+                                 IsOptional="true"
+                                 class="form-control"/>
                             <ValidationMessage For="@(() => Account.Timezone)"/>
                         </div>
 
@@ -192,5 +202,25 @@ else
 @code{
 
     private AccountModel Account => State.Account;
+    private static IReadOnlyDictionary<string, string> _countries;
+    private static IReadOnlyDictionary<string, string> _timezones;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _countries ??= (await StorageClient.Country.GetAllAsync())
+            .Select(x => new
+            {
+                x.Alpha2Code,
+                Name = x.Translations.FirstOrDefault(t =>
+                    t.Language == CultureInfo.CurrentCulture.ThreeLetterWindowsLanguageName.ToUpper())
+                       ?? x.Translations.FirstOrDefault()
+            })
+            .OrderBy(x => x.Name.Common)
+            .ToDictionary(x => x.Alpha2Code, x => x.Name.Common);
+
+        _timezones ??= (await StorageClient.Timezone.GetAllAsync())
+            .ToDictionary(x => x.Zone, x => $"{x.Zone} ({x.Gmt.Name})");
+    }
 
 }
