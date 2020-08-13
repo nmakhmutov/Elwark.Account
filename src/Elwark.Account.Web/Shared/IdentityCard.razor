@@ -27,13 +27,13 @@
         {
             if (Item.Notification is Notification.PrimaryEmail)
             {
-                <h2 class="h5 font-weight-bold">
+                <h2 class="notification-title">
                     Primary email
                 </h2>
             }
             else if (Item.Identification is Identification.Email)
             {
-                <div class="form-group">
+                <div class="form-group mb-0">
                     <select class="form-control"
                             @onchange="@(e => OnChangeNotification.InvokeAsync(Enum.Parse<NotificationType>(e.Value.ToString())))"
                             disabled="@Item.IsLoading">
@@ -47,6 +47,10 @@
 
                     </select>
                 </div>
+            }
+            else
+            {
+                <div class="notification-spacer"></div>
             }
         }
         else
