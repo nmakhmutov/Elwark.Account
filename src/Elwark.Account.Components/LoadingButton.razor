@@ -5,16 +5,22 @@
 
 @code{
 
-    [Parameter] public bool IsLoading { get; set; }
+    [Parameter]
+    public bool IsLoading { get; set; }
 
-    [Parameter] public string Icon { get; set; } = "";
+    [Parameter]
+    public string Icon { get; set; } = "";
 
-    [Parameter] public string Title { get; set; } = "Update";
+    [Parameter]
+    public string Title { get; set; } = "Update";
 
-    [Parameter] public string Type { get; set; } = "button";
+    [Parameter]
+    public string Type { get; set; } = "button";
 
-    [Parameter] public string ClassName { get; set; } = "btn btn-outline-primary";
-    
-    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter]
+    public string ClassName { get; set; } = "btn btn-outline-primary";
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
 
 }

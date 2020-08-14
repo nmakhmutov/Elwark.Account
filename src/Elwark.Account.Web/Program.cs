@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Blazored.Modal;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sotsera.Blazor.Toaster.Core.Models;
 
 namespace Elwark.Account.Web
@@ -45,7 +47,8 @@ namespace Elwark.Account.Web
                     configuration.ShowProgressBar = false;
                 })
                 .AddBlazoredModal()
-                .AddBlazoredLocalStorage();
+                .AddBlazoredLocalStorage()
+                .AddLocalization(options => options.ResourcesPath = "Resources");
 
             builder.Services
                 .AddOidcAuthentication(options =>
@@ -54,8 +57,11 @@ namespace Elwark.Account.Web
                     builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions);
                 });
 
-            await builder.Build()
-                .RunAsync();
+            var host = builder.Build();
+            
+            await host.Services.GetRequiredService<LocalizationState>().Init();
+
+            await host.RunAsync();
         }
     }
 
@@ -64,6 +70,7 @@ namespace Elwark.Account.Web
         public static IServiceCollection AddViewModels(this IServiceCollection services) =>
             services
                 .AddSingleton<AccountStore>()
+                .AddScoped<LocalizationState>()
                 .AddScoped<AccountState>()
                 .AddScoped<PasswordState>()
                 .AddScoped<IdentitiesState>();

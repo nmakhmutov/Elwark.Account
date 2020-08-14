@@ -11,16 +11,21 @@
 
             <div class="ml-auto">
                 <div class="media align-items-center">
-                    @if (Account is {})
+                    @if (Account is null)
+                    {
+                        <div style="height: 40px"></div>
+                    }
+                    else
                     {
                         <div class="media-body mr-2 text-dark">
                             @Account.FullName
                         </div>
-                        
+
                         <div class="avatar">
                             <img src="@Account.Picture" alt="@AccountState.Account.FullName">
                         </div>
                     }
+                    <LocalizationSelect/>
                 </div>
             </div>
         </nav>
@@ -34,7 +39,7 @@
 
     private AccountModel Account => AccountState.Account;
 
-    protected override void OnInitialized() => 
+    protected override void OnInitialized() =>
         AccountState.OnChange += StateHasChanged;
 
     public void Dispose() =>

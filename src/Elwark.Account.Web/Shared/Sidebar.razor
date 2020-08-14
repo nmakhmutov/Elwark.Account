@@ -1,6 +1,8 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Localization
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
+@inject IStringLocalizer<Sidebar> L
 
 <div>
     <div class="app-sidebar">
@@ -17,7 +19,7 @@
                         <span class="side-nav-icon">
                             <i class="fas fa-user" aria-hidden="true"></i>
                         </span>
-                        <span class="nav-item-label">Profile</span>
+                        <span class="nav-item-label">@L["Profile"]</span>
                     </NavLink>
                 </li>
                 <li class="nav-item">
@@ -25,7 +27,7 @@
                         <span class="side-nav-icon">
                             <i class="fas fa-user-shield" aria-hidden="true"></i>
                         </span>
-                        <span class="nav-item-label">Security</span>
+                        <span class="nav-item-label">@L["Security"]</span>
                     </NavLink>
                 </li>
                 <li class="nav-item">
@@ -33,7 +35,7 @@
                         <span class="side-nav-icon">
                             <i class="fas fa-address-book" aria-hidden="true"></i>
                         </span>
-                        <span class="nav-item-label">Identities</span>
+                        <span class="nav-item-label">@L["Identities"]</span>
                     </NavLink>
                 </li>
                 <li class="nav-item nav-item-spacer"></li>
@@ -42,7 +44,7 @@
                         <span class="side-nav-icon">
                             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         </span>
-                        <span class="nav-item-label">Log out</span>
+                        <span class="nav-item-label">@L["Logout"]</span>
                     </NavLink>
                 </li>
             </ul>
@@ -67,7 +69,7 @@
 
     [Parameter]
     public EventCallback ToggleSidebar { get; set; }
-    
+
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();

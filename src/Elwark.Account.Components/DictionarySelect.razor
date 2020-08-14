@@ -14,9 +14,9 @@ else
                  AdditionalAttributes="AdditionalAttributes">
         @if (IsOptional)
         {
-            <option value="">Choose...</option>    
+            <option value="">Choose...</option>
         }
-        
+
         @foreach (var (key, value) in Values)
         {
             <option value="@key">@value</option>

@@ -81,15 +81,6 @@ namespace Elwark.Account.Web.State
         private event Action ViewChanged;
         private event Action SortingChanged;
 
-        public static string GetNotificationTypeLabel(NotificationType type) =>
-            type switch
-            {
-                NotificationType.None => "None",
-                NotificationType.PrimaryEmail => "Primary email",
-                NotificationType.SecondaryEmail => "Secondary email",
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
-
         public async Task InitializeAsync()
         {
             _view = await _localStorage.GetItemAsync<ViewType>(ViewKey);

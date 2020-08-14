@@ -1,4 +1,6 @@
 @using Elwark.Account.Shared.Identity
+@using Elwark.Account.Web.Pages
+@inject IStringLocalizer<Identities> L
 
 <div class="card">
     <div class="card-header">
@@ -28,7 +30,7 @@
             if (Item.Notification is Notification.PrimaryEmail)
             {
                 <h2 class="notification-title">
-                    Primary email
+                    @L["PrimaryEmail"]
                 </h2>
             }
             else if (Item.Identification is Identification.Email)
@@ -41,7 +43,7 @@
                         @foreach (var notification in IdentitiesState.NotificationTypes)
                         {
                             <option value="@notification" selected="@(Item.Notification.Type == notification)">
-                                @IdentitiesState.GetNotificationTypeLabel(notification)
+                                @L[notification.ToString()]
                             </option>
                         }
 
@@ -63,7 +65,7 @@
                         <div class="input-group mb-3">
                             <InputNumber @bind-Value="ConfirmationModel.Code" class="form-control" placeholder="Code"/>
                             <div class="input-group-append">
-                                <LoadingButton IsLoading="@Item.IsLoading" Type="submit" Title="Confirm" Icon="fa-check"/>
+                                <LoadingButton IsLoading="@Item.IsLoading" Type="submit" Title="@L["Confirm"]" Icon="fa-check"/>
                             </div>
                         </div>
                         <ValidationMessage For="@(() => ConfirmationModel.Code)"/>
@@ -74,7 +76,7 @@
             {
                 <LoadingButton
                     IsLoading="@Item.IsLoading"
-                    Title="Confirm"
+                    Title="@L["Confirm"]"
                     Icon="fa-check"
                     OnClick="@OnSendConfirmationCode"/>
             }
@@ -85,7 +87,7 @@
     <div class="card-footer border-top-0 pt-0">
         <div class="row align-items-center justify-content-between">
             <div class="col-auto">
-                <small class="text-muted">Added @Item.CreatedAt.ToString("d")</small>
+                <small class="text-muted">@L["Added"] @Item.CreatedAt.ToString("d")</small>
             </div>
             <div class="col-auto">
                 @if (Item.Notification.Type != NotificationType.PrimaryEmail)
@@ -103,13 +105,18 @@
 {
     private ConfirmIdentityModel ConfirmationModel { get; set; } = new ConfirmIdentityModel();
 
-    [Parameter] public IdentityModel Item { get; set; }
+    [Parameter]
+    public IdentityModel Item { get; set; }
 
-    [Parameter] public EventCallback<NotificationType> OnChangeNotification { get; set; }
+    [Parameter]
+    public EventCallback<NotificationType> OnChangeNotification { get; set; }
 
-    [Parameter] public EventCallback OnSendConfirmationCode { get; set; }
+    [Parameter]
+    public EventCallback OnSendConfirmationCode { get; set; }
 
-    [Parameter] public EventCallback OnDelete { get; set; }
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
 
-    [Parameter] public EventCallback<long> OnConfirm { get; set; }
+    [Parameter]
+    public EventCallback<long> OnConfirm { get; set; }
 }

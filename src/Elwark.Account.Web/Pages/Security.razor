@@ -1,37 +1,31 @@
 @page "/security"
 @inject PasswordState State
+@inject IStringLocalizer<Security> L
 
 @attribute [Authorize]
 
-<div class="container">
-    <div class="row justify-content-between m-b">
-        <div class="col-auto mr-auto">
-            <h2 class="mb-0">Security</h2>
-            <p class="text-muted">
-                Manage your password.
-            </p>
-        </div>
-    </div>
+@if (State.IsPasswordAvailable is null)
+{
+    <PageLoading/>
+}
+else
+{
+    <div class="container">
+        <PageHeader Title="@L["Security"]" Subtitle="@L["Manage your password"]"/>
 
-    @if (State.IsPasswordAvailable is null)
-    {
-        <PageLoading/>
-    }
-    else
-    {
         <div class="row">
             <div class="col-md-6">
                 @if (State.IsPasswordAvailable.Value)
                 {
                     <UpdatePassword
-                        Model="@State.UpdateModel" 
-                        IsLoading="@State.IsLoading" 
+                        Model="@State.UpdateModel"
+                        IsLoading="@State.IsLoading"
                         OnUpdate="@State.UpdateAsync"/>
                 }
                 else
                 {
-                    <CreatePassword 
-                        Model="@State.CreateModel" 
+                    <CreatePassword
+                        Model="@State.CreateModel"
                         IsLoading="@State.IsLoading"
                         OnCreate="@State.CreateAsync"
                         IsCodeSending="@State.IsCodeSending"
@@ -39,8 +33,8 @@
                 }
             </div>
         </div>
-    }
-</div>
+    </div>
+}
 
 @code{
 

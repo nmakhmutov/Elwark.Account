@@ -1,4 +1,5 @@
 @inject AccountState AccountState
+@inject IStringLocalizer<App> L
 
 <CascadingAuthenticationState>
     <CascadingBlazoredModal>
@@ -9,9 +10,7 @@
                         <RedirectToLogin/>
                     </NotAuthorized>
                     <Authorizing>
-                        <div class="m-t-xxl text-center">
-                            <h3 class="m-b">Authentication in progress...</h3>
-                        </div>
+                        <PageLoading/>
                     </Authorizing>
                 </AuthorizeRouteView>
             </Found>
@@ -19,8 +18,8 @@
                 <LayoutView Layout="@typeof(MainLayout)">
                     <div class="m-t-xxl text-center">
                         <h1 class="error-number">404</h1>
-                        <h3 class="m-b">Sorry but we couldnt find this page. It doesn't exist!</h3>
-                        <NavLink href="">Home</NavLink>
+                        <h3 class="m-b">@L["Sorry but we couldnt find this page. It doesn't exist!"]</h3>
+                        <NavLink href="">@L["Home"]</NavLink>
                     </div>
                 </LayoutView>
             </NotFound>

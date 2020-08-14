@@ -1,50 +1,45 @@
 @page "/identities"
 @using Elwark.Account.Web.Models
-@using Elwark.Account.Shared.Identity
 @inject IModalService ModalWindow
 @inject IdentitiesState State
+@inject IStringLocalizer<Identities> L
+
 @attribute [Authorize]
 
-<div class="container">
-    <div class="row justify-content-between m-b">
-        <div class="col-auto mr-auto">
-            <h2 class="mb-0">Identities</h2>
-            <p class="text-muted">
-                Manage your identities which allow you log in to your account.
-            </p>
-        </div>
-        <div class="col-auto">
-            <button @onclick="@OpenAddIdentityDialog" class="btn btn-outline-success">
-                <i class="fas fa-plus"></i>
-                Add
-            </button>
-        </div>
-    </div>
+@if (State.Identities.Count == 0)
+{
+    <PageLoading/>
+}
+else
+{
+    <div class="container">
+        <PageHeader Title="@L["Identities"]" Subtitle="@L["Manage your identities which allow you log in to your account."]">
+            <HeaderAside>
+                <button @onclick="@OpenAddIdentityDialog" class="btn btn-outline-success">
+                    <i class="fas fa-plus"></i>
+                    @L["Add"]
+                </button>
+            </HeaderAside>
+        </PageHeader>
 
-    @if (State.Identities.Count == 0)
-    {
-        <PageLoading/>
-    }
-    else
-    {
         <div class="row mb-3 justify-content-between">
 
-            <div class="col-12 col-sm-5 col-md-3">
+            <div class="col-auto">
                 <div class="form-group row">
-                    <label for="sort" class="col-sm-2 col-form-label">Sort</label>
-                    <div class="col-sm-10">
+                    <label for="sort" class="col-auto col-form-label">@L["Sort"]</label>
+                    <div class="col-auto">
                         <select @bind="State.Sorting" id="sort" class="form-control">
-                            <option value="@IdentitySorting.None">None</option>
-                            <option value="@IdentitySorting.AddedAsc">By date added ascending</option>
-                            <option value="@IdentitySorting.AddedDesc">By date added descending</option>
-                            <option value="@IdentitySorting.TypeAsc">By type ascending</option>
-                            <option value="@IdentitySorting.TypeDesc">By type descending</option>
+                            <option value="@IdentitySorting.None">@L["None"]</option>
+                            <option value="@IdentitySorting.AddedAsc">@L["AddedAsc"]</option>
+                            <option value="@IdentitySorting.AddedDesc">@L["AddedDesc"]</option>
+                            <option value="@IdentitySorting.TypeAsc">@L["TypeAsc"]</option>
+                            <option value="@IdentitySorting.TypeDesc">@L["TypeDesc"]</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 col-sm-2">
+            <div class="col-auto">
                 <div class="btn-toolbar float-right">
                     <div class="btn-group">
                         <button type="button"
@@ -60,6 +55,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
 
@@ -70,10 +66,10 @@
                 {
                     <IdentityRow
                         Item="@item"
-                        OnChangeNotification="@((NotificationType type) => State.ChangeNotificationTypeAsync(item, type))"
+                        OnChangeNotification="@(type => State.ChangeNotificationTypeAsync(item, type))"
                         OnSendConfirmationCode="@(() => State.SendConfirmationCodeAsync(item))"
                         OnDelete="@(() => State.DeleteAsync(item))"
-                        OnConfirm="@((long code) => State.ConfirmAsync(item, code))"/>
+                        OnConfirm="@(code => State.ConfirmAsync(item, code))"/>
                 }
                 break;
 
@@ -84,18 +80,17 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <IdentityCard
                                 Item="@item"
-                                OnChangeNotification="@((NotificationType type) => State.ChangeNotificationTypeAsync(item, type))"
+                                OnChangeNotification="@(type => State.ChangeNotificationTypeAsync(item, type))"
                                 OnSendConfirmationCode="@(() => State.SendConfirmationCodeAsync(item))"
                                 OnDelete="@(() => State.DeleteAsync(item))"
-                                OnConfirm="@((long code) => State.ConfirmAsync(item, code))"/>
+                                OnConfirm="@(code => State.ConfirmAsync(item, code))"/>
                         </div>
                     }
                 </div>
                 break;
         }
-    }
-
-</div>
+    </div>
+}
 
 @code {
 
@@ -104,7 +99,7 @@
 
     private async Task OpenAddIdentityDialog()
     {
-        var modal = ModalWindow.Show<AddIdentityModal>("Add identity", new ModalOptions
+        var modal = ModalWindow.Show<AddIdentityModal>(L["Add identity"], new ModalOptions
         {
             Position = ModalPosition.Center
         });
