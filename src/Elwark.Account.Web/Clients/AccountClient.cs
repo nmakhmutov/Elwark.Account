@@ -17,7 +17,7 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse<AccountModel>> GetAsync()
         {
-            var data = await _httpClient.GetAsync("accounts/me");
+            var data = await _httpClient.GetAsync("me");
 
             return await data.GetResultAsync<AccountModel>();
         }
@@ -30,7 +30,7 @@ namespace Elwark.Account.Web.Clients
                 "application/json"
             );
 
-            var result = await _httpClient.PutAsync("accounts/me", content);
+            var result = await _httpClient.PutAsync("me", content);
 
             return await result.GetResultAsync<AccountModel>();
         }
@@ -43,7 +43,7 @@ namespace Elwark.Account.Web.Clients
                 "application/json"
             );
 
-            var result = await _httpClient.PutAsync("accounts/me/picture", content);
+            var result = await _httpClient.PutAsync("me/picture", content);
 
             return await result.GetResultAsync();
         }

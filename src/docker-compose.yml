@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+
+  account.web:
+    container_name: "elwark_account_web"
+    image: elwark/account.web:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Elwark.Account.Web/Dockerfile
+    ports:
+      - "5003:80"

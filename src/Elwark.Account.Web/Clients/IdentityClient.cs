@@ -18,7 +18,7 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse<IReadOnlyCollection<IdentityModel>>> GetAsync()
         {
-            var data = await _httpClient.GetAsync("accounts/me/identities");
+            var data = await _httpClient.GetAsync("me/identities");
 
             return await data.GetResultAsync<IReadOnlyCollection<IdentityModel>>();
         }
@@ -26,14 +26,14 @@ namespace Elwark.Account.Web.Clients
         public async Task<ApiResponse> AddAsync(Identification.Email email)
         {
             var content = new StringContent(JsonConvert.SerializeObject(email), Encoding.UTF8, "application/json");
-            var data = await _httpClient.PostAsync("accounts/me/attach/email", content);
+            var data = await _httpClient.PostAsync("me/email", content);
 
             return await data.GetResultAsync();
         }
 
         public async Task<ApiResponse> RequestConfirmationAsync(IdentityId id)
         {
-            var data = await _httpClient.PostAsync($"accounts/me/identities/{id}/confirm",
+            var data = await _httpClient.PostAsync($"me/identities/{id}/confirm",
                 new StringContent(string.Empty));
 
             return await data.GetResultAsync();
@@ -41,7 +41,7 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse> ConfirmAsync(IdentityId id, long code)
         {
-            var data = await _httpClient.PutAsync($"accounts/me/identities/{id}/confirm/{code}",
+            var data = await _httpClient.PutAsync($"me/identities/{id}/confirm/{code}",
                 new StringContent(string.Empty));
 
             return await data.GetResultAsync();
@@ -49,7 +49,7 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse> ChangeNotificationTypeAsync(IdentityId id, NotificationType type)
         {
-            var data = await _httpClient.PutAsync($"accounts/me/identities/{id}/notification/{type}",
+            var data = await _httpClient.PutAsync($"me/identities/{id}/notification/{type}",
                 new StringContent(string.Empty));
 
             return await data.GetResultAsync();
@@ -57,7 +57,7 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse> DeleteAsync(IdentityId id)
         {
-            var data = await _httpClient.DeleteAsync($"accounts/me/identities/{id}");
+            var data = await _httpClient.DeleteAsync($"me/identities/{id}");
 
             return await data.GetResultAsync();
         }

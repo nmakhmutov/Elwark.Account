@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 using Sotsera.Blazor.Toaster.Core.Models;
 
 namespace Elwark.Account.Web
@@ -59,7 +58,8 @@ namespace Elwark.Account.Web
 
             var host = builder.Build();
             
-            await host.Services.GetRequiredService<LocalizationState>().Init();
+            await host.Services.GetRequiredService<LocalizationState>()
+                .Init();
 
             await host.RunAsync();
         }

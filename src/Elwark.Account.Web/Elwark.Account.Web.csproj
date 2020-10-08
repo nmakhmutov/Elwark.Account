@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Elwark.Storage.Client" Version="3.1.2" />
+        <PackageReference Include="Elwark.Storage.Client" Version="3.1.3" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.1" />
         <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
-        <PackageReference Include="FluentValidation" Version="9.1.2" />
+        <PackageReference Include="FluentValidation" Version="9.2.2" />
         <PackageReference Include="Accelist.FluentValidation.Blazor" Version="3.0.0" />
         <PackageReference Include="Sotsera.Blazor.Toaster" Version="3.0.0" />
-        <PackageReference Include="Blazored.Modal" Version="5.0.3" />
+        <PackageReference Include="Blazored.Modal" Version="5.1.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
         <PackageReference Include="Elwark.People.Abstractions" Version="3.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="3.1.7" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="3.1.8" />
     </ItemGroup>
     
     <ItemGroup>
@@ -26,30 +26,6 @@
         <ProjectReference Include="..\Elwark.Account.Shared\Elwark.Account.Shared.csproj" />
     </ItemGroup>
     
-    <ItemGroup>
-      <Content Update="Shared\AddIdentityModal.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\CreatePassword.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\IdentityCard.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\IdentityIcon.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\IdentityRow.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\PictureEditor.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-      <Content Update="Shared\UpdatePassword.razor">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </Content>
-    </ItemGroup>
-
     <Target Name="NpmBuild" BeforeTargets="AfterBuild" Condition="'$(Configuration)' == 'Debug'">
         <Exec Command="npm install" />
         <Exec Command="npm run build" />

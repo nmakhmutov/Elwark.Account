@@ -16,14 +16,14 @@ namespace Elwark.Account.Web.Clients
 
         public async Task<ApiResponse<bool>> IsAvailableAsync()
         {
-            var result = await _httpClient.GetAsync("accounts/me/password");
+            var result = await _httpClient.GetAsync("me/password");
 
             return await result.GetResultAsync<bool>();
         }
 
         public async Task<ApiResponse> RequestConfirmationAsync()
         {
-            var result = await _httpClient.PostAsync("accounts/me/password/code", new StringContent(string.Empty));
+            var result = await _httpClient.PostAsync("me/password/code", new StringContent(string.Empty));
 
             return await result.GetResultAsync();
         }
@@ -36,7 +36,7 @@ namespace Elwark.Account.Web.Clients
                 "application/json"
             );
 
-            var result = await _httpClient.PostAsync("accounts/me/password", content);
+            var result = await _httpClient.PostAsync("me/password", content);
 
             return await result.GetResultAsync();
         }
@@ -49,7 +49,7 @@ namespace Elwark.Account.Web.Clients
                 "application/json"
             );
 
-            var result = await _httpClient.PutAsync("accounts/me/password", content);
+            var result = await _httpClient.PutAsync("me/password", content);
 
             return await result.GetResultAsync();
         }

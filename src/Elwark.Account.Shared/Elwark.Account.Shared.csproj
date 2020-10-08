@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <PackageReference Include="Elwark.People.Abstractions" Version="3.1.1" />
-      <PackageReference Include="FluentValidation" Version="9.1.2" />
+      <PackageReference Include="FluentValidation" Version="9.2.2" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
