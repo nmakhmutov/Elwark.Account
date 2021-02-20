@@ -1,0 +1,16 @@
+.grid {
+    display: grid;
+    gap: 24px;
+    padding: 12px;
+    background-color: var(--mud-palette-surface);
+}
+
+.two-column {
+    grid-column: 1/-1;
+}
+
+@media (min-width: 600px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

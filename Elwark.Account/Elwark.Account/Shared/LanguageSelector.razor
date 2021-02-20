@@ -1,0 +1,39 @@
+@using System.Globalization
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<MudMenu
+    StartIcon="@Icons.Filled.Translate" 
+    EndIcon="@Icons.Filled.KeyboardArrowDown" 
+    Color="Color.Inherit"
+    FullWidth="true"
+    Label="@Get()">
+    @foreach (var (culture, name) in _cultures)
+    {
+        <MudMenuItem OnClick="@(() => Set(culture))">
+            @name
+        </MudMenuItem>
+    }
+</MudMenu>
+
+@code {
+
+    private IReadOnlyDictionary<string, string> _cultures = new Dictionary<string, string>
+    {
+        ["en"] = "English",
+        ["ru"] = "Русский"
+    };
+
+    private string Get() =>
+        _cultures.TryGetValue(CultureInfo.CurrentCulture.TwoLetterISOLanguageName, out var language)
+            ? language
+            : _cultures.First().Value;
+
+    private async Task Set(string language)
+    {
+        await LocalStorage.SetItemAsync("language", language);
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
+}
