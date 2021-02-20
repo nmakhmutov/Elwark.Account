@@ -1,0 +1,12 @@
+.header {
+    background-color: var(--mud-palette-surface);
+}
+
+.background {
+    background-image: url(https://i1.wp.com/linkedinheaders.com/wp-content/uploads/2018/02/mountain-header.jpg?w=1584&ssl=1);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 200px;
+    width: 100%;
+}

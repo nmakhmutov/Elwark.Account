@@ -1,8 +1,0 @@
-@inject LocalizationState State
-
-<select class="localization-select ml-2" @onchange="@(x => State.Set(new CultureInfo(x.Value.ToString())))">
-    @foreach (var culture in LocalizationState.SupportedCultures)
-    {
-        <option value="@culture" selected="@Equals(culture, CultureInfo.CurrentCulture)">@culture.TwoLetterISOLanguageName</option>
-    }
-</select>

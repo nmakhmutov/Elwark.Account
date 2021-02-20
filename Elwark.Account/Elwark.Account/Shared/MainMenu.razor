@@ -1,0 +1,30 @@
+@inject NavigationManager Manager
+
+<MudTabs @ref="_tabs">
+    <MudTabPanel Text="Profile" ID="@("profile")" OnClick="@(() => Manager.NavigateTo("/"))"/>
+    <MudTabPanel Text="Security" ID="@("security")" OnClick="@(() => Manager.NavigateTo("/security"))"/>
+    <MudTabPanel Text="Identities" ID="@("identities")" OnClick="@(() => Manager.NavigateTo("/identities"))"/>
+</MudTabs>
+
+@code {
+    MudTabs? _tabs;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        switch (Manager.ToBaseRelativePath(Manager.Uri))
+        {
+            case "profile":
+                _tabs?.ActivatePanel("profile");
+                break;
+            
+            case "security":
+                _tabs?.ActivatePanel("security");
+                break;
+     
+            case "identities":
+                _tabs?.ActivatePanel("identities");
+                break;
+        }
+    }
+
+}

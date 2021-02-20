@@ -1,0 +1,50 @@
+@using Elwark.Account.Service.Profile
+@using Elwark.Account.Service
+@using Elwark.Account.Service.Profile.Models
+@implements IDisposable
+@inject IProfileClient Client
+@inject ProfileStateProvider Provider;
+
+@switch (_profile.Status)
+{
+    case ResponseStatus.Loading:
+        <MudText Typo="Typo.h1">
+            Loading...
+        </MudText>
+        break;
+
+    case ResponseStatus.Fail:
+        <MudText Typo="Typo.h1">
+            Error
+        </MudText>
+        break;
+
+    case ResponseStatus.Success:
+        <CascadingValue Value="Provider.Profile">
+            @ChildContent
+        </CascadingValue>
+        break;
+}
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    private ApiResponse<Profile> _profile = ApiResponse<Profile>.Loading();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Provider.ProfileStateChanged += StateHasChanged;
+        _profile = await Client.GetAsync();
+
+        if (_profile.Status == ResponseStatus.Success)
+            Provider.Update(_profile.Data);
+    }
+
+    public void Dispose()
+    {
+        Provider.ProfileStateChanged -= StateHasChanged;
+    }
+
+}
