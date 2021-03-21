@@ -1,0 +1,90 @@
+@page "/security"
+@using Microsoft.AspNetCore.Authorization
+@using Elwark.Account.Service.Profile.Models
+@using Elwark.Account.Service.Profile
+@using Elwark.Account.Service
+@using Elwark.Account.Service.Profile.Requests
+@using Elwark.Account.States
+@inject IStringLocalizer<App> L
+@inject IProfileClient Client
+@inject ISnackbar Snackbar
+@inject ProfileStateProvider Provider
+@attribute [Authorize]
+
+<div class="grid">
+    <MudCard>
+        <MudCardContent>
+            <MudText Typo="Typo.h6">
+                @L["Password"]
+            </MudText>
+            @if (Profile.IsPasswordAvailable)
+            {
+                <UpdatePassword OnUpdatePassword="@OnUpdatePassword"/>
+            }
+            else
+            {
+                <CreatePassword 
+                    OnSendConfirmation="@OnSendConfirmation"
+                    OnCreatePassword="@OnCreatePassword"/>
+            }
+        </MudCardContent>
+    </MudCard>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public Profile Profile { get; set; } = default!;
+
+    private async Task<string> OnSendConfirmation()
+    {
+        var response = await Client.CreatingPasswordAsync();
+        switch (response.Status)
+        {
+            case ResponseStatus.Fail:
+                Snackbar.Add("Something went wrong", Severity.Error);
+                break;
+
+            case ResponseStatus.Success:
+                var primary = Profile.Identities.Where(x => x.IdentityType == IdentityType.Email)
+                    .Cast<EmailIdentity>()
+                    .First(x => x.EmailType == EmailType.PrimaryEmail);
+                Snackbar.Add($"Confirmation code sent to {primary.Value}", Severity.Success);
+                return response.Data.Id;
+        }
+
+        return string.Empty;
+    }
+
+    private async Task OnCreatePassword(CreatePasswordRequest request)
+    {
+        var response = await Client.CreatePasswordAsync(request);
+        switch (response.Status)
+        {
+            case ResponseStatus.Fail:
+                Snackbar.Add("Something went wrong", Severity.Error);
+                break;
+
+            case ResponseStatus.Success:
+                Provider.Update(response.Data);
+                Snackbar.Add(L["AccountUpdated"], Severity.Success);
+                break;
+        }
+    }
+
+    private async Task OnUpdatePassword(UpdatePasswordRequest request)
+    {
+        var response = await Client.UpdatePasswordAsync(request);
+        switch (response.Status)
+        {
+            case ResponseStatus.Fail:
+                Snackbar.Add("Something went wrong", Severity.Error);
+                break;
+
+            case ResponseStatus.Success:
+                Snackbar.Add(L["AccountUpdated"], Severity.Success);
+                break;
+        }
+    }
+
+}

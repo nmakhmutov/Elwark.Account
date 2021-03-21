@@ -1,0 +1,66 @@
+@using Elwark.Account.Service.Profile.Models
+@using Elwark.Account.Service.Profile
+@using Elwark.Account.Service.Profile.Requests
+@using Elwark.Account.Service
+@using Elwark.Account.States
+@inject IProfileClient Client
+@inject ProfileStateProvider Provider
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<App> L
+
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="_model" OnValidSubmit="@OnSubmit">
+            <FluentValidationValidator/>
+            <MudTextField Label="@L["Code"]" @bind-Value="@_model.Code" For="@(() => _model.Code)"/>
+            <div class="d-flex flex-row justify-end mt-6 mb-3">
+                <MudButton OnClick="@(() => MudDialog.Cancel())" Class="mr-3">
+                    @L["Cancel"]
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">
+                    @L["Confirm"]
+                </MudButton>
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Identity Identity { get; set; } = default!;
+
+    [Parameter]
+    public Confirming Confirming { get; set; } = default!;
+
+    private Confirm _model = new();
+
+    protected override void OnInitialized()
+    {
+        _model = new Confirm
+        {
+            Id = Confirming.Id
+        };
+    }
+
+    private async Task OnSubmit(EditContext context)
+    {
+        var account = await Client.ConfirmIdentityAsync(Identity.IdentityType, Identity.Value, _model);
+        switch (account.Status)
+        {
+            case ResponseStatus.Fail:
+                Snackbar.Add(account.Error.Title, Severity.Error);
+                break;
+
+            case ResponseStatus.Success:
+                Provider.Update(account.Data);
+                Snackbar.Add(L["AccountUpdated"], Severity.Success);
+                MudDialog.Close(DialogResult.Ok(Identity));
+                break;
+        }
+    }
+
+}

@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2E673316-7E14-4CCC-860A-4050E4C5165C}"
+ProjectSection(SolutionItems) = preProject
+	src\docker-compose.yml = src\docker-compose.yml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elwark.Account", "src\Elwark.Account\Elwark.Account.csproj", "{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D2B8FB42-4BB1-4510-BCE7-631FF3FACD96} = {2E673316-7E14-4CCC-860A-4050E4C5165C}
+	EndGlobalSection
+EndGlobal

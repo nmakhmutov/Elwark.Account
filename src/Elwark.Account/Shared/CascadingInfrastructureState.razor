@@ -1,0 +1,34 @@
+@using Elwark.Account.Service.Profile
+@using Elwark.Account.Service
+@using Elwark.Account.Service.Profile.Models
+@using Elwark.Account.States
+@implements IDisposable
+@inject IInfrastructureClient Client
+@inject InfrastructureStateProvider Provider
+
+<CascadingValue Value="Provider.Infrastructure">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Provider.InfrastructureStateChanged += StateHasChanged;
+        var result = await Client.GetAsync();
+        if (result.Status == ResponseStatus.Success)
+            Provider.Update(
+                new InfrastructureState(
+                    result.Data.Countries.ToDictionary(x => x.Code, x => x.Name),
+                    result.Data.Timezones.ToDictionary(x => x.Name, x => $"{x.Name} ({x.Offset})")
+                    )
+                );
+    }
+
+    public void Dispose() => 
+        Provider.InfrastructureStateChanged -= StateHasChanged;
+
+}

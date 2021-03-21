@@ -1,0 +1,68 @@
+@using Elwark.Account.Service.Profile.Models
+@inject IStringLocalizer<App> L
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            @switch (Identity.IdentityType)
+            {
+                case IdentityType.Google:
+                    <MudAvatar Style="background: #DB4437">
+                        <MudIcon Icon="@(Icons.Custom.Brands.Google)"/>
+                    </MudAvatar>
+                    break;
+
+                case IdentityType.Microsoft:
+                    <MudAvatar Style="background: #00A4EF">
+                        <MudIcon Icon="@(Icons.Custom.Brands.Microsoft)"/>
+                    </MudAvatar>
+                    break;
+            }
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">@Identity.IdentityType</MudText>
+            @if (Identity.IsConfirmed)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Success">
+                    @L["Confirmed"]
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Color="Color.Error">
+                    @L["NotConfirmed"]
+                </MudText>
+            }
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudMenu Direction="Direction.Left" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert">
+                <MudMenuItem OnClick="OnDeleteClick">@L["Delete"]</MudMenuItem>
+            </MudMenu>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.subtitle1">
+            <strong>
+                @Identity.Name
+            </strong>
+        </MudText>
+        <MudText Typo="Typo.body1">
+            @Identity.Value
+        </MudText>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public SocialIdentity Identity { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<Identity> OnDelete { get; set; }
+
+    private async Task OnDeleteClick()
+    {
+        await OnDelete.InvokeAsync(Identity);
+    }
+
+}

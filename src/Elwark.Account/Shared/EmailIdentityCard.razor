@@ -1,0 +1,121 @@
+@using Elwark.Account.Service.Profile.Models
+@using Elwark.Account.Service.Profile.Requests
+@using Microsoft.AspNetCore.Components
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> L
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            <MudAvatar Style="background: #FFB800">
+                <MudIcon Icon="@Icons.Material.Filled.AlternateEmail"/>
+            </MudAvatar>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">Email</MudText>
+            @if (Email.IsConfirmed)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Success">
+                    @L["Confirmed"]
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Color="Color.Error">
+                    @L["NotConfirmed"]
+                </MudText>
+            }
+        </CardHeaderContent>
+        <CardHeaderActions>
+            @if (Email.EmailType != EmailType.PrimaryEmail)
+            {
+                <MudMenu Direction="Direction.Left" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert">
+                    <MudMenuItem OnClick="OnDeleteClick">@L["Delete"]</MudMenuItem>
+                </MudMenu>
+            }
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.subtitle1">
+            <strong>
+                @Email.Value
+            </strong>
+        </MudText>
+        @if (Email.IsConfirmed && Email.EmailType == EmailType.PrimaryEmail)
+        {
+            <MudText>
+                @L["PrimaryEmail"]
+            </MudText>
+        }
+        else if (Email.IsConfirmed)
+        {
+            <MudSelect
+                Value="@Email.EmailType"
+                Variant="Variant.Text"
+                ValueChanged="@((EmailType type) => OnEmailTypeChanged(type))"
+                Disabled="_isLoading">
+                <MudSelectItem Value="EmailType.PrimaryEmail">
+                    @L["PrimaryEmail"]
+                </MudSelectItem>
+                <MudSelectItem Value="EmailType.SecondaryEmail">
+                    @L["SecondaryEmail"]
+                </MudSelectItem>
+                <MudSelectItem Value="EmailType.None">
+                    @L["None"]
+                </MudSelectItem>
+            </MudSelect>
+        }
+        else
+        {
+            <MudButton Class="mt-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnConfirmationClick" Disabled="@_isLoading">
+                @if (_isLoading)
+                {
+                    <div class="d-flex flex-row align-center">
+                        <MudProgressCircular Class="mr-3" Size="Size.Small" Indeterminate="true"/>
+                        @L["Loading"]
+                    </div>
+                }
+                else
+                {
+                    @L["Confirm"]
+                }
+            </MudButton>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    private bool _isLoading;
+
+    [Parameter]
+    public EmailIdentity Email { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<Identity> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<Identity> OnConfirmation { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeEmailType> OnEmailTypeChange { get; set; }
+
+    private async Task OnDeleteClick()
+    {
+        await OnDelete.InvokeAsync(Email);
+    }
+
+    private async Task OnConfirmationClick()
+    {
+        _isLoading = true;
+        await OnConfirmation.InvokeAsync(Email);
+        _isLoading = false;
+    }
+
+    private async Task OnEmailTypeChanged(EmailType type)
+    {
+        _isLoading = true;
+        await OnEmailTypeChange.InvokeAsync(new ChangeEmailType(Email.Value, type));
+        _isLoading = false;
+    }
+
+}
