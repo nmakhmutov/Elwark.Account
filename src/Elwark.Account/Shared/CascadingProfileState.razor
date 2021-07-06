@@ -3,8 +3,6 @@
 @using Elwark.Account.Service.Profile.Models
 @using Elwark.Account.States
 @implements IDisposable
-@inject IProfileClient Client
-@inject ProfileStateProvider Provider;
 
 @switch (_profile.Status)
 {
@@ -32,6 +30,12 @@
 
 @code {
 
+    [Inject]
+    private IProfileClient Client { get; set; } = default!;
+
+    [Inject]
+    private ProfileStateProvider Provider { get; set; } = default!;
+    
     [Parameter]
     public RenderFragment ChildContent { get; set; } = default!;
 

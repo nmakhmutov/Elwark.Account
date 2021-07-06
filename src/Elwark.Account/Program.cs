@@ -21,8 +21,7 @@ namespace Elwark.Account
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             
-            builder.Logging
-                .SetMinimumLevel(LogLevel.Critical);
+            builder.Logging.SetMinimumLevel(LogLevel.Critical);
             
             var policy = HttpPolicyExtensions
                 .HandleTransientHttpError()
@@ -38,13 +37,13 @@ namespace Elwark.Account
 
             builder.Services
                 .AddSingleton<ProfileStateProvider>()
-                .AddScoped<InfrastructureStateProvider>()
+                .AddSingleton<InfrastructureStateProvider>()
                 .AddTransient<AccountLocalization>()
                 .AddTransient<AccountAuthorization>();
 
             builder.Services
                 .AddHttpClient<IProfileClient, ProfileClient>(client =>
-                    client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"])
+                    client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
                 )
                 .AddHttpMessageHandler<AccountLocalization>()
                 .AddHttpMessageHandler<AccountAuthorization>()
@@ -52,7 +51,7 @@ namespace Elwark.Account
 
             builder.Services
                 .AddHttpClient<IInfrastructureClient, InfrastructureClient>(client =>
-                    client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"])
+                    client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
                 )
                 .AddHttpMessageHandler<AccountLocalization>()
                 .AddHttpMessageHandler<AccountAuthorization>()

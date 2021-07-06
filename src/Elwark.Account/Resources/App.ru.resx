@@ -33,8 +33,8 @@
     <data name="Bio" xml:space="preserve">
         <value>Биография</value>
     </data>
-    <data name="Birthday" xml:space="preserve">
-        <value>День рождения</value>
+    <data name="DateOfBirth" xml:space="preserve">
+        <value>Дата рождения</value>
     </data>
     <data name="City" xml:space="preserve">
         <value>Город</value>

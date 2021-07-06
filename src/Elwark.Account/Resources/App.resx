@@ -36,8 +36,8 @@
     <data name="Nickname" xml:space="preserve">
         <value>Nickname</value>
     </data>
-    <data name="Birthday" xml:space="preserve">
-        <value>Birthday</value>
+    <data name="DateOfBirth" xml:space="preserve">
+        <value>Date of birth</value>
     </data>
     <data name="Gender" xml:space="preserve">
         <value>Gender</value>

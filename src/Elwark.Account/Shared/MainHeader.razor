@@ -16,7 +16,7 @@
                 }
                 @if (Profile.Address.CountryCode is not  null)
                 {
-                    @(Infrastructure.Countries.TryGetValue(Profile.Address.CountryCode, out var value) ? value : null)
+                    @(Infrastructure.Countries.FirstOrDefault(x => x.Code == Profile.Address.CountryCode)?.Name)
                 }
             </MudText>
             <MudText Typo="Typo.body2">

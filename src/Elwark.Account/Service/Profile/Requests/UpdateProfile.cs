@@ -8,14 +8,14 @@ namespace Elwark.Account.Service.Profile.Requests
     public sealed record UpdateProfile
     {
         public UpdateProfile(string? firstName, string? lastName, string nickname, string language, Gender gender,
-            DateTime? birthday, string? bio, string? countryCode, string? cityName, string timezone)
+            DateTime? dateOfBirth, string? bio, string? countryCode, string? cityName, string timezone)
         {
             FirstName = firstName;
             LastName = lastName;
             Nickname = nickname;
             Language = language;
             Gender = gender;
-            Birthday = birthday;
+            DateOfBirth = dateOfBirth;
             Bio = bio;
             CountryCode = countryCode;
             CityName = cityName;
@@ -32,7 +32,7 @@ namespace Elwark.Account.Service.Profile.Requests
 
         public Gender Gender { get; set; }
 
-        public DateTime? Birthday { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public string? Bio { get; set; }
 
@@ -48,21 +48,21 @@ namespace Elwark.Account.Service.Profile.Requests
             {
                 RuleFor(x => x.Nickname)
                     .MinimumLength(3)
-                    .MaximumLength(100)
+                    .MaximumLength(99)
                     .NotEmpty()
                     .WithName(l["Nickname"]);
 
                 RuleFor(x => x.FirstName)
-                    .MaximumLength(100)
+                    .MaximumLength(999)
                     .WithName(l["FirstName"]);
 
                 RuleFor(x => x.LastName)
-                    .MaximumLength(100)
+                    .MaximumLength(99)
                     .WithName(l["LastName"]);
                 
-                RuleFor(x => x.Birthday)
+                RuleFor(x => x.DateOfBirth)
                     .NotEmpty()
-                    .WithName(l["Birthday"]);
+                    .WithName(l["DateOfBirth"]);
 
                 RuleFor(x => x.Gender)
                     .IsInEnum()
@@ -82,6 +82,7 @@ namespace Elwark.Account.Service.Profile.Requests
 
                 RuleFor(x => x.Timezone)
                     .NotEmpty()
+                    .MaximumLength(50)
                     .WithName(l["Timezone"]);
 
                 RuleFor(x => x.Bio)

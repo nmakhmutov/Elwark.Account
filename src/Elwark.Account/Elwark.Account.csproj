@@ -13,9 +13,9 @@
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.0-preview.3.21201.13" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.3.21201.4" />
         <PackageReference Include="System.Net.Http.Json" Version="6.0.0-preview.3.21201.4" />
-        <PackageReference Include="MudBlazor" Version="5.0.8" />
-        <PackageReference Include="Blazored.FluentValidation" Version="2.0.0" />
-        <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
+        <PackageReference Include="MudBlazor" Version="5.0.15" />
+        <PackageReference Include="Blazored.FluentValidation" Version="2.0.1" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.1.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
@@ -28,19 +28,6 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>App.ru.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Resources\App.Designer.cs">
-        <AutoGen>True</AutoGen>
-        <DependentUpon>App.resx</DependentUpon>
-        <DesignTime>True</DesignTime>
-      </Compile>
-      <Compile Update="Resources\App.ru.Designer.cs">
-        <AutoGen>True</AutoGen>
-        <DependentUpon>App.ru.resx</DependentUpon>
-        <DesignTime>True</DesignTime>
-      </Compile>
     </ItemGroup>
 
 </Project>

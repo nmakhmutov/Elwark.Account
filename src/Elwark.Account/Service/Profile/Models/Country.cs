@@ -1,10 +1,8 @@
-using System;
-
 namespace Elwark.Account.Service.Profile.Models
 {
-    public record Timezone(string Name, TimeSpan Offset)
+    public sealed record Country(string Code, string Name)
     {
         public override string ToString() =>
-            Name + " " + Offset;
+            $"{Name} ({Code})";
     }
 }

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using Elwark.Account.Service.Profile.Models;
 
 namespace Elwark.Account.States
 {
-    public sealed record InfrastructureState(Dictionary<string, string> Countries, Dictionary<string, string> Timezones);
+    public sealed record InfrastructureState(Country[] Countries, Timezone[] Timezones);
 }

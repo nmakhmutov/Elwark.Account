@@ -11,7 +11,10 @@ namespace Elwark.Account.Service.Profile
         public InfrastructureClient(HttpClient client) =>
             _client = client;
 
-        public Task<ApiResponse<Lists>> GetAsync() =>
-            ExecuteAsync<Lists>(() => _client.GetAsync("infrastructure"));
+        public Task<ApiResponse<Country[]>> GetCountriesAsync() =>
+            ExecuteAsync<Country[]>(() => _client.GetAsync("countries"));
+
+        public Task<ApiResponse<Timezone[]>> GetTimezonesAsync() =>
+            ExecuteAsync<Timezone[]>(() => _client.GetAsync("timezones"));
     }
 }

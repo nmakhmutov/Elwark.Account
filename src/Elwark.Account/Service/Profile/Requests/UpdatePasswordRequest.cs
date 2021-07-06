@@ -21,6 +21,7 @@ namespace Elwark.Account.Service.Profile.Requests
 
                 RuleFor(x => x.NewPassword)
                     .NotEmpty()
+                    .MaximumLength(999)
                     .WithName(l["NewPassword"]);
 
                 RuleFor(x => x.ConfirmNewPassword)

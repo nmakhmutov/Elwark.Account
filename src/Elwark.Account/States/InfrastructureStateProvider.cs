@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Elwark.Account.Service.Profile.Models;
 
 namespace Elwark.Account.States
 {
@@ -7,12 +7,18 @@ namespace Elwark.Account.States
     {
         public event Action InfrastructureStateChanged = () => { };
 
-        public InfrastructureState Infrastructure { get; private set; }
-            = new(new Dictionary<string, string>(), new Dictionary<string, string>());
+        public InfrastructureState State { get; private set; } =
+            new(Array.Empty<Country>(), Array.Empty<Timezone>());
 
-        public void Update(InfrastructureState infrastructure)
+        public void Update(Country[] countries)
         {
-            Infrastructure = infrastructure;
+            State = State with {Countries = countries};
+            InfrastructureStateChanged.Invoke();
+        }
+
+        public void Update(Timezone[] timezones)
+        {
+            State = State with {Timezones = timezones};
             InfrastructureStateChanged.Invoke();
         }
     }

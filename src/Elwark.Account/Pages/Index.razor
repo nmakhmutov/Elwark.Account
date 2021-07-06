@@ -19,7 +19,7 @@
         <MudTextField Label="@L["FirstName"]" @bind-Value="@_model.FirstName" For="@(() => _model.FirstName)"/>
         <MudTextField Label="@L["LastName"]" @bind-Value="@_model.LastName" For="@(() => _model.LastName)"/>
         <MudTextField Label="@L["Nickname"]" @bind-Value="@_model.Nickname" For="@(() => _model.Nickname)"/>
-        <MudDatePicker Label="@L["Birthday"]" @bind-Date="@_model.Birthday" MaxDate="@DateTime.UtcNow" For="@(() => _model.Birthday)"/>
+        <MudDatePicker Label="@L["DateOfBirth"]" @bind-Date="@_model.DateOfBirth" MaxDate="@DateTime.UtcNow" For="@(() => _model.DateOfBirth)"/>
         <MudSelect Label="@L["Gender"]" @bind-Value="@_model.Gender" For="@(() => _model.Gender)">
             <MudSelectItem Value="@Gender.Male">@L["Male"]</MudSelectItem>
             <MudSelectItem Value="@Gender.Female">@L["Female"]</MudSelectItem>
@@ -35,17 +35,18 @@
             @bind-Value="@_model.CountryCode"
             For="@(() => _model.CountryCode)"
             SearchFunc="@CountrySearch"
-            ToStringFunc="@(s => Infrastructure.Countries.TryGetValue(s, out var value) ? value : null)"
+            ToStringFunc="@(s => Infrastructure.Countries.FirstOrDefault(x => x.Code == s)?.Name)"
             ResetValueOnEmptyText="true"
             CoerceText="true">
             <ItemTemplate Context="country">
                 <MudText>
-                    @(Infrastructure.Countries.TryGetValue(country, out var value) ? value : null)
+                    @(Infrastructure.Countries.FirstOrDefault(x => x.Code == country))
                 </MudText>
             </ItemTemplate>
         </MudAutocomplete>
 
         <MudTextField Label="@L["City"]" @bind-Value="@_model.CityName" For="@(() => _model.CityName)"/>
+
         <MudAutocomplete
             T="string"
             Label="@L["Timezone"]"
@@ -56,7 +57,7 @@
             CoerceText="true">
             <ItemTemplate Context="timezone">
                 <MudText>
-                    @(Infrastructure.Timezones.TryGetValue(timezone, out var value) ? value : null)
+                    @(Infrastructure.Timezones.FirstOrDefault(x => x.Name == timezone))
                 </MudText>
             </ItemTemplate>
         </MudAutocomplete>
@@ -82,20 +83,42 @@
     private bool _isUpdating;
 
     protected override void OnInitialized() =>
-        _model = new UpdateProfile(Profile.FirstName, Profile.LastName, Profile.Nickname, Profile.Language, Profile.Gender,
-            Profile.Birthday, Profile.Bio, Profile.Address.CountryCode, Profile.Address.CityName, Profile.Timezone.Name);
-
-    private Task<IEnumerable<string>> CountrySearch(string? arg) =>
-        Task.FromResult(Infrastructure.Countries
-            .Where(x => x.Value.Contains(arg ?? string.Empty, StringComparison.InvariantCultureIgnoreCase))
-            .Select(x => x.Key)
+        _model = new UpdateProfile(
+            Profile.FirstName,
+            Profile.LastName,
+            Profile.Nickname,
+            Profile.Language,
+            Profile.Gender,
+            Profile.DateOfBirth,
+            Profile.Bio,
+            Profile.Address.CountryCode,
+            Profile.Address.CityName,
+            Profile.Timezone.Name
             );
 
-    private Task<IEnumerable<string>> TimezoneSearch(string? arg) =>
-        Task.FromResult(Infrastructure.Timezones
-            .Where(x => x.Key.Contains(arg ?? string.Empty, StringComparison.InvariantCultureIgnoreCase))
-            .Select(x => x.Key)
-            );
+    private Task<IEnumerable<string>> CountrySearch(string? arg)
+    {
+        if (string.IsNullOrEmpty(arg))
+            return Task.FromResult(Enumerable.Empty<string>());
+
+        var result = Infrastructure.Countries
+            .Where(x => x.ToString().Contains(arg, StringComparison.InvariantCultureIgnoreCase))
+            .Select(x => x.Code);
+
+        return Task.FromResult(result);
+    }
+
+    private Task<IEnumerable<string>> TimezoneSearch(string? arg)
+    {
+        if (string.IsNullOrEmpty(arg))
+            return Task.FromResult(Enumerable.Empty<string>());
+
+        var result = Infrastructure.Timezones
+            .Where(x => x.ToString().Contains(arg, StringComparison.InvariantCultureIgnoreCase))
+            .Select(x => x.Name);
+
+        return Task.FromResult(result);
+    }
 
     private async Task OnSubmit()
     {
