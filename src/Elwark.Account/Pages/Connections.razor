@@ -1,4 +1,4 @@
-@page "/identities"
+@page "/connections"
 @using Microsoft.AspNetCore.Authorization
 @using Elwark.Account.Service.Profile.Models
 @using Elwark.Account.Service.Profile
@@ -24,20 +24,16 @@
     </MudButton>
 </div>
 <div class="grid">
-    @foreach (var identity in Profile.Identities)
+    @foreach (var identity in Profile.Connections)
     {
         switch (identity)
         {
-            case EmailIdentity x:
-                <EmailIdentityCard
-                    Email="@x"
-                    OnDelete="@OnDeleteClick"
-                    OnConfirmation="@OnRequestConfirmationClick"
-                    OnEmailTypeChange="@OnEmailTypeChanged"/>
+            case EmailConnection x:
+                <EmailIdentityCard Email="@x" OnDelete="@OnDelete" OnConfirmation="@OnConfirmation" OnTypeChange="@OnTypeChanged"/>
                 break;
 
-            case SocialIdentity x:
-                <SocialIdentityCard Identity="@x" OnDelete="@OnDeleteClick"/>
+            case SocialConnection x:
+                <SocialIdentityCard Connection="@x" OnDelete="@OnDelete"/>
                 break;
         }
     }
@@ -57,12 +53,12 @@
         _addLink = new Uri(host, $"attach?returnUrl={returnUrl}").ToString();
     }
 
-    private async Task OnDeleteClick(Identity identity)
+    private async Task OnDelete(Connection connection)
     {
         var result = await DialogService.ShowMessageBox(
             new MessageBoxOptions
             {
-                Message = L["AreYouSureYouWantToDeleteYourIdentity", identity.IdentityType.ToString().ToLowerInvariant(), identity.Value],
+                Message = L["AreYouSureYouWantToDeleteYourIdentity", connection.IdentityType.ToString().ToLowerInvariant(), connection.Value],
                 Title = L["Warning"],
                 YesText = L["Delete"],
                 NoText = L["No"]
@@ -71,7 +67,7 @@
         if (result != true)
             return;
 
-        var profile = await Client.DeleteIdentityAsync(identity.IdentityType, identity.Value);
+        var profile = await Client.DeleteConnectionAsync(connection.IdentityType, connection.Value);
         switch (profile.Status)
         {
             case ResponseStatus.Fail:
@@ -85,9 +81,9 @@
         }
     }
 
-    private async Task OnRequestConfirmationClick(Identity identity)
+    private async Task OnConfirmation(Connection connection)
     {
-        var profile = await Client.ConfirmingIdentityAsync(identity.IdentityType, identity.Value);
+        var profile = await Client.ConfirmingConnectionAsync(connection.IdentityType, connection.Value);
         switch (profile.Status)
         {
             case ResponseStatus.Fail:
@@ -95,12 +91,12 @@
                 break;
 
             case ResponseStatus.Success:
-                Snackbar.Add($"Confirmation code sent to {identity.Value}", Severity.Success);
+                Snackbar.Add($"Confirmation code sent to {connection.Value}", Severity.Success);
                 DialogService.Show<IdentityConfirmationDialog>(
                     string.Empty,
                     new DialogParameters
                     {
-                        [nameof(Identity)] = identity,
+                        [nameof(Connection)] = connection,
                         [nameof(Confirming)] = profile.Data
                     },
                     new DialogOptions
@@ -115,7 +111,7 @@
         }
     }
 
-    private async Task OnEmailTypeChanged(ChangeEmailType request)
+    private async Task OnTypeChanged(ChangeEmailType request)
     {
         var profile = await Client.ChangeEmailType(request);
         switch (profile.Status)

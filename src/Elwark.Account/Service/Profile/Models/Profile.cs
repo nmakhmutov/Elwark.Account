@@ -18,6 +18,6 @@ namespace Elwark.Account.Service.Profile.Models
         Ban? Ban,
         bool IsPasswordAvailable,
         DateTime CreatedAt,
-        Identity[] Identities
+        Connection[] Connections
     );
 }

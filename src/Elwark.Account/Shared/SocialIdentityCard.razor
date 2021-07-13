@@ -4,7 +4,7 @@
 <MudCard>
     <MudCardHeader>
         <CardHeaderAvatar>
-            @switch (Identity.IdentityType)
+            @switch (Connection.IdentityType)
             {
                 case IdentityType.Google:
                     <MudAvatar Style="background: #DB4437">
@@ -20,8 +20,8 @@
             }
         </CardHeaderAvatar>
         <CardHeaderContent>
-            <MudText Typo="Typo.body1">@Identity.IdentityType</MudText>
-            @if (Identity.IsConfirmed)
+            <MudText Typo="Typo.body1">@Connection.IdentityType</MudText>
+            @if (Connection.IsConfirmed)
             {
                 <MudText Typo="Typo.body2" Color="Color.Success">
                     @L["Confirmed"]
@@ -43,11 +43,11 @@
     <MudCardContent>
         <MudText Typo="Typo.subtitle1">
             <strong>
-                @Identity.Name
+                @Connection.FirstName @Connection.LastName
             </strong>
         </MudText>
         <MudText Typo="Typo.body1">
-            @Identity.Value
+            @Connection.Value
         </MudText>
     </MudCardContent>
 </MudCard>
@@ -55,14 +55,14 @@
 @code {
 
     [Parameter]
-    public SocialIdentity Identity { get; set; } = default!;
+    public SocialConnection Connection { get; set; } = default!;
 
     [Parameter]
-    public EventCallback<Identity> OnDelete { get; set; }
+    public EventCallback<Connection> OnDelete { get; set; }
 
     private async Task OnDeleteClick()
     {
-        await OnDelete.InvokeAsync(Identity);
+        await OnDelete.InvokeAsync(Connection);
     }
 
 }

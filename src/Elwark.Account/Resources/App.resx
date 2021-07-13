@@ -24,8 +24,8 @@
     <data name="Security" xml:space="preserve">
         <value>Security</value>
     </data>
-    <data name="Identities" xml:space="preserve">
-        <value>Identities</value>
+    <data name="Connections" xml:space="preserve">
+        <value>Connections</value>
     </data>
     <data name="FirstName" xml:space="preserve">
         <value>First name</value>

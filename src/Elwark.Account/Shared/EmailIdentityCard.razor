@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<App> L
+
 <MudCard>
     <MudCardHeader>
         <CardHeaderAvatar>
@@ -88,16 +89,16 @@
     private bool _isLoading;
 
     [Parameter]
-    public EmailIdentity Email { get; set; } = default!;
+    public EmailConnection Email { get; set; } = default!;
 
     [Parameter]
-    public EventCallback<Identity> OnDelete { get; set; }
+    public EventCallback<Connection> OnDelete { get; set; }
 
     [Parameter]
-    public EventCallback<Identity> OnConfirmation { get; set; }
+    public EventCallback<Connection> OnConfirmation { get; set; }
 
     [Parameter]
-    public EventCallback<ChangeEmailType> OnEmailTypeChange { get; set; }
+    public EventCallback<ChangeEmailType> OnTypeChange { get; set; }
 
     private async Task OnDeleteClick()
     {
@@ -114,7 +115,7 @@
     private async Task OnEmailTypeChanged(EmailType type)
     {
         _isLoading = true;
-        await OnEmailTypeChange.InvokeAsync(new ChangeEmailType(Email.Value, type));
+        await OnTypeChange.InvokeAsync(new ChangeEmailType(Email.Value, type));
         _isLoading = false;
     }
 

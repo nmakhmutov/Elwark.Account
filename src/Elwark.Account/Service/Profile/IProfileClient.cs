@@ -10,11 +10,11 @@ namespace Elwark.Account.Service.Profile
         
         Task<ApiResponse<Models.Profile>> UpdateAsync(UpdateProfile profile);
         
-        Task<ApiResponse<Profile.Models.Profile>> DeleteIdentityAsync(IdentityType type, string value);
+        Task<ApiResponse<Profile.Models.Profile>> DeleteConnectionAsync(IdentityType type, string value);
         
-        Task<ApiResponse<Confirming>> ConfirmingIdentityAsync(IdentityType type, string value);
+        Task<ApiResponse<Confirming>> ConfirmingConnectionAsync(IdentityType type, string value);
 
-        Task<ApiResponse<Models.Profile>> ConfirmIdentityAsync(IdentityType type, string value, Confirm request);
+        Task<ApiResponse<Models.Profile>> ConfirmConnectionAsync(IdentityType type, string value, Confirm request);
 
         Task<ApiResponse<Models.Profile>> ChangeEmailType(ChangeEmailType request);
         

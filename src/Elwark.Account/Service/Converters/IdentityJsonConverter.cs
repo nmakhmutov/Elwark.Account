@@ -5,14 +5,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Elwark.Account.Service.Converters
 {
-    public class IdentityJsonConverter : JsonConverter<Identity?>
+    public class IdentityJsonConverter : JsonConverter<Connection?>
     {
-        private const string Type = nameof(Identity.IdentityType);
+        private const string Type = nameof(Connection.IdentityType);
 
-        public override void WriteJson(JsonWriter writer, Identity? value, JsonSerializer serializer) =>
+        public override void WriteJson(JsonWriter writer, Connection? value, JsonSerializer serializer) =>
             serializer.Serialize(writer, value);
 
-        public override Identity? ReadJson(JsonReader reader, Type objectType, Identity? existingValue,
+        public override Connection? ReadJson(JsonReader reader, Type objectType, Connection? existingValue,
             bool hasExistingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
@@ -26,10 +26,10 @@ namespace Elwark.Account.Service.Converters
 
             return Enum.Parse<IdentityType>(type, true) switch
             {
-                IdentityType.Email => jObject.ToObject<EmailIdentity>(),
-                IdentityType.Google => jObject.ToObject<SocialIdentity>(),
-                IdentityType.Microsoft => jObject.ToObject<SocialIdentity>(),
-                _ => throw new ArgumentOutOfRangeException(nameof(Identity), @"Unknown identity type")
+                IdentityType.Email => jObject.ToObject<EmailConnection>(),
+                IdentityType.Google => jObject.ToObject<SocialConnection>(),
+                IdentityType.Microsoft => jObject.ToObject<SocialConnection>(),
+                _ => throw new ArgumentOutOfRangeException(nameof(Connection), @"Unknown identity type")
             };
         }
     }
