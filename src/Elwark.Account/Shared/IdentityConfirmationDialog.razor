@@ -3,10 +3,6 @@
 @using Elwark.Account.Service.Profile.Requests
 @using Elwark.Account.Service
 @using Elwark.Account.States
-@inject IProfileClient Client
-@inject ProfileStateProvider Provider
-@inject ISnackbar Snackbar
-@inject IStringLocalizer<App> L
 
 <MudDialog>
     <DialogContent>
@@ -29,6 +25,18 @@
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Inject]
+    IProfileClient Client { get; set; } = default!;
+
+    [Inject]
+    ProfileStateProvider Provider { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
 
     [Parameter]
     public Connection Connection { get; set; } = default!;

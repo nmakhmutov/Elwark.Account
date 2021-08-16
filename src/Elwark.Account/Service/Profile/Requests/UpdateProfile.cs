@@ -7,12 +7,14 @@ namespace Elwark.Account.Service.Profile.Requests
 {
     public sealed record UpdateProfile
     {
-        public UpdateProfile(string? firstName, string? lastName, string nickname, string language, Gender gender,
-            DateTime? dateOfBirth, string? bio, string? countryCode, string? cityName, string timezone)
+        public UpdateProfile(string? firstName, string? lastName, string nickname, bool preferNickname, string language,
+            Gender gender, DateTime? dateOfBirth, string? bio, string? countryCode, string? cityName, string timezone,
+            DayOfWeek firstDayOfWeek)
         {
             FirstName = firstName;
             LastName = lastName;
             Nickname = nickname;
+            PreferNickname = preferNickname;
             Language = language;
             Gender = gender;
             DateOfBirth = dateOfBirth;
@@ -20,6 +22,7 @@ namespace Elwark.Account.Service.Profile.Requests
             CountryCode = countryCode;
             CityName = cityName;
             Timezone = timezone;
+            FirstDayOfWeek = firstDayOfWeek;
         }
 
         public string? FirstName { get; set; }
@@ -27,6 +30,8 @@ namespace Elwark.Account.Service.Profile.Requests
         public string? LastName { get; set; }
 
         public string Nickname { get; set; }
+        
+        public bool PreferNickname { get; set; }
 
         public string Language { get; set; }
 
@@ -41,6 +46,8 @@ namespace Elwark.Account.Service.Profile.Requests
         public string? CityName { get; set; }
 
         public string Timezone { get; set; }
+        
+        public DayOfWeek FirstDayOfWeek { get; set; }
 
         public class Validator : AbstractValidator<UpdateProfile>
         {
@@ -53,13 +60,13 @@ namespace Elwark.Account.Service.Profile.Requests
                     .WithName(l["Nickname"]);
 
                 RuleFor(x => x.FirstName)
-                    .MaximumLength(999)
+                    .MaximumLength(99)
                     .WithName(l["FirstName"]);
 
                 RuleFor(x => x.LastName)
                     .MaximumLength(99)
                     .WithName(l["LastName"]);
-                
+
                 RuleFor(x => x.DateOfBirth)
                     .NotEmpty()
                     .WithName(l["DateOfBirth"]);

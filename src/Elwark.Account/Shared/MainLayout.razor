@@ -1,6 +1,4 @@
-﻿@using Elwark.Account.Service.Profile
-@inherits LayoutComponentBase
-@inject IProfileClient Client
+﻿@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="_currentTheme"/>
 <MudDialogProvider/>
@@ -14,7 +12,7 @@
                 Account
             </MudText>
         </div>
-        <MudAppBarSpacer/>
+        <MudSpacer/>
         <LanguageSelector/>
         <MudTooltip Text="Toggle theme">
             <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" OnClick="@SwitchTheme"/>

@@ -8,21 +8,11 @@
 @using System.Net
 @using Elwark.Account.States
 
-@inject IDialogService DialogService
-@inject ProfileStateProvider Provider
-@inject IProfileClient Client
-@inject ISnackbar Snackbar
-@inject IStringLocalizer<App> L
-@inject IConfiguration Configuration
-@inject NavigationManager Navigation
-
 @attribute [Authorize]
 
-<div class="mb-3">
-    <MudButton Link="@_addLink" Variant="Variant.Outlined" Color="Color.Primary">
-        @L["Add"]
-    </MudButton>
-</div>
+<MudButton Class="mb-3" Link="@_addLink" Variant="Variant.Filled" Color="Color.Primary">
+    @L["Add"]
+</MudButton>
 <div class="grid">
     @foreach (var identity in Profile.Connections)
     {
@@ -44,6 +34,27 @@
     [CascadingParameter]
     public Profile Profile { get; set; } = default!;
 
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    ProfileStateProvider Provider { get; set; } = default!;
+
+    [Inject]
+    IProfileClient Client { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+
+    [Inject]
+    IConfiguration Configuration { get; set; } = default!;
+
+    [Inject]
+    NavigationManager Navigation { get; set; } = default!;
+    
     private string _addLink = string.Empty;
 
     protected override void OnInitialized()
@@ -58,7 +69,7 @@
         var result = await DialogService.ShowMessageBox(
             new MessageBoxOptions
             {
-                Message = L["AreYouSureYouWantToDeleteYourIdentity", connection.IdentityType.ToString().ToLowerInvariant(), connection.Value],
+                Message = L["AreYouSureYouWantToDeleteYourConnection", connection.IdentityType.ToString().ToLowerInvariant(), connection.Value],
                 Title = L["Warning"],
                 YesText = L["Delete"],
                 NoText = L["No"]

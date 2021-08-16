@@ -102,8 +102,8 @@
     <data name="No" xml:space="preserve">
         <value>No</value>
     </data>
-    <data name="AreYouSureYouWantToDeleteYourIdentity" xml:space="preserve">
-        <value>Are you sure you want to delete {0} {1} identity?</value>
+    <data name="AreYouSureYouWantToDeleteYourConnection" xml:space="preserve">
+        <value>Are you sure you want to delete {0} {1} connection?</value>
     </data>
     <data name="Create" xml:space="preserve">
         <value>Create</value>
@@ -122,5 +122,38 @@
     </data>
     <data name="ConfirmPassword" xml:space="preserve">
         <value>Confirm password</value>
+    </data>
+    <data name="General" xml:space="preserve">
+        <value>General</value>
+    </data>
+    <data name="Address" xml:space="preserve">
+        <value>Address</value>
+    </data>
+    <data name="PreferNickname" xml:space="preserve">
+        <value>Prefer nickname instead of full name</value>
+    </data>
+    <data name="FirstDayOfWeek" xml:space="preserve">
+        <value>First day of week</value>
+    </data>
+    <data name="DayOfWeek:Monday" xml:space="preserve">
+        <value>Monday</value>
+    </data>
+    <data name="DayOfWeek:Tuesday" xml:space="preserve">
+        <value>Tuesday</value>
+    </data>
+    <data name="DayOfWeek:Wednesday" xml:space="preserve">
+        <value>Wednesday</value>
+    </data>
+    <data name="DayOfWeek:Thursday" xml:space="preserve">
+        <value>Thursday</value>
+    </data>
+    <data name="DayOfWeek:Friday" xml:space="preserve">
+        <value>Friday</value>
+    </data>
+    <data name="DayOfWeek:Saturday" xml:space="preserve">
+        <value>Saturday</value>
+    </data>
+    <data name="DayOfWeek:Sunday" xml:space="preserve">
+        <value>Sunday</value>
     </data>
 </root>

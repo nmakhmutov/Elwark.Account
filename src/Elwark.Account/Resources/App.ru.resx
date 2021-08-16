@@ -99,7 +99,7 @@
     <data name="No" xml:space="preserve">
         <value>Нет</value>
     </data>
-    <data name="AreYouSureYouWantToDeleteYourIdentity" xml:space="preserve">
+    <data name="AreYouSureYouWantToDeleteYourConnection" xml:space="preserve">
         <value>Вы действительно хотите удалить {0} {1}?</value>
     </data>
     <data name="Create" xml:space="preserve">
@@ -122,5 +122,38 @@
     </data>
     <data name="Connections" xml:space="preserve">
         <value>Подключения</value>
+    </data>
+    <data name="General" xml:space="preserve">
+        <value>Общее</value>
+    </data>
+    <data name="Address" xml:space="preserve">
+        <value>Адрес</value>
+    </data>
+    <data name="PreferNickname" xml:space="preserve">
+        <value>Предпочитать ник вместо полного имени</value>
+    </data>
+    <data name="FirstDayOfWeek" xml:space="preserve">
+        <value>Первый день недели</value>
+    </data>
+    <data name="DayOfWeek:Monday" xml:space="preserve">
+        <value>Понедельник</value>
+    </data>
+    <data name="DayOfWeek:Friday" xml:space="preserve">
+        <value>Пятница</value>
+    </data>
+    <data name="DayOfWeek:Saturday" xml:space="preserve">
+        <value>Суббота</value>
+    </data>
+    <data name="DayOfWeek:Sunday" xml:space="preserve">
+        <value>Воскресенье</value>
+    </data>
+    <data name="DayOfWeek:Thursday" xml:space="preserve">
+        <value>Четверг</value>
+    </data>
+    <data name="DayOfWeek:Tuesday" xml:space="preserve">
+        <value>Вторник</value>
+    </data>
+    <data name="DayOfWeek:Wednesday" xml:space="preserve">
+        <value>Среда</value>
     </data>
 </root>

@@ -1,5 +1,4 @@
 @using Elwark.Account.Service.Profile.Models
-@inject IStringLocalizer<App> L
 
 <MudCard>
     <MudCardHeader>
@@ -53,7 +52,9 @@
 </MudCard>
 
 @code {
-
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+    
     [Parameter]
     public SocialConnection Connection { get; set; } = default!;
 

@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Elwark.Account.Service.Converters;
-using Elwark.Account.Service.Profile.Models;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

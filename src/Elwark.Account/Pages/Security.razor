@@ -5,10 +5,7 @@
 @using Elwark.Account.Service
 @using Elwark.Account.Service.Profile.Requests
 @using Elwark.Account.States
-@inject IStringLocalizer<App> L
-@inject IProfileClient Client
-@inject ISnackbar Snackbar
-@inject ProfileStateProvider Provider
+
 @attribute [Authorize]
 
 <div class="grid">
@@ -23,7 +20,7 @@
             }
             else
             {
-                <CreatePassword 
+                <CreatePassword
                     OnSendConfirmation="@OnSendConfirmation"
                     OnCreatePassword="@OnCreatePassword"/>
             }
@@ -35,6 +32,18 @@
 
     [CascadingParameter]
     public Profile Profile { get; set; } = default!;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+
+    [Inject]
+    IProfileClient Client { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    ProfileStateProvider Provider { get; set; } = default!;
 
     private async Task<string> OnSendConfirmation()
     {

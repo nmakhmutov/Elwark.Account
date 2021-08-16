@@ -7,4 +7,6 @@ namespace Elwark.Account.Service.Profile.Models
         public override string ToString() =>
             Name + " " + Offset;
     }
+    
+    public sealed record TimeInfo(Timezone Timezone, DayOfWeek FirstDayOfWeek);
 }

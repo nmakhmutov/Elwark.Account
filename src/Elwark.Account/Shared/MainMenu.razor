@@ -1,6 +1,4 @@
 @using Microsoft.Extensions.Localization
-@inject NavigationManager Manager
-@inject IStringLocalizer<App> L
 
 <ul class="menu">
     <li>
@@ -19,3 +17,12 @@
         </NavLink>
     </li>
 </ul>
+
+@code
+{
+    [Inject]
+    NavigationManager Manager { get; set; } = default!;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+}

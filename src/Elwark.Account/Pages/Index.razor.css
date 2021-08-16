@@ -1,8 +1,6 @@
 .grid {
     display: grid;
-    gap: 24px;
-    padding: 12px;
-    background-color: var(--mud-palette-surface);
+    grid-gap: 12px;
 }
 
 .two-column {
@@ -12,5 +10,6 @@
 @media (min-width: 600px) {
     .grid {
         grid-template-columns: 1fr 1fr;
+        grid-gap: 24px;
     }
 }

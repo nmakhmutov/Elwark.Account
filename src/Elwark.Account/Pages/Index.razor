@@ -6,70 +6,87 @@
 @using Elwark.Account.Service.Profile.Requests
 @using Elwark.Account.States
 
-@inject IProfileClient Client
-@inject ProfileStateProvider Provider
-@inject ISnackbar Snackbar
-@inject IStringLocalizer<App> L
-
 @attribute [Authorize]
 
-<EditForm Model="@_model" OnValidSubmit="@OnSubmit">
-    <FluentValidationValidator/>
-    <div class="grid">
-        <MudTextField Label="@L["FirstName"]" @bind-Value="@_model.FirstName" For="@(() => _model.FirstName)"/>
-        <MudTextField Label="@L["LastName"]" @bind-Value="@_model.LastName" For="@(() => _model.LastName)"/>
-        <MudTextField Label="@L["Nickname"]" @bind-Value="@_model.Nickname" For="@(() => _model.Nickname)"/>
-        <MudDatePicker Label="@L["DateOfBirth"]" @bind-Date="@_model.DateOfBirth" MaxDate="@DateTime.UtcNow" For="@(() => _model.DateOfBirth)"/>
-        <MudSelect Label="@L["Gender"]" @bind-Value="@_model.Gender" For="@(() => _model.Gender)">
-            <MudSelectItem Value="@Gender.Male">@L["Male"]</MudSelectItem>
-            <MudSelectItem Value="@Gender.Female">@L["Female"]</MudSelectItem>
-        </MudSelect>
-        <MudSelect Label="@L["Language"]" @bind-Value="_model.Language" For="@(() => _model.Language)">
-            <MudSelectItem Value="@("en")">English</MudSelectItem>
-            <MudSelectItem Value="@("ru")">Русский</MudSelectItem>
-        </MudSelect>
+<MudPaper Class="pa-3 pa-sm-6">
+    <EditForm Model="@_model" OnValidSubmit="@OnSubmit">
+        <FluentValidationValidator/>
 
-        <MudAutocomplete
-            T="string"
-            Label="@L["Country"]"
-            @bind-Value="@_model.CountryCode"
-            For="@(() => _model.CountryCode)"
-            SearchFunc="@CountrySearch"
-            ToStringFunc="@(s => Infrastructure.Countries.FirstOrDefault(x => x.Code == s)?.Name)"
-            ResetValueOnEmptyText="true"
-            CoerceText="true">
-            <ItemTemplate Context="country">
-                <MudText>
-                    @(Infrastructure.Countries.FirstOrDefault(x => x.Code == country))
-                </MudText>
-            </ItemTemplate>
-        </MudAutocomplete>
-
-        <MudTextField Label="@L["City"]" @bind-Value="@_model.CityName" For="@(() => _model.CityName)"/>
-
-        <MudAutocomplete
-            T="string"
-            Label="@L["Timezone"]"
-            @bind-Value="@_model.Timezone"
-            For="@(() => _model.Timezone)"
-            SearchFunc="@TimezoneSearch"
-            ResetValueOnEmptyText="true"
-            CoerceText="true">
-            <ItemTemplate Context="timezone">
-                <MudText>
-                    @(Infrastructure.Timezones.FirstOrDefault(x => x.Name == timezone))
-                </MudText>
-            </ItemTemplate>
-        </MudAutocomplete>
-
-        <div class="two-column">
-            <MudTextField Label="@L["Bio"]" @bind-Value="_model.Bio" For="@(() => _model.Bio)" Lines="2"/>
+        <MudText Typo="Typo.h6">
+            @L["General"]
+        </MudText>
+        <div class="grid">
+            <MudTextField Label="@L["FirstName"]" @bind-Value="@_model.FirstName" For="@(() => _model.FirstName)"/>
+            <MudTextField Label="@L["LastName"]" @bind-Value="@_model.LastName" For="@(() => _model.LastName)"/>
+            <MudTextField Label="@L["Nickname"]" @bind-Value="@_model.Nickname" For="@(() => _model.Nickname)"/>
+            <MudCheckBox @bind-Checked="@_model.PreferNickname" Label="@L["PreferNickname"]"/>
+            <MudDatePicker Label="@L["DateOfBirth"]" @bind-Date="@_model.DateOfBirth" MaxDate="@DateTime.UtcNow" For="@(() => _model.DateOfBirth)"/>
+            <MudSelect Label="@L["Gender"]" @bind-Value="@_model.Gender" For="@(() => _model.Gender)">
+                <MudSelectItem Value="@Gender.Male">@L["Male"]</MudSelectItem>
+                <MudSelectItem Value="@Gender.Female">@L["Female"]</MudSelectItem>
+            </MudSelect>
+            <MudSelect Label="@L["Language"]" @bind-Value="_model.Language" For="@(() => _model.Language)">
+                <MudSelectItem Value="@("en")">English</MudSelectItem>
+                <MudSelectItem Value="@("ru")">Русский</MudSelectItem>
+            </MudSelect>
+            <div class="two-column">
+                <MudTextField Label="@L["Bio"]" @bind-Value="_model.Bio" For="@(() => _model.Bio)"/>
+            </div>
         </div>
-        <div class="two-column">
-            <LoadingButton Text="@L["Update"]" IsLoading="@_isUpdating"/>
+
+        <MudText Typo="Typo.h6" Class="mt-6 mt-sm-12">
+            @L["Address"]
+        </MudText>
+        <div class="grid">
+            <MudAutocomplete
+                T="string"
+                Label="@L["Country"]"
+                @bind-Value="@_model.CountryCode"
+                For="@(() => _model.CountryCode)"
+                SearchFunc="@CountrySearch"
+                ToStringFunc="@(s => Infrastructure.Countries.FirstOrDefault(x => x.Code == s)?.Name ?? "")"
+                ResetValueOnEmptyText="true"
+                CoerceText="true">
+                <ItemTemplate Context="country">
+                    <MudText>
+                        @(Infrastructure.Countries.FirstOrDefault(x => x.Code == country))
+                    </MudText>
+                </ItemTemplate>
+            </MudAutocomplete>
+
+            <MudTextField Label="@L["City"]" @bind-Value="@_model.CityName" For="@(() => _model.CityName)"/>
         </div>
-    </div>
-</EditForm>
+
+        <MudText Typo="Typo.h6" Class="mt-6 mt-sm-12">
+            @L["Timezone"]
+        </MudText>
+        <div class="grid">
+            <MudAutocomplete
+                T="string"
+                Label="@L["Timezone"]"
+                @bind-Value="@_model.Timezone"
+                For="@(() => _model.Timezone)"
+                SearchFunc="@TimezoneSearch"
+                ResetValueOnEmptyText="true"
+                CoerceText="true">
+                <ItemTemplate Context="timezone">
+                    <MudText>
+                        @(Infrastructure.Timezones.FirstOrDefault(x => x.Name == timezone))
+                    </MudText>
+                </ItemTemplate>
+            </MudAutocomplete>
+
+            <MudSelect Label="@L["FirstDayOfWeek"]" @bind-Value="_model.FirstDayOfWeek" For="@(() => _model.FirstDayOfWeek)">
+                @foreach (var day in Enum.GetValues<DayOfWeek>())
+                {
+                    <MudSelectItem Value="@day">@L[$"DayOfWeek:{day}"]</MudSelectItem>    
+                }
+            </MudSelect>
+        </div>
+
+        <LoadingButton Class="mt-6 mt-sm-12" Text="@L["Update"]" IsLoading="@_isUpdating"/>
+    </EditForm>
+</MudPaper>
 
 @code
 {
@@ -79,6 +96,18 @@
     [CascadingParameter]
     public InfrastructureState Infrastructure { get; set; } = default!;
 
+    [Inject]
+    IProfileClient Client { get; set; } = default!;
+
+    [Inject]
+    ProfileStateProvider Provider { get; set; } = default!;
+
+    [Inject]
+    ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+
     private UpdateProfile _model = default!;
     private bool _isUpdating;
 
@@ -87,13 +116,15 @@
             Profile.FirstName,
             Profile.LastName,
             Profile.Nickname,
+            Profile.PreferNickname,
             Profile.Language,
             Profile.Gender,
             Profile.DateOfBirth,
             Profile.Bio,
             Profile.Address.CountryCode,
             Profile.Address.CityName,
-            Profile.Timezone.Name
+            Profile.TimeInfo.Timezone.Name,
+            Profile.TimeInfo.FirstDayOfWeek
             );
 
     private Task<IEnumerable<string>> CountrySearch(string? arg)

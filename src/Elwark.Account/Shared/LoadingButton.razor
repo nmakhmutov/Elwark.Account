@@ -1,5 +1,3 @@
-@inject IStringLocalizer<App> L
-
 <MudButton ButtonType="@ButtonType" Variant="@Variant" Color="@Color" Disabled="@IsLoading" Class="@Class">
     @if (IsLoading)
     {
@@ -16,6 +14,9 @@
 
 @code {
 
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+        
     [Parameter]
     public string Text { get; set; } = string.Empty;
     
