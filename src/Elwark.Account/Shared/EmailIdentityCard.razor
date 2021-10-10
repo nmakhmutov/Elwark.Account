@@ -26,7 +26,7 @@
             }
         </CardHeaderContent>
         <CardHeaderActions>
-            @if (Email.EmailType != EmailType.PrimaryEmail)
+            @if (!Email.IsPrimary)
             {
                 <MudMenu Direction="Direction.Left" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert">
                     <MudMenuItem OnClick="OnDeleteClick">@L["Delete"]</MudMenuItem>
@@ -40,7 +40,7 @@
                 @Email.Value
             </strong>
         </MudText>
-        @if (Email.IsConfirmed && Email.EmailType == EmailType.PrimaryEmail)
+        @if (Email.IsConfirmed && Email.IsPrimary)
         {
             <MudText>
                 @L["PrimaryEmail"]
@@ -48,25 +48,23 @@
         }
         else if (Email.IsConfirmed)
         {
-            <MudSelect
-                Value="@Email.EmailType"
-                Variant="Variant.Text"
-                ValueChanged="@((EmailType type) => OnEmailTypeChanged(type))"
-                Disabled="_isLoading">
-                <MudSelectItem Value="EmailType.PrimaryEmail">
-                    @L["PrimaryEmail"]
-                </MudSelectItem>
-                <MudSelectItem Value="EmailType.SecondaryEmail">
-                    @L["SecondaryEmail"]
-                </MudSelectItem>
-                <MudSelectItem Value="EmailType.None">
-                    @L["None"]
-                </MudSelectItem>
-            </MudSelect>
+            <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnSetPrimaryClick" Disabled="@_isLoading">
+                @if (_isLoading)
+                {
+                    <div class="d-flex flex-row align-center">
+                        <MudProgressCircular Class="mr-3" Size="Size.Small" Indeterminate="true"/>
+                        @L["Loading"]
+                    </div>
+                }
+                else
+                {
+                    @L["SetAsPrimaryEmail"]
+                }
+            </MudButton>
         }
         else
         {
-            <MudButton Class="mt-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnConfirmationClick" Disabled="@_isLoading">
+            <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnConfirmationClick" Disabled="@_isLoading">
                 @if (_isLoading)
                 {
                     <div class="d-flex flex-row align-center">
@@ -97,10 +95,10 @@
     public EventCallback<Connection> OnDelete { get; set; }
 
     [Parameter]
-    public EventCallback<Connection> OnConfirmation { get; set; }
+    public EventCallback<EmailConnection> OnConfirmation { get; set; }
 
     [Parameter]
-    public EventCallback<ChangeEmailType> OnTypeChange { get; set; }
+    public EventCallback<EmailConnection> OnSetPrimary { get; set; }
 
     private async Task OnDeleteClick()
     {
@@ -114,10 +112,10 @@
         _isLoading = false;
     }
 
-    private async Task OnEmailTypeChanged(EmailType type)
+    private async Task OnSetPrimaryClick()
     {
         _isLoading = true;
-        await OnTypeChange.InvokeAsync(new ChangeEmailType(Email.Value, type));
+        await OnSetPrimary.InvokeAsync(Email);
         _isLoading = false;
     }
 

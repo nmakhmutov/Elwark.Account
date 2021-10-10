@@ -1,6 +1,8 @@
 @using Elwark.Account.Service.Profile
 @using Elwark.Account.Service
+@using Elwark.Account.Service.Country
 @using Elwark.Account.Service.Profile.Models
+@using Elwark.Account.Service.Timezone
 @using Elwark.Account.States
 @implements IDisposable
 
@@ -11,8 +13,11 @@
 @code {
 
     [Inject]
-    private IInfrastructureClient Client { get; set; } = default!;
+    private ICountryClient Country { get; set; } = default!;
 
+    [Inject]
+    private ITimezoneClient Timezone { get; set; } = default!;
+    
     [Inject]
     private InfrastructureStateProvider Provider { get; set; } = default!;
 
@@ -22,16 +27,16 @@
     protected override async Task OnInitializedAsync()
     {
         Provider.InfrastructureStateChanged += StateHasChanged;
-        var countries = await Client.GetCountriesAsync();
+        
+        var countries = await Country.GetAsync();
         if(countries.Status == ResponseStatus.Success)
             Provider.Update(countries.Data);
 
-        var timezones = await Client.GetTimezonesAsync();
+        var timezones = await Timezone.GetAsync();
         if(timezones.Status == ResponseStatus.Success)
             Provider.Update(timezones.Data);
     }
 
     public void Dispose() =>
         Provider.InfrastructureStateChanged -= StateHasChanged;
-
 }

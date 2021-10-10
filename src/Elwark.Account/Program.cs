@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Elwark.Account.Infrastructure;
+using Elwark.Account.Service.Country;
 using Elwark.Account.Service.Profile;
+using Elwark.Account.Service.Timezone;
 using Elwark.Account.States;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -50,7 +52,15 @@ namespace Elwark.Account
                 .AddPolicyHandler(policy);
 
             builder.Services
-                .AddHttpClient<IInfrastructureClient, InfrastructureClient>(client =>
+                .AddHttpClient<ICountryClient, CountryClient>(client =>
+                    client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
+                )
+                .AddHttpMessageHandler<AccountLocalization>()
+                .AddHttpMessageHandler<AccountAuthorization>()
+                .AddPolicyHandler(policy);
+            
+            builder.Services
+                .AddHttpClient<ITimezoneClient, TimezoneClient>(client =>
                     client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
                 )
                 .AddHttpMessageHandler<AccountLocalization>()

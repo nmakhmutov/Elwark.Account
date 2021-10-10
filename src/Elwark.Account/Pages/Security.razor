@@ -57,7 +57,7 @@
             case ResponseStatus.Success:
                 var primary = Profile.Connections.Where(x => x.IdentityType == IdentityType.Email)
                     .Cast<EmailConnection>()
-                    .First(x => x.EmailType == EmailType.PrimaryEmail);
+                    .First(x => x.IsPrimary);
                 Snackbar.Add($"Confirmation code sent to {primary.Value}", Severity.Success);
                 return response.Data.Id;
         }

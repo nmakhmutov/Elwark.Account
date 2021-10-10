@@ -5,7 +5,7 @@ using Elwark.Account.Service.Profile.Requests;
 
 namespace Elwark.Account.Service.Profile
 {
-    public class ProfileClient : GatewayBase, IProfileClient
+    internal sealed class ProfileClient : GatewayBase, IProfileClient
     {
         private readonly HttpClient _client;
 
@@ -26,8 +26,8 @@ namespace Elwark.Account.Service.Profile
             Confirm request) => ExecuteAsync<Models.Profile>(() =>
             _client.PutAsync($"profiles/me/connections/{type}/{value}/confirm", ToJson(request)));
 
-        public Task<ApiResponse<Models.Profile>> ChangeEmailType(ChangeEmailType request) =>
-            ExecuteAsync<Models.Profile>(() => _client.PutAsync($"profiles/me/connections/email/{request.Email}/{request.Type}", ToJson(request)));
+        public Task<ApiResponse<Models.Profile>> SetAsPrimaryAsync(string email) =>
+            ExecuteAsync<Models.Profile>(() => _client.PutAsync($"profiles/me/connections/email/{email}/primary", EmptyContent));
 
         public Task<ApiResponse<Models.Profile>> DeleteConnectionAsync(IdentityType type, string value) =>
             ExecuteAsync<Models.Profile>(() => _client.DeleteAsync($"profiles/me/connections/{type}/{value}"));

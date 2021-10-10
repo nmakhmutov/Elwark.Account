@@ -1,4 +1,4 @@
-namespace Elwark.Account.Service.Profile.Models
+namespace Elwark.Account.Service.Country
 {
     public sealed record Country(string Code, string Name)
     {

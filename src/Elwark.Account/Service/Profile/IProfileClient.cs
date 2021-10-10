@@ -16,7 +16,7 @@ namespace Elwark.Account.Service.Profile
 
         Task<ApiResponse<Models.Profile>> ConfirmConnectionAsync(IdentityType type, string value, Confirm request);
 
-        Task<ApiResponse<Models.Profile>> ChangeEmailType(ChangeEmailType request);
+        Task<ApiResponse<Models.Profile>> SetAsPrimaryAsync(string email);
         
         Task<ApiResponse<Confirming>> CreatingPasswordAsync();
         

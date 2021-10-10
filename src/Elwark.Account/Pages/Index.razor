@@ -20,26 +20,17 @@
             <MudTextField Label="@L["LastName"]" @bind-Value="@_model.LastName" For="@(() => _model.LastName)"/>
             <MudTextField Label="@L["Nickname"]" @bind-Value="@_model.Nickname" For="@(() => _model.Nickname)"/>
             <MudCheckBox @bind-Checked="@_model.PreferNickname" Label="@L["PreferNickname"]"/>
-            <MudDatePicker Label="@L["DateOfBirth"]" @bind-Date="@_model.DateOfBirth" MaxDate="@DateTime.UtcNow" For="@(() => _model.DateOfBirth)"/>
-            <MudSelect Label="@L["Gender"]" @bind-Value="@_model.Gender" For="@(() => _model.Gender)">
-                <MudSelectItem Value="@Gender.Male">@L["Male"]</MudSelectItem>
-                <MudSelectItem Value="@Gender.Female">@L["Female"]</MudSelectItem>
-            </MudSelect>
             <MudSelect Label="@L["Language"]" @bind-Value="_model.Language" For="@(() => _model.Language)">
                 <MudSelectItem Value="@("en")">English</MudSelectItem>
                 <MudSelectItem Value="@("ru")">Русский</MudSelectItem>
             </MudSelect>
-            <div class="two-column">
-                <MudTextField Label="@L["Bio"]" @bind-Value="_model.Bio" For="@(() => _model.Bio)"/>
-            </div>
         </div>
 
         <MudText Typo="Typo.h6" Class="mt-6 mt-sm-12">
-            @L["Address"]
+            @L["Timezone"]
         </MudText>
         <div class="grid">
             <MudAutocomplete
-                T="string"
                 Label="@L["Country"]"
                 @bind-Value="@_model.CountryCode"
                 For="@(() => _model.CountryCode)"
@@ -53,14 +44,7 @@
                     </MudText>
                 </ItemTemplate>
             </MudAutocomplete>
-
-            <MudTextField Label="@L["City"]" @bind-Value="@_model.CityName" For="@(() => _model.CityName)"/>
-        </div>
-
-        <MudText Typo="Typo.h6" Class="mt-6 mt-sm-12">
-            @L["Timezone"]
-        </MudText>
-        <div class="grid">
+            
             <MudAutocomplete
                 T="string"
                 Label="@L["Timezone"]"
@@ -79,7 +63,7 @@
             <MudSelect Label="@L["FirstDayOfWeek"]" @bind-Value="_model.FirstDayOfWeek" For="@(() => _model.FirstDayOfWeek)">
                 @foreach (var day in Enum.GetValues<DayOfWeek>())
                 {
-                    <MudSelectItem Value="@day">@L[$"DayOfWeek:{day}"]</MudSelectItem>    
+                    <MudSelectItem Value="@day">@L[$"DayOfWeek:{day}"]</MudSelectItem>
                 }
             </MudSelect>
         </div>
@@ -118,25 +102,21 @@
             Profile.Nickname,
             Profile.PreferNickname,
             Profile.Language,
-            Profile.Gender,
-            Profile.DateOfBirth,
-            Profile.Bio,
-            Profile.Address.CountryCode,
-            Profile.Address.CityName,
-            Profile.TimeInfo.Timezone.Name,
-            Profile.TimeInfo.FirstDayOfWeek
+            Profile.CountryCode,
+            Profile.TimeZone,
+            Profile.FirstDayOfWeek
             );
 
-    private Task<IEnumerable<string>> CountrySearch(string? arg)
+    private Task<IEnumerable<string?>> CountrySearch(string? arg)
     {
         if (string.IsNullOrEmpty(arg))
-            return Task.FromResult(Enumerable.Empty<string>());
+            return Task.FromResult(Enumerable.Empty<string?>());
 
         var result = Infrastructure.Countries
             .Where(x => x.ToString().Contains(arg, StringComparison.InvariantCultureIgnoreCase))
             .Select(x => x.Code);
 
-        return Task.FromResult(result);
+        return Task.FromResult<IEnumerable<string?>>(result);
     }
 
     private Task<IEnumerable<string>> TimezoneSearch(string? arg)

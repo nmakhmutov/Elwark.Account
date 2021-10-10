@@ -10,17 +10,10 @@
                 @Profile.FullName
             </MudText>
             <MudText Typo="Typo.subtitle1" Class="mb-3">
-                @if (!string.IsNullOrEmpty(Profile.Address.CityName))
+                @if (Profile.CountryCode is not  null)
                 {
-                    @(Profile.Address.CityName + ", ")
+                    @(Infrastructure.Countries.FirstOrDefault(x => x.Code == Profile.CountryCode)?.Name)
                 }
-                @if (Profile.Address.CountryCode is not  null)
-                {
-                    @(Infrastructure.Countries.FirstOrDefault(x => x.Code == Profile.Address.CountryCode)?.Name)
-                }
-            </MudText>
-            <MudText Typo="Typo.body2">
-                @Profile.Bio
             </MudText>
         </div>
     </div>

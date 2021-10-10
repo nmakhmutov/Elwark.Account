@@ -27,15 +27,6 @@
     <data name="Add" xml:space="preserve">
         <value>Добавить</value>
     </data>
-    <data name="Bio" xml:space="preserve">
-        <value>Биография</value>
-    </data>
-    <data name="DateOfBirth" xml:space="preserve">
-        <value>Дата рождения</value>
-    </data>
-    <data name="City" xml:space="preserve">
-        <value>Город</value>
-    </data>
     <data name="Confirm" xml:space="preserve">
         <value>Подтвердить</value>
     </data>
@@ -47,9 +38,6 @@
     </data>
     <data name="FirstName" xml:space="preserve">
         <value>Имя</value>
-    </data>
-    <data name="Gender" xml:space="preserve">
-        <value>Пол</value>
     </data>
     <data name="Language" xml:space="preserve">
         <value>Язык</value>
@@ -68,9 +56,6 @@
     </data>
     <data name="PrimaryEmail" xml:space="preserve">
         <value>Основной email</value>
-    </data>
-    <data name="SecondaryEmail" xml:space="preserve">
-        <value>Дополнительный email</value>
     </data>
     <data name="Timezone" xml:space="preserve">
         <value>Часовой пояс</value>
@@ -126,9 +111,6 @@
     <data name="General" xml:space="preserve">
         <value>Общее</value>
     </data>
-    <data name="Address" xml:space="preserve">
-        <value>Адрес</value>
-    </data>
     <data name="PreferNickname" xml:space="preserve">
         <value>Предпочитать ник вместо полного имени</value>
     </data>
@@ -155,5 +137,8 @@
     </data>
     <data name="DayOfWeek:Wednesday" xml:space="preserve">
         <value>Среда</value>
+    </data>
+    <data name="SetAsPrimaryEmail" xml:space="preserve">
+        <value>Сделать основным</value>
     </data>
 </root>

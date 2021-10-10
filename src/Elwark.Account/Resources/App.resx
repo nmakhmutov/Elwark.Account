@@ -36,26 +36,14 @@
     <data name="Nickname" xml:space="preserve">
         <value>Nickname</value>
     </data>
-    <data name="DateOfBirth" xml:space="preserve">
-        <value>Date of birth</value>
-    </data>
-    <data name="Gender" xml:space="preserve">
-        <value>Gender</value>
-    </data>
     <data name="Language" xml:space="preserve">
         <value>Language</value>
     </data>
     <data name="Country" xml:space="preserve">
         <value>Country</value>
     </data>
-    <data name="City" xml:space="preserve">
-        <value>City</value>
-    </data>
     <data name="Timezone" xml:space="preserve">
         <value>Timezone</value>
-    </data>
-    <data name="Bio" xml:space="preserve">
-        <value>Bio</value>
     </data>
     <data name="Update" xml:space="preserve">
         <value>Update</value>
@@ -65,9 +53,6 @@
     </data>
     <data name="PrimaryEmail" xml:space="preserve">
         <value>Primary email</value>
-    </data>
-    <data name="SecondaryEmail" xml:space="preserve">
-        <value>Secondary email</value>
     </data>
     <data name="None" xml:space="preserve">
         <value>None</value>
@@ -126,9 +111,6 @@
     <data name="General" xml:space="preserve">
         <value>General</value>
     </data>
-    <data name="Address" xml:space="preserve">
-        <value>Address</value>
-    </data>
     <data name="PreferNickname" xml:space="preserve">
         <value>Prefer nickname instead of full name</value>
     </data>
@@ -155,5 +137,8 @@
     </data>
     <data name="DayOfWeek:Sunday" xml:space="preserve">
         <value>Sunday</value>
+    </data>
+    <data name="SetAsPrimaryEmail" xml:space="preserve">
+        <value>Set as primary email</value>
     </data>
 </root>

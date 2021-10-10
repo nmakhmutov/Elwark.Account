@@ -3,7 +3,6 @@
 @using Elwark.Account.Service.Profile.Models
 @using Elwark.Account.Service.Profile
 @using Elwark.Account.Service
-@using Elwark.Account.Service.Profile.Requests
 @using Microsoft.Extensions.Configuration
 @using System.Net
 @using Elwark.Account.States
@@ -19,7 +18,11 @@
         switch (identity)
         {
             case EmailConnection x:
-                <EmailIdentityCard Email="@x" OnDelete="@OnDelete" OnConfirmation="@OnConfirmation" OnTypeChange="@OnTypeChanged"/>
+                <EmailIdentityCard 
+                    Email="@x" 
+                    OnDelete="@OnDelete" 
+                    OnConfirmation="@OnConfirmation" 
+                    OnSetPrimary="@OnSetPrimaryEmail"/>
                 break;
 
             case SocialConnection x:
@@ -92,7 +95,7 @@
         }
     }
 
-    private async Task OnConfirmation(Connection connection)
+    private async Task OnConfirmation(EmailConnection connection)
     {
         var profile = await Client.ConfirmingConnectionAsync(connection.IdentityType, connection.Value);
         switch (profile.Status)
@@ -122,9 +125,9 @@
         }
     }
 
-    private async Task OnTypeChanged(ChangeEmailType request)
+    private async Task OnSetPrimaryEmail(EmailConnection connection)
     {
-        var profile = await Client.ChangeEmailType(request);
+        var profile = await Client.SetAsPrimaryAsync(connection.Value);
         switch (profile.Status)
         {
             case ResponseStatus.Fail:
