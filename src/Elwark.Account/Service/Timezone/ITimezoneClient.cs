@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace Elwark.Account.Service.Timezone
+namespace Elwark.Account.Service.Timezone;
+
+public interface ITimezoneClient
 {
-    public interface ITimezoneClient
-    {
-        Task<ApiResponse<Timezone[]>> GetAsync();
-    }
+    Task<ApiResponse<Timezone[]>> GetAsync();
 }

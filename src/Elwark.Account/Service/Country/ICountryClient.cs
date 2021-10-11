@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace Elwark.Account.Service.Country
+namespace Elwark.Account.Service.Country;
+
+public interface ICountryClient
 {
-    public interface ICountryClient
-    {
-        Task<ApiResponse<Country[]>> GetAsync();
-    }
+    Task<ApiResponse<Country[]>> GetAsync();
 }

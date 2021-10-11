@@ -6,34 +6,16 @@
 
 <MudLayout>
     <MudAppBar Elevation="25">
-        <div class="d-flex flex-row align-end">
-            <img src="https://res.cloudinary.com/elwark/image/upload/v1613019547/Elwark/white/36x36_rvcbiz.png" alt="Elwark logo">
-            <MudText Typo="Typo.h5" Class="d-none d-sm-block">
-                Account
-            </MudText>
-        </div>
+        <img src="https://res.cloudinary.com/elwark/image/upload/v1613019547/Elwark/white/36x36_rvcbiz.png" alt="Elwark logo">
         <MudSpacer/>
-        <LanguageSelector/>
+        <LanguageDropdown/>
         <MudTooltip Text="Toggle theme">
             <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" OnClick="@SwitchTheme"/>
         </MudTooltip>
     </MudAppBar>
 
-    <MudMainContent Class="main-content">
-        <CascadingProfileState>
-            <CascadingInfrastructureState>
-                <div class="header mb-3">
-                    <div class="background"></div>
-                    <MudContainer MaxWidth="MaxWidth.Medium">
-                        <MainHeader Class="mt-3 mb-6"/>
-                        <MainMenu/>
-                    </MudContainer>
-                </div>
-                <MudContainer MaxWidth="MaxWidth.Medium">
-                    @Body
-                </MudContainer>
-            </CascadingInfrastructureState>
-        </CascadingProfileState>
+    <MudMainContent>
+        @Body
     </MudMainContent>
 </MudLayout>
 

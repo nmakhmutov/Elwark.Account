@@ -1,10 +1,9 @@
 using System;
 
-namespace Elwark.Account.Service.Timezone
+namespace Elwark.Account.Service.Timezone;
+
+public record Timezone(string Name, TimeSpan Offset)
 {
-    public record Timezone(string Name, TimeSpan Offset)
-    {
-        public override string ToString() =>
-            Name + " " + Offset;
-    }
+    public override string ToString() =>
+        $"{Name} {Offset}";
 }

@@ -24,8 +24,8 @@
     <data name="Security" xml:space="preserve">
         <value>Безопасность</value>
     </data>
-    <data name="Add" xml:space="preserve">
-        <value>Добавить</value>
+    <data name="AddConnection" xml:space="preserve">
+        <value>Добавить подключение</value>
     </data>
     <data name="Confirm" xml:space="preserve">
         <value>Подтвердить</value>
@@ -140,5 +140,11 @@
     </data>
     <data name="SetAsPrimaryEmail" xml:space="preserve">
         <value>Сделать основным</value>
+    </data>
+    <data name="MemberSince" xml:space="preserve">
+        <value>Участник с {0}</value>
+    </data>
+    <data name="PreferredLanguage" xml:space="preserve">
+        <value>Предпочитаемый язык</value>
     </data>
 </root>

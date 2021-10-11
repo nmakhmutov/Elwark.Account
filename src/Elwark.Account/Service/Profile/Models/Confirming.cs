@@ -1,4 +1,3 @@
-namespace Elwark.Account.Service.Profile.Models
-{
-    public sealed record Confirming(string Id);
-}
+namespace Elwark.Account.Service.Profile.Models;
+
+public sealed record Confirming(string Id);

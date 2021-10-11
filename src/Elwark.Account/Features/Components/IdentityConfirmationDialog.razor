@@ -2,7 +2,6 @@
 @using Elwark.Account.Service.Profile
 @using Elwark.Account.Service.Profile.Requests
 @using Elwark.Account.Service
-@using Elwark.Account.States
 
 <MudDialog>
     <DialogContent>
@@ -28,9 +27,6 @@
 
     [Inject]
     IProfileClient Client { get; set; } = default!;
-
-    [Inject]
-    ProfileStateProvider Provider { get; set; } = default!;
 
     [Inject]
     ISnackbar Snackbar { get; set; } = default!;
@@ -64,7 +60,6 @@
                 break;
 
             case ResponseStatus.Success:
-                Provider.Update(account.Data);
                 Snackbar.Add(L["AccountUpdated"], Severity.Success);
                 MudDialog.Close(DialogResult.Ok(Connection));
                 break;

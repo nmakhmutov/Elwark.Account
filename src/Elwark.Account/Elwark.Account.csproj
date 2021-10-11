@@ -29,4 +29,11 @@
       </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Shared\CascadingInfrastructureState.razor" />
+      <_ContentIncludedByDefault Remove="Shared\CascadingProfileState.razor" />
+      <_ContentIncludedByDefault Remove="Shared\MainHeader.razor" />
+      <_ContentIncludedByDefault Remove="Shared\MainMenu.razor" />
+    </ItemGroup>
+
 </Project>

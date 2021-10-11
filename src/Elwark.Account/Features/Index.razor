@@ -1,0 +1,201 @@
+﻿@page "/"
+@using Elwark.Account.Service.Profile
+@using Elwark.Account.Service.Profile.Models
+@using Microsoft.AspNetCore.Authorization
+@using Elwark.Account.Service
+@using Elwark.Account.Service.Country
+@using Elwark.Account.Service.Profile.Requests
+@using Elwark.Account.Service.Timezone
+@using Microsoft.Extensions.Configuration
+@using System.Net
+
+@attribute [Authorize]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-3 my-sm-6">
+    <ApiViewer Response="@_response">
+        <Loading>
+            <MudSkeleton/>
+        </Loading>
+        <Success Context="profile">
+            <MudPaper Class="pa-3 pa-sm-6 mb-3 mb-sm-6">
+                <ProfileEditor
+                    Model="@_model"
+                    Timezones="@_timezones"
+                    Countries="@_countries"
+                    OnUpdate="@UpdateProfileAsync"/>
+            </MudPaper>
+            <section class="mb-3 mb-sm-6">
+                <MudText Typo="Typo.h5" Class="mb-3">
+                    @L["Security"]
+                </MudText>
+                <MudPaper Class="pa-3 pa-sm-6">
+                    security
+                </MudPaper>
+            </section>
+            <section class="mb-3 mb-sm-6">
+                <MudText Typo="Typo.h5" Class="mb-3">
+                    @L["Connections"]
+                </MudText>
+                <MudGrid Spacing="3">
+                    @foreach (var connection in profile.Connections)
+                    {
+                        <MudItem xs="12" sm="6" md="4" lg="3">
+                            @switch (connection)
+                            {
+                                case EmailConnection email:
+                                    <EmailIdentityCard
+                                        Email="@email"
+                                        OnDelete="@DeleteConnectionAsync"
+                                        OnConfirmation="@ConfirmationConnectionAsync"
+                                        OnSetPrimary="@SetAsPrimaryEmailAsync"/>
+                                    break;
+
+                                case SocialConnection social:
+                                    <SocialIdentityCard Connection="@social" OnDelete="@DeleteConnectionAsync"/>
+                                    break;
+
+                                default:
+                                    throw new ArgumentOutOfRangeException(nameof(connection));
+                            }
+                        </MudItem>
+                    }
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                        <a href="@_addLink">
+                            <MudPaper Class="pa-3 pa-sm-6">
+                                <div class="d-flex flex-column justify-center align-center">
+                                    <MudIcon Icon="@Icons.Outlined.Add" Size="Size.Large" Color="Color.Primary"/>
+                                    <MudText Typo="Typo.subtitle1" Color="Color.Primary">
+                                        @L["AddConnection"]
+                                    </MudText>
+                                </div>
+                            </MudPaper>
+                        </a>
+                    </MudItem>
+                </MudGrid>
+            </section>
+        </Success>
+    </ApiViewer>
+</MudContainer>
+
+@code
+{
+    private ProfileEditorModel _model = default!;
+    private ApiResponse<Profile> _response = ApiResponse<Profile>.Loading();
+    private Timezone[] _timezones = Array.Empty<Timezone>();
+    private Country[] _countries = Array.Empty<Country>();
+    private string _addLink = string.Empty;
+
+    [Inject]
+    private IProfileClient ProfileClient { get; set; } = default!;
+
+    [Inject]
+    private ITimezoneClient TimezoneClient { get; set; } = default!;
+
+    [Inject]
+    private ICountryClient CountryClient { get; set; } = default!;
+
+    [Inject]
+    private IConfiguration Configuration { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    private IStringLocalizer<App> L { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var returnUrl = WebUtility.UrlEncode(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
+        _addLink = new Uri(new Uri(Configuration["OpenIdConnect:Authority"]), $"attach?returnUrl={returnUrl}")
+            .ToString();
+
+        _response = await ProfileClient.GetAsync();
+
+        if (_response.IsSuccess)
+            _model = ToEditorModel(_response.Data);
+
+        var timezones = await TimezoneClient.GetAsync();
+        if (timezones.IsSuccess)
+            _timezones = timezones.Data;
+
+        var countries = await CountryClient.GetAsync();
+        if (countries.IsSuccess)
+            _countries = countries.Data;
+    }
+
+    private async Task UpdateProfileAsync(ProfileEditorModel model)
+    {
+        var request = new UpdateProfileRequest(
+            model.FirstName,
+            model.LastName,
+            model.Nickname,
+            model.PreferNickname,
+            model.Language,
+            model.CountryCode,
+            model.Timezone,
+            model.FirstDayOfWeek
+            );
+
+        _response = await ProfileClient.UpdateAsync(request);
+        if (_response.IsSuccess)
+        {
+            _model = ToEditorModel(_response.Data);
+            Snackbar.Add(L["AccountUpdated"], Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Something went wrong", Severity.Error);
+        }
+    }
+
+    private static ProfileEditorModel ToEditorModel(Profile profile) =>
+        new(
+            profile.FirstName,
+            profile.LastName,
+            profile.Nickname,
+            profile.PreferNickname,
+            profile.Language,
+            profile.CountryCode,
+            profile.TimeZone,
+            profile.FirstDayOfWeek,
+            profile.Picture,
+            profile.FullName,
+            profile.CreatedAt
+            );
+
+    private async Task DeleteConnectionAsync(Connection connection)
+    {
+        var (type, value, _) = connection;
+        var result = await DialogService.ShowMessageBox(
+            new MessageBoxOptions
+            {
+                Message = L["AreYouSureYouWantToDeleteYourConnection", type.ToString(), value],
+                Title = L["Warning"],
+                YesText = L["Delete"],
+                NoText = L["No"]
+            });
+
+        if (result != true)
+            return;
+
+        _response = await ProfileClient.DeleteConnectionAsync(type, value);
+    }
+
+    private async Task ConfirmationConnectionAsync(EmailConnection email)
+    {
+        var profile = await ProfileClient.ConfirmingConnectionAsync(email.IdentityType, email.Value);
+        if (profile.IsSuccess)
+            DialogService.Show<IdentityConfirmationDialog>();
+    }
+
+    private async Task SetAsPrimaryEmailAsync(EmailConnection email)
+    {
+        _response = await ProfileClient.SetAsPrimaryAsync(email.Value);
+    }
+}

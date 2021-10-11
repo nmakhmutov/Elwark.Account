@@ -1,8 +1,7 @@
-namespace Elwark.Account.Service.Country
+namespace Elwark.Account.Service.Country;
+
+public sealed record Country(string Code, string Name)
 {
-    public sealed record Country(string Code, string Name)
-    {
-        public override string ToString() =>
-            $"{Name} ({Code})";
-    }
+    public override string ToString() =>
+        $"{Name} ({Code})";
 }
