@@ -66,8 +66,8 @@
     <data name="NotConfirmed" xml:space="preserve">
         <value>Not confirmed</value>
     </data>
-    <data name="Add" xml:space="preserve">
-        <value>Add</value>
+    <data name="AddConnection" xml:space="preserve">
+        <value>Add connection</value>
     </data>
     <data name="AccountUpdated" xml:space="preserve">
         <value>Account updated</value>
@@ -96,8 +96,8 @@
     <data name="Password" xml:space="preserve">
         <value>Password</value>
     </data>
-    <data name="Code" xml:space="preserve">
-        <value>Code</value>
+    <data name="ConfirmationCode" xml:space="preserve">
+        <value>Confirmation code</value>
     </data>
     <data name="NewPassword" xml:space="preserve">
         <value>New password</value>
@@ -140,5 +140,20 @@
     </data>
     <data name="SetAsPrimaryEmail" xml:space="preserve">
         <value>Set as primary email</value>
+    </data>
+    <data name="MemberSince" xml:space="preserve">
+        <value>Member since {0}</value>
+    </data>
+    <data name="PreferredLanguage" xml:space="preserve">
+        <value>Preferred language</value>
+    </data>
+    <data name="SomethingWentWrong" xml:space="preserve">
+        <value>Something went wrong</value>
+    </data>
+    <data name="PasswordsShouldBeEquals" xml:space="preserve">
+        <value>Passwords should be equals</value>
+    </data>
+    <data name="ConfirmationCodeSent" xml:space="preserve">
+        <value>Confirmation code sent</value>
     </data>
 </root>

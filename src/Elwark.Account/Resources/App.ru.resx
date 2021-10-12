@@ -24,8 +24,8 @@
     <data name="Security" xml:space="preserve">
         <value>Безопасность</value>
     </data>
-    <data name="Add" xml:space="preserve">
-        <value>Добавить</value>
+    <data name="AddConnection" xml:space="preserve">
+        <value>Добавить подключение</value>
     </data>
     <data name="Confirm" xml:space="preserve">
         <value>Подтвердить</value>
@@ -93,9 +93,6 @@
     <data name="Password" xml:space="preserve">
         <value>Пароль</value>
     </data>
-    <data name="Code" xml:space="preserve">
-        <value>Код</value>
-    </data>
     <data name="NewPassword" xml:space="preserve">
         <value>Новый пароль</value>
     </data>
@@ -140,5 +137,23 @@
     </data>
     <data name="SetAsPrimaryEmail" xml:space="preserve">
         <value>Сделать основным</value>
+    </data>
+    <data name="MemberSince" xml:space="preserve">
+        <value>Участник с {0}</value>
+    </data>
+    <data name="PreferredLanguage" xml:space="preserve">
+        <value>Предпочитаемый язык</value>
+    </data>
+    <data name="SomethingWentWrong" xml:space="preserve">
+        <value>Что-то пошло не так</value>
+    </data>
+    <data name="PasswordsShouldBeEquals" xml:space="preserve">
+        <value>Пароли должны быть одинаковыми</value>
+    </data>
+    <data name="ConfirmationCode" xml:space="preserve">
+        <value>Код подтверждения</value>
+    </data>
+    <data name="ConfirmationCodeSent" xml:space="preserve">
+        <value>Код подтверждения отправлен</value>
     </data>
 </root>
