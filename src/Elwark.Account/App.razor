@@ -14,3 +14,12 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code{
+
+    [Inject]
+    private ThemeProvider ThemeProvider { get; set; } = default!;
+
+    protected override Task OnInitializedAsync() => ThemeProvider.InitAsync();
+
+}

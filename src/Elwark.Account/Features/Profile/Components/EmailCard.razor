@@ -1,0 +1,161 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.Extensions.Localization
+@using Elwark.Account.Gateways.Profile.Models
+@using FluentValidation
+
+<MudCard>
+    <MudCardHeader Class="pa-3">
+        <CardHeaderAvatar>
+            <MudAvatar Style="background: #FFB800">
+                <MudIcon Icon="@Icons.Material.Filled.AlternateEmail"/>
+            </MudAvatar>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">Email</MudText>
+            @if (Email.IsConfirmed)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Success">
+                    @L["Confirmed"]
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Color="Color.Warning">
+                    @L["NotConfirmed"]
+                </MudText>
+            }
+        </CardHeaderContent>
+        <CardHeaderActions>
+            @if (!Email.IsPrimary)
+            {
+                <MudMenu Direction="Direction.Left" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert">
+                    @if (Email.IsConfirmed)
+                    {
+                        <MudMenuItem OnClick="OnSetPrimaryClick">@L["SetAsPrimaryEmail"]</MudMenuItem>
+                    }
+                    <MudMenuItem OnClick="OnDeleteClick">@L["Delete"]</MudMenuItem>
+                </MudMenu>
+            }
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent Class="pa-3">
+        <MudText Typo="Typo.subtitle1">
+            <strong>
+                @Email.Value
+            </strong>
+        </MudText>
+        @if (_confirmationModel is not null)
+        {
+            <EditForm Model="@_confirmationModel" OnValidSubmit="@ConfirmSubmit">
+                <FluentValidationValidator/>
+
+                <MudNumericField
+                    @bind-Value="@_confirmationModel.Code"
+                    Label="@L["ConfirmationCode"]"
+                    Class="mb-3"
+                    For="@(() => _confirmationModel.Code)"/>
+
+                <LoadingButton
+                    ButtonType="ButtonType.Submit"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Text="@L["Confirm"]"
+                    LoadingText="@L["Loading"]"
+                    IsLoading="@_isLoading"/>
+            </EditForm>
+        }
+        else if (Email.IsPrimary)
+        {
+            <MudText>
+                @L["PrimaryEmail"]
+            </MudText>
+        }
+        else if(!Email.IsConfirmed)
+        {
+            <LoadingButton
+                Class="mt-1"
+                Variant="Variant.Filled"
+                Color="Color.Primary"
+                Text="@L["Confirm"]"
+                LoadingText="@L["Loading"]"
+                OnClick="@OnConfirmationClick"
+                IsLoading="@_isLoading"/>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    private bool _isLoading;
+    private ConfirmationModel? _confirmationModel;
+
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public EmailConnection Email { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<Connection> OnDelete { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<EmailConnection> OnSetPrimary { get; set; }
+
+    [Parameter, EditorRequired]
+    public Func<EmailConnection, Task<string?>> OnConfirming { get; set; } = _ => Task.FromResult<string?>(null);
+
+    [Parameter, EditorRequired]
+    public EventCallback<ConfirmationModel> OnConfirm { get; set; }
+
+    private async Task OnDeleteClick()
+    {
+        await OnDelete.InvokeAsync(Email);
+    }
+
+    private async Task OnConfirmationClick()
+    {
+        _isLoading = true;
+        var id = await OnConfirming(Email);
+        if (id is not null)
+            _confirmationModel = new ConfirmationModel(id, Email);
+
+        _isLoading = false;
+    }
+
+    private async Task OnSetPrimaryClick()
+    {
+        _isLoading = true;
+        await OnSetPrimary.InvokeAsync(Email);
+        _isLoading = false;
+    }
+
+    private async Task ConfirmSubmit()
+    {
+        _isLoading = true;
+        await OnConfirm.InvokeAsync(_confirmationModel);
+        _confirmationModel = null;
+        _isLoading = false;
+    }
+
+    public sealed record ConfirmationModel(string Id, EmailConnection Email)
+    {
+        public uint? Code { get; set; }
+
+        public sealed class Validator : AbstractValidator<ConfirmationModel>
+        {
+            public Validator(IStringLocalizer<App> l)
+            {
+                RuleFor(x => x.Id)
+                    .NotEmpty();
+
+                RuleFor(x => x.Email)
+                    .NotEmpty();
+
+                RuleFor(x => x.Code)
+                    .NotEmpty()
+                    .WithName(l["ConfirmationCode"]);
+            }
+        }
+    }
+
+}

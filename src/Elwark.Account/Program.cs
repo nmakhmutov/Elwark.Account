@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
-using Elwark.Account.Infrastructure;
-using Elwark.Account.Service.Country;
-using Elwark.Account.Service.Profile;
-using Elwark.Account.Service.Timezone;
+using Elwark.Account.Gateways.Country;
+using Elwark.Account.Gateways.Profile;
+using Elwark.Account.Gateways.Timezone;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,31 +38,38 @@ public class Program
             builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions));
 
         builder.Services
-            .AddTransient<AccountLocalization>()
-            .AddTransient<AccountAuthorization>();
+            .AddScoped<ThemeProvider>()
+            .AddScoped<LocalizationHandler>()
+            .AddScoped<AuthorizationMessageHandler>(provider => 
+                new AuthorizationMessageHandler(
+                        provider.GetRequiredService<IAccessTokenProvider>(),
+                        provider.GetRequiredService<NavigationManager>()
+                    )
+                    .ConfigureHandler(new[] { builder.Configuration["Urls:Gateway"] })
+            );
 
         builder.Services
             .AddHttpClient<IProfileClient, ProfileClient>(client =>
                 client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
             )
-            .AddHttpMessageHandler<AccountLocalization>()
-            .AddHttpMessageHandler<AccountAuthorization>()
+            .AddHttpMessageHandler<LocalizationHandler>()
+            .AddHttpMessageHandler<AuthorizationMessageHandler>()
             .AddPolicyHandler(policy);
 
         builder.Services
             .AddHttpClient<ICountryClient, CountryClient>(client =>
                 client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
             )
-            .AddHttpMessageHandler<AccountLocalization>()
-            .AddHttpMessageHandler<AccountAuthorization>()
+            .AddHttpMessageHandler<LocalizationHandler>()
+            .AddHttpMessageHandler<AuthorizationMessageHandler>()
             .AddPolicyHandler(policy);
             
         builder.Services
             .AddHttpClient<ITimezoneClient, TimezoneClient>(client =>
                 client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
             )
-            .AddHttpMessageHandler<AccountLocalization>()
-            .AddHttpMessageHandler<AccountAuthorization>()
+            .AddHttpMessageHandler<LocalizationHandler>()
+            .AddHttpMessageHandler<AuthorizationMessageHandler>()
             .AddPolicyHandler(policy);
 
         await builder.Build().RunAsync();

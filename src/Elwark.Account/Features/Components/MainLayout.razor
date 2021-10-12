@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="_currentTheme"/>
+<MudThemeProvider Theme="@ThemeProvider.Current"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
@@ -10,7 +10,7 @@
         <MudSpacer/>
         <LanguageDropdown/>
         <MudTooltip Text="Toggle theme">
-            <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" OnClick="@SwitchTheme"/>
+            <MudIconButton Icon="@ThemeProvider.Icon" Color="Color.Inherit" OnClick="@ThemeProvider.ToggleAsync"/>
         </MudTooltip>
     </MudAppBar>
 
@@ -21,60 +21,6 @@
 
 @code
 {
-    protected override void OnInitialized() => _currentTheme = _defaultTheme;
-
-    MudTheme _currentTheme = new();
-    string _themeIcon = Icons.Filled.Brightness7;
-
-    private void SwitchTheme()
-    {
-        if (_currentTheme == _defaultTheme)
-        {
-            _currentTheme = _darkTheme;
-            _themeIcon = Icons.Filled.Brightness3;
-        }
-        else
-        {
-            _currentTheme = _defaultTheme;
-            _themeIcon = Icons.Filled.Brightness7;
-        }
-    }
-
-    private readonly MudTheme _defaultTheme = new()
-    {
-        Palette = new Palette
-        {
-            Primary = "#3f51b5",
-            Secondary = "#606fc7",
-            Tertiary = "#8560c7",
-            Black = "#272c34",
-            Background = "#f4f6f8",
-            BackgroundGrey = "#e3e5e7",
-            AppbarBackground = "#3949ab"
-        }
-    };
-
-    private readonly MudTheme _darkTheme = new()
-    {
-        Palette = new Palette
-        {
-            Primary = "#3f51b5",
-            Secondary = "#606fc7",
-            Tertiary = "#8560c7",
-            Black = "#27272f",
-            Background = "#32333d",
-            BackgroundGrey = "#27272f",
-            Surface = "#373740",
-            DrawerBackground = "#27272f",
-            DrawerText = "rgba(255,255,255, 0.50)",
-            AppbarBackground = "#27272f",
-            AppbarText = "rgba(255,255,255, 0.70)",
-            TextPrimary = "rgba(255,255,255, 0.70)",
-            TextSecondary = "rgba(255,255,255, 0.50)",
-            ActionDefault = "#adadb1",
-            ActionDisabled = "rgba(255,255,255, 0.26)",
-            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
-            DrawerIcon = "rgba(255,255,255, 0.50)"
-        }
-    };
+    [Inject]
+    private ThemeProvider ThemeProvider { get; set; } = default!;
 }

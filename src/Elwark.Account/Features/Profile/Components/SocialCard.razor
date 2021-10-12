@@ -1,0 +1,69 @@
+@using Elwark.Account.Gateways.Profile.Models
+
+<MudCard>
+    <MudCardHeader Class="pa-3">
+        <CardHeaderAvatar>
+            @switch (Connection.IdentityType)
+            {
+                case IdentityType.Google:
+                    <MudAvatar Style="background: #DB4437">
+                        <MudIcon Icon="@(Icons.Custom.Brands.Google)"/>
+                    </MudAvatar>
+                    break;
+
+                case IdentityType.Microsoft:
+                    <MudAvatar Style="background: #00A4EF">
+                        <MudIcon Icon="@(Icons.Custom.Brands.Microsoft)"/>
+                    </MudAvatar>
+                    break;
+            }
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">@Connection.IdentityType</MudText>
+            @if (Connection.IsConfirmed)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Success">
+                    @L["Confirmed"]
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Color="Color.Error">
+                    @L["NotConfirmed"]
+                </MudText>
+            }
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudMenu Direction="Direction.Left" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert">
+                <MudMenuItem OnClick="OnDeleteClick">@L["Delete"]</MudMenuItem>
+            </MudMenu>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent Class="pa-3">
+        <MudText Typo="Typo.subtitle1">
+            <strong>
+                @Connection.FirstName @Connection.LastName
+            </strong>
+        </MudText>
+        <MudText Typo="Typo.body1">
+            @Connection.Value
+        </MudText>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Inject]
+    IStringLocalizer<App> L { get; set; } = default!;
+    
+    [Parameter]
+    public SocialConnection Connection { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<Connection> OnDelete { get; set; }
+
+    private async Task OnDeleteClick()
+    {
+        await OnDelete.InvokeAsync(Connection);
+    }
+
+}

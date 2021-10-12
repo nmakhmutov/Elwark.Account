@@ -36,6 +36,9 @@
 
     private async Task Set(string language)
     {
+        if(CultureInfo.CurrentCulture.TwoLetterISOLanguageName.Equals(language))
+            return;
+        
         await LocalStorage.SetItemAsync("ls", language);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
