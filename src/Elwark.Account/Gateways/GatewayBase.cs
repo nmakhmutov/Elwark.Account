@@ -1,8 +1,11 @@
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Elwark.Account.Gateways.Converters;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -15,40 +18,48 @@ public abstract class GatewayBase
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+        IgnoreReadOnlyProperties = false,
+        PropertyNameCaseInsensitive = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
         Converters =
         {
             new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
             new IdentityJsonConverter()
-        },
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        }
     };
 
     protected static readonly StringContent EmptyContent = new(string.Empty, Encoding.UTF8, "application/json");
 
-    protected static async Task<ApiResponse<T>> ExecuteAsync<T>(Func<Task<HttpResponseMessage>> handler)
+    protected static async Task<ApiResponse<T>> ExecuteAsync<T>(Func<CancellationToken, Task<HttpResponseMessage>> action)
     {
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+
         try
         {
-            using var message = await handler();
-            await using var stream = await message.Content.ReadAsStreamAsync();
+            using var message = await action(cts.Token);
             
             return message.IsSuccessStatusCode
-                ? ApiResponse<T>.Success(JsonSerializer.Deserialize<T>(stream, Serializer)!)
-                : ApiResponse<T>.Fail(JsonSerializer.Deserialize<Error>(stream, Serializer)!);
+                ? message.StatusCode == HttpStatusCode.NoContent
+                    ? ApiResponse<T>.Success(default!)
+                    : ApiResponse<T>.Success((await message.Content.ReadFromJsonAsync<T>(Serializer, cts.Token))!)
+                : ApiResponse<T>.Fail((await message.Content.ReadFromJsonAsync<Error>(Serializer, cts.Token))!);
         }
         catch (AccessTokenNotAvailableException ex)
         {
             ex.Redirect();
-            return ApiResponse<T>.Fail(Error.Create("Unauthorized", "https://tools.ietf.org/html/rfc7235#section-3.1", 401));
+            var error = Error.Create("Unauthorized", "https://tools.ietf.org/html/rfc7235#section-3.1", 401);
+            return ApiResponse<T>.Fail(error);
         }
         catch (HttpRequestException)
         {
-            return ApiResponse<T>.Fail(Error.Create("Unavailable", "https://tools.ietf.org/html/rfc7231#section-6.6.4", 503));
+            var error = Error.Create("Unavailable", "https://tools.ietf.org/html/rfc7231#section-6.6.4", 503);
+            return ApiResponse<T>.Fail(error);
         }
         catch (Exception)
         {
-            return ApiResponse<T>.Fail(Error.Create("Internal", "https://tools.ietf.org/html/rfc7231#section-6.6.3", 502));
+            var error = Error.Create("Internal", "https://tools.ietf.org/html/rfc7231#section-6.6.3", 502);
+            return ApiResponse<T>.Fail(error);
         }
     }
 

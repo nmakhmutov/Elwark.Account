@@ -11,5 +11,5 @@ internal sealed class TimezoneClient : GatewayBase, ITimezoneClient
         _client = client;
 
     public Task<ApiResponse<Timezone[]>> GetAsync() =>
-        ExecuteAsync<Timezone[]>(() => _client.GetAsync("timezones"));
+        ExecuteAsync<Timezone[]>(ct => _client.GetAsync("timezones", ct));
 }

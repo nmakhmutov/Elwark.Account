@@ -15,7 +15,11 @@
 <MudContainer MaxWidth="MaxWidth.Large" Class="my-3 my-sm-6">
     <ApiViewer Response="@_response">
         <Loading>
-            <MudSkeleton/>
+            <div class="d-flex justify-content-center app-loader flex-column">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
         </Loading>
         <Success Context="profile">
             <MudPaper Class="pa-3 pa-sm-6 mb-3 mb-sm-6">
@@ -68,7 +72,7 @@
                     </MudItem>
                 </MudGrid>
             </section>
-            
+
             <section class="mb-3 mb-sm-6">
                 <MudText Typo="Typo.h5" Class="mb-3">
                     @L["Security"]
@@ -86,7 +90,7 @@
                     }
                 </MudPaper>
             </section>
-            
+
         </Success>
     </ApiViewer>
 </MudContainer>
@@ -214,18 +218,18 @@
         Snackbar.Add(response.Error.Message, Severity.Error);
         return null;
     }
-    
+
     private async Task ConfirmEmailAsync(EmailCard.ConfirmationModel model)
     {
         var request = new ConfirmRequest(model.Id, model.Code!.Value);
         var response = await ProfileClient.ConfirmAsync(model.Email.IdentityType, model.Email.Value, request);
-        
+
         if (response.IsSuccess)
             _response = response;
         else
             Snackbar.Add(response.Error.Message, Severity.Error);
     }
-    
+
     private async Task SetEmailAsPrimaryAsync(EmailConnection email)
     {
         _response = await ProfileClient.SetAsPrimaryAsync(email.Value);
@@ -235,7 +239,7 @@
     {
         var request = new UpdatePasswordRequest(model.OldPassword!, model.NewPassword!, model.ConfirmNewPassword!);
         var response = await ProfileClient.UpdatePasswordAsync(request);
-        
+
         if (response.IsSuccess)
             Snackbar.Add(L["AccountUpdated"], Severity.Success);
         else
@@ -245,7 +249,7 @@
     private async Task<string> SendPasswordConfirmationAsync()
     {
         var response = await ProfileClient.CreatingPasswordAsync();
-        if(response.IsSuccess)
+        if (response.IsSuccess)
             return response.Data.Id;
 
         Snackbar.Add(response.Error.Message, Severity.Error);
@@ -256,7 +260,7 @@
     {
         var request = new CreatePasswordRequest(model.Id, model.Code!.Value, model.Password!, model.ConfirmPassword!);
         var response = await ProfileClient.CreatePasswordAsync(request);
-        
+
         if (response.IsSuccess)
             _response = response;
         else
