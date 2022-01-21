@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Elwark.Account.Gateways.Country;
 using Elwark.Account.Gateways.Profile;
@@ -7,9 +5,6 @@ using Elwark.Account.Gateways.Timezone;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Polly;
 using Polly.Extensions.Http;

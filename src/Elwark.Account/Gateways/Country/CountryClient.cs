@@ -1,6 +1,3 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-
 namespace Elwark.Account.Gateways.Country;
 
 internal sealed class CountryClient : GatewayBase,ICountryClient

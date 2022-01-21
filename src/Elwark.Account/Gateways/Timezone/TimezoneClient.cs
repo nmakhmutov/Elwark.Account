@@ -1,6 +1,3 @@
-using System.Net.Http;
-using System.Threading.Tasks;
-
 namespace Elwark.Account.Gateways.Timezone;
 
 internal sealed class TimezoneClient : GatewayBase, ITimezoneClient

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Elwark.Account.Gateways;
 
 public sealed record Error

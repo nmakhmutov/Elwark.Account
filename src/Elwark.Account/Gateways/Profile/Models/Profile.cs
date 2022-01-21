@@ -1,5 +1,3 @@
-using System;
-
 namespace Elwark.Account.Gateways.Profile.Models;
 
 public sealed record Profile(

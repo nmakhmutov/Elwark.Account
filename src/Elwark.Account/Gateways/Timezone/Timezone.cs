@@ -1,5 +1,3 @@
-using System;
-
 namespace Elwark.Account.Gateways.Timezone;
 
 public record Timezone(string Name, TimeSpan Offset)

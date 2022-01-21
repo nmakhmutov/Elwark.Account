@@ -1,5 +1,3 @@
-using System.Net.Http;
-using System.Threading.Tasks;
 using Elwark.Account.Gateways.Profile.Models;
 using Elwark.Account.Gateways.Profile.Requests;
 

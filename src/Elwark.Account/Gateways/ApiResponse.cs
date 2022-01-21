@@ -1,5 +1,3 @@
-using System;
-
 namespace Elwark.Account.Gateways;
 
 public class ApiResponse<T>

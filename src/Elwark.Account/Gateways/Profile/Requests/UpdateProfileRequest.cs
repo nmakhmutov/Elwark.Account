@@ -1,5 +1,3 @@
-using System;
-
 namespace Elwark.Account.Gateways.Profile.Requests;
 
 public sealed record UpdateProfileRequest(
