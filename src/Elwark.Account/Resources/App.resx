@@ -114,8 +114,8 @@
     <data name="PreferNickname" xml:space="preserve">
         <value>Prefer nickname instead of full name</value>
     </data>
-    <data name="FirstDayOfWeek" xml:space="preserve">
-        <value>First day of week</value>
+    <data name="WeekStart" xml:space="preserve">
+        <value>Week start</value>
     </data>
     <data name="DayOfWeek:Monday" xml:space="preserve">
         <value>Monday</value>
@@ -155,5 +155,11 @@
     </data>
     <data name="ConfirmationCodeSent" xml:space="preserve">
         <value>Confirmation code sent</value>
+    </data>
+    <data name="DateFormat" xml:space="preserve">
+        <value>Date format</value>
+    </data>
+    <data name="TimeFormat" xml:space="preserve">
+        <value>Time format</value>
     </data>
 </root>

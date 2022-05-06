@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Elwark.Account.Gateways.Converters;
@@ -24,8 +23,6 @@ public abstract class GatewayBase
             new IdentityJsonConverter()
         }
     };
-
-    protected static readonly StringContent EmptyContent = new(string.Empty, Encoding.UTF8, "application/json");
 
     protected static async Task<ApiResponse<T>> ExecuteAsync<T>(Func<CancellationToken, Task<HttpResponseMessage>> action)
     {
@@ -59,6 +56,6 @@ public abstract class GatewayBase
         }
     }
 
-    protected static StringContent ToJson<T>(T value) =>
-        new(JsonSerializer.Serialize(value, Serializer), Encoding.UTF8, "application/json");
+    protected static HttpContent CreateJson<T>(T value) =>
+        JsonContent.Create(value, null, Serializer);
 }

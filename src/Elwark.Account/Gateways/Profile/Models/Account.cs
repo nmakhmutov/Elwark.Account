@@ -1,6 +1,6 @@
 namespace Elwark.Account.Gateways.Profile.Models;
 
-public sealed record Profile(
+public sealed record Account(
     long Id,
     string Nickname,
     bool PreferNickname,
@@ -11,7 +11,9 @@ public sealed record Profile(
     string Picture,
     string? CountryCode,
     string TimeZone,
-    DayOfWeek FirstDayOfWeek,
+    string DateFormat,
+    string TimeFormat,
+    DayOfWeek WeekStart,
     Ban? Ban,
     bool IsPasswordAvailable,
     DateTime CreatedAt,

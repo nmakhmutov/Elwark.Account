@@ -44,7 +44,7 @@ public class Program
             );
 
         builder.Services
-            .AddHttpClient<IProfileClient, ProfileClient>(client =>
+            .AddHttpClient<IAccountClient, AccountClient>(client =>
                 client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
             )
             .AddHttpMessageHandler<LocalizationHandler>()

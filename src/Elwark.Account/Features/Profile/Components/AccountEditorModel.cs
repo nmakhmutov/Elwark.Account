@@ -3,9 +3,9 @@ using Microsoft.Extensions.Localization;
 
 namespace Elwark.Account.Features.Profile.Components;
 
-public sealed record ProfileEditorModel(string? FirstName, string? LastName, string Nickname, bool PreferNickname,
-    string Language, string? CountryCode, string Timezone, DayOfWeek FirstDayOfWeek, string Picture, string FullName,
-    DateTime CreatedAt)
+public sealed record AccountEditorModel(string? FirstName, string? LastName, string Nickname, bool PreferNickname,
+    string Language, string? CountryCode, string Timezone, string DateFormat, string TimeFormat,
+    DayOfWeek WeekStart, string Picture, string FullName, DateTime CreatedAt)
 {
     public string? FirstName { get; set; } = FirstName;
 
@@ -21,9 +21,13 @@ public sealed record ProfileEditorModel(string? FirstName, string? LastName, str
 
     public string Timezone { get; set; } = Timezone;
 
-    public DayOfWeek FirstDayOfWeek { get; set; } = FirstDayOfWeek;
+    public DayOfWeek WeekStart { get; set; } = WeekStart;
+    
+    public string DateFormat { get; set; } = DateFormat;
+    
+    public string TimeFormat { get; set; } = TimeFormat;
 
-    public class Validator : AbstractValidator<ProfileEditorModel>
+    public class Validator : AbstractValidator<AccountEditorModel>
     {
         public Validator(IStringLocalizer<App> l)
         {
@@ -53,6 +57,15 @@ public sealed record ProfileEditorModel(string? FirstName, string? LastName, str
                 .NotEmpty()
                 .MaximumLength(50)
                 .WithName(l["Timezone"]);
+            
+            RuleFor(x => x.DateFormat)
+                .NotEmpty()
+                .WithName(l["DateFormat"]);
+            
+            RuleFor(x => x.TimeFormat)
+                .NotEmpty()
+                .WithName(l["DateFormat"]);
+            
         }
     }
 }

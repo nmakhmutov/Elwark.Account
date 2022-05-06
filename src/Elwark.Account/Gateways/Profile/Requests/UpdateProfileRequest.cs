@@ -1,12 +1,14 @@
 namespace Elwark.Account.Gateways.Profile.Requests;
 
 public sealed record UpdateProfileRequest(
-    string? FirstName,
+    string? FirstName, 
     string? LastName,
     string Nickname,
     bool PreferNickname,
-    string Language,
+    string Language, 
     string? CountryCode,
-    string Timezone,
-    DayOfWeek FirstDayOfWeek
+    string TimeZone,
+    string DateFormat,
+    string TimeFormat,
+    DayOfWeek WeekStart
 );

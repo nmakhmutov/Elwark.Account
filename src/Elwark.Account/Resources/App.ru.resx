@@ -111,7 +111,7 @@
     <data name="PreferNickname" xml:space="preserve">
         <value>Предпочитать ник вместо полного имени</value>
     </data>
-    <data name="FirstDayOfWeek" xml:space="preserve">
+    <data name="WeekStart" xml:space="preserve">
         <value>Первый день недели</value>
     </data>
     <data name="DayOfWeek:Monday" xml:space="preserve">
@@ -155,5 +155,11 @@
     </data>
     <data name="ConfirmationCodeSent" xml:space="preserve">
         <value>Код подтверждения отправлен</value>
+    </data>
+    <data name="DateFormat" xml:space="preserve">
+        <value>Формат даты</value>
+    </data>
+    <data name="TimeFormat" xml:space="preserve">
+        <value>Формат время</value>
     </data>
 </root>

@@ -137,7 +137,7 @@
         _isLoading = false;
     }
 
-    public sealed record ConfirmationModel(string Id, EmailConnection Email)
+    public sealed record ConfirmationModel(string Token, EmailConnection Email)
     {
         public uint? Code { get; set; }
 
@@ -145,7 +145,7 @@
         {
             public Validator(IStringLocalizer<App> l)
             {
-                RuleFor(x => x.Id)
+                RuleFor(x => x.Token)
                     .NotEmpty();
 
                 RuleFor(x => x.Email)

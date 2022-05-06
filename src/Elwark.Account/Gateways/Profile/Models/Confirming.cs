@@ -1,3 +1,3 @@
 namespace Elwark.Account.Gateways.Profile.Models;
 
-public sealed record Confirming(string Id);
+public sealed record Confirming(string Token);

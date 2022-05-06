@@ -3,7 +3,7 @@ using Microsoft.Extensions.Localization;
 
 namespace Elwark.Account.Features.Profile.Components;
 
-public sealed record PasswordCreateEditorModel(string Id)
+public sealed record PasswordCreateEditorModel(string Token)
 {
     public uint? Code { get; set; }
         
@@ -15,14 +15,14 @@ public sealed record PasswordCreateEditorModel(string Id)
     {
         public Validator(IStringLocalizer<App> l)
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x.Token)
                 .NotEmpty();
             
             RuleFor(x => x.Code)
                 .NotEmpty()
                 .WithName(l["ConfirmationCode"]);
 
-            RuleFor(x => x.Id)
+            RuleFor(x => x.Token)
                 .NotEmpty();
 
             RuleFor(x => x.Password)
