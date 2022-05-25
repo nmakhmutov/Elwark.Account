@@ -25,8 +25,8 @@
 @code{
 
     [Inject]
-    private ThemeProvider ThemeProvider { get; set; } = default!;
+    private ThemeService ThemeService { get; set; } = default!;
 
-    protected override Task OnInitializedAsync() => ThemeProvider.InitAsync();
+    protected override Task OnInitializedAsync() => ThemeService.InitAsync();
 
 }

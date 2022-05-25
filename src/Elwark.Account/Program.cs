@@ -33,7 +33,7 @@ public class Program
             builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions));
 
         builder.Services
-            .AddScoped<ThemeProvider>()
+            .AddScoped<ThemeService>()
             .AddScoped<LocalizationHandler>()
             .AddScoped<AuthorizationMessageHandler>(provider => 
                 new AuthorizationMessageHandler(

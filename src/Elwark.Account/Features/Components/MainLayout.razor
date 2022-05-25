@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@ThemeProvider.Current"/>
+<MudThemeProvider Theme="@ThemeService.Theme" IsDarkMode="@ThemeService.IsDarkMode"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
@@ -8,10 +8,8 @@
     <MudAppBar Elevation="25">
         <img src="https://res.cloudinary.com/elwark/image/upload/v1613019547/Elwark/white/36x36_rvcbiz.png" alt="Elwark logo">
         <MudSpacer/>
+        <MudIconButton Icon="@ThemeService.Icon" Color="Color.Inherit" OnClick="@ThemeService.ToggleAsync" Class="mr-3"/>
         <LanguageDropdown/>
-        <MudTooltip Text="Toggle theme">
-            <MudIconButton Icon="@ThemeProvider.Icon" Color="Color.Inherit" OnClick="@ThemeProvider.ToggleAsync"/>
-        </MudTooltip>
     </MudAppBar>
 
     <MudMainContent>
@@ -22,5 +20,5 @@
 @code
 {
     [Inject]
-    private ThemeProvider ThemeProvider { get; set; } = default!;
+    private ThemeService ThemeService { get; set; } = default!;
 }

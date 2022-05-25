@@ -113,7 +113,7 @@
 
 @code {
     private bool _isLoading;
-    private DateTime _templateDate = new(2001, 8, 31, 5, 0, 0);
+    private DateTime _templateDate = new(2001, 8, 31, 13, 0, 0);
 
     private static readonly string[] DateFormats =
     {
@@ -132,9 +132,8 @@
 
     private static readonly string[] TimeFormats =
     {
-        "H:mm",
-        "h:mm tt",
         "HH:mm",
+        "h:mm tt",
         "hh:mm tt"
     };
 
@@ -177,12 +176,12 @@
         return Task.FromResult(result);
     }
 
-    private string GetCountryName(string? code) => 
-        string.IsNullOrEmpty(code) 
+    private string GetCountryName(string? code) =>
+        string.IsNullOrEmpty(code)
             ? string.Empty
             : Countries.FirstOrDefault(x => x.Code == code)?.ToString() ?? string.Empty;
 
-    private string GetTimeZoneName(string name) => 
+    private string GetTimeZoneName(string name) =>
         Timezones.FirstOrDefault(x => x.Name == name)?.ToString() ?? string.Empty;
 
     private async Task OnSubmit()
