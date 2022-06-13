@@ -1,72 +1,80 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
+using Elwark.Account;
+using Elwark.Account.Components.Account;
 using Elwark.Account.Gateways.Country;
 using Elwark.Account.Gateways.Profile;
 using Elwark.Account.Gateways.Timezone;
+using Elwark.Account.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Polly;
 using Polly.Extensions.Http;
 
-namespace Elwark.Account;
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.Logging.ClearProviders();
 
-public class Program
-{
-    public static async Task Main(string[] args)
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services
+    .AddMudServices(configuration =>
     {
-        var builder = WebAssemblyHostBuilder.CreateDefault(args);
-        builder.RootComponents.Add<App>("#app");
-            
-        builder.Logging.SetMinimumLevel(LogLevel.Critical);
-            
-        var policy = HttpPolicyExtensions
-            .HandleTransientHttpError()
-            .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(Math.Pow(2, i)));
-            
-        builder.Services
-            .AddMudServices()
-            .AddBlazoredLocalStorage()
-            .AddLocalization(options => options.ResourcesPath = "Resources");
+        configuration.SnackbarConfiguration.PreventDuplicates = false;
+        configuration.SnackbarConfiguration.NewestOnTop = true;
+        configuration.SnackbarConfiguration.MaxDisplayedSnackbars = 3;
+    })
+    .AddBlazoredLocalStorage(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    })
+    .AddLocalization(options => options.ResourcesPath = "Resources");
 
-        builder.Services.AddOidcAuthentication(options =>
-            builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions));
+var gatewayUrl = builder.Configuration.GetValue<Uri>("Urls:Gateway")!;
+var policy = builder.HostEnvironment.IsDevelopment()
+    ? HttpPolicyExtensions.HandleTransientHttpError()
+        .WaitAndRetryAsync(new[] { TimeSpan.Zero })
+    : HttpPolicyExtensions.HandleTransientHttpError()
+        .WaitAndRetryAsync(new[] { TimeSpan.Zero, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5) });
 
-        builder.Services
-            .AddScoped<ThemeService>()
-            .AddScoped<LocalizationHandler>()
-            .AddScoped<AuthorizationMessageHandler>(provider => 
-                new AuthorizationMessageHandler(
-                        provider.GetRequiredService<IAccessTokenProvider>(),
-                        provider.GetRequiredService<NavigationManager>()
-                    )
-                    .ConfigureHandler(new[] { builder.Configuration["Urls:Gateway"] })
-            );
+builder.Services
+    .AddOidcAuthentication(options => builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions));
 
-        builder.Services
-            .AddHttpClient<IAccountClient, AccountClient>(client =>
-                client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
+builder.Services
+    .AddScoped<ThemeService>()
+    .AddScoped<LocalizationHandler>()
+    .AddScoped<AccountStateProvider>()
+    .AddScoped<AuthorizationMessageHandler>(provider =>
+        new AuthorizationMessageHandler(
+                provider.GetRequiredService<IAccessTokenProvider>(),
+                provider.GetRequiredService<NavigationManager>()
             )
-            .AddHttpMessageHandler<LocalizationHandler>()
-            .AddHttpMessageHandler<AuthorizationMessageHandler>()
-            .AddPolicyHandler(policy);
+            .ConfigureHandler(new[] { gatewayUrl.ToString() })
+    );
 
-        builder.Services
-            .AddHttpClient<ICountryClient, CountryClient>(client =>
-                client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
-            )
-            .AddHttpMessageHandler<LocalizationHandler>()
-            .AddHttpMessageHandler<AuthorizationMessageHandler>()
-            .AddPolicyHandler(policy);
-            
-        builder.Services
-            .AddHttpClient<ITimezoneClient, TimezoneClient>(client =>
-                client.BaseAddress = new Uri(builder.Configuration["Urls:Gateway"]!)
-            )
-            .AddHttpMessageHandler<LocalizationHandler>()
-            .AddHttpMessageHandler<AuthorizationMessageHandler>()
-            .AddPolicyHandler(policy);
+builder.Services
+    .AddHttpClient<IAccountClient, AccountClient>(client => client.BaseAddress = gatewayUrl)
+    .AddHttpMessageHandler<LocalizationHandler>()
+    .AddHttpMessageHandler<AuthorizationMessageHandler>()
+    .AddPolicyHandler(policy);
 
-        await builder.Build().RunAsync();
-    }
-}
+var worldUrl = builder.Configuration.GetValue<Uri>("Urls:World.Api")!;
+builder.Services
+    .AddHttpClient<ICountryClient, CountryClient>(client => client.BaseAddress = worldUrl)
+    .AddHttpMessageHandler<LocalizationHandler>()
+    .AddPolicyHandler(policy);
+
+builder.Services
+    .AddHttpClient<ITimezoneClient, TimezoneClient>(client => client.BaseAddress = worldUrl)
+    .AddHttpMessageHandler<LocalizationHandler>()
+    .AddPolicyHandler(policy);
+
+var app = builder.Build();
+
+await app.RunAsync();

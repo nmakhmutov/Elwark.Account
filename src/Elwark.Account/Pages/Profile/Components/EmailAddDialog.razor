@@ -1,0 +1,99 @@
+@using Elwark.Account.Gateways.Profile
+@using Elwark.Account.Gateways.Profile.Requests
+@using FluentValidation
+
+<MudDialog Class="pa-3 pa-sm-6">
+    <DialogContent>
+        <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-3 mb-sm-6">
+            @L["Email:AddNew"]
+        </MudText>
+        <EditForm Model="@_model" OnSubmit="@OnSubmit">
+            <FluentValidationValidator/>
+
+            <MudTextField
+                Clearable
+                Label="@L["Email"]"
+                Error="@(!string.IsNullOrEmpty(_error))"
+                ErrorText="@_error"
+                Variant="Variant.Outlined"
+                @bind-Value="@_model.Email"
+                For="@(() => _model.Email)"/>
+
+            <MudStack Row Justify="Justify.Center" AlignItems="AlignItems.Center" Class="mt-3 mt-sm-6">
+                <LoadingButton
+                    IsLoading="@_isLoading"
+                    Text="@L["Email:Add"]"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    ButtonType="ButtonType.Submit"
+                    DisableElevation/>
+
+                <MudButton OnClick="OnCancel" DisableElevation>
+                    @L["Account:Cancel"]
+                </MudButton>
+            </MudStack>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private bool _isLoading;
+    private string? _error;
+    private readonly Model _model = new();
+
+    [Inject]
+    private IStringLocalizer<App> L { get; set; } = default!;
+
+    [Inject]
+    private IAccountClient Client { get; set; } = default!;
+
+    [Inject]
+    private AccountStateProvider Provider { get; set; } = default!;
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = default!;
+
+    private async Task OnSubmit(EditContext context)
+    {
+        _error = context.Validate() ? null : context.GetValidationMessages().FirstOrDefault();
+        
+        if(_error is not null)
+            return;
+        
+        _isLoading = true;
+
+        var result = await Client.AddEmailAsync(new EmailRequest(_model.Email));
+
+        _isLoading = false;
+
+        if (result.IsSuccess)
+        {
+            Provider.Add(result.Data);
+            MudDialog.Close();
+
+            return;
+        }
+
+        _error = result.Error.Detail;
+    }
+
+    private void OnCancel() =>
+        MudDialog.Cancel();
+
+    public sealed class Model
+    {
+        public string Email { get; set; } = string.Empty;
+
+        public sealed class Validator : AbstractValidator<Model>
+        {
+            public Validator(IStringLocalizer<App> l)
+            {
+                RuleFor(x => x.Email)
+                    .NotEmpty()
+                    .EmailAddress()
+                    .WithName(l["Email"]);
+            }
+        }
+    }
+
+}

@@ -6,18 +6,18 @@ namespace Elwark.Account.Gateways.Profile;
 public interface IAccountClient
 {
     Task<ApiResponse<Models.Account>> GetAsync();
-    
+
     Task<ApiResponse<Models.Account>> UpdateAsync(UpdateProfileRequest profile);
-    
-    Task<ApiResponse<Models.Account>> ConfirmAsync(ConfirmConnectionRequest request);
-    
-    Task<ApiResponse<Models.Account>> ChangePrimaryEmailAsync(UpdatePrimaryEmailRequest request);
-    
-    Task<ApiResponse<Models.Account>> DeleteAsync(IdentityType type, string value);
-    
-    Task<ApiResponse<Models.Account>> CreatePasswordAsync(CreatePasswordRequest request);
-    
-    Task<ApiResponse<bool>> UpdatePasswordAsync(UpdatePasswordRequest request);
-    
-    Task<ApiResponse<Confirming>> SendConfirmationAsync(CreateConfirmationRequest? request = null);
+
+    Task<ApiResponse<Email>> AddEmailAsync(EmailRequest email);
+
+    Task<ApiResponse<bool>> DeleteEmailAsync(string email);
+
+    Task<ApiResponse<Email[]>> SetPrimaryEmailAsync(EmailRequest email);
+
+    Task<ApiResponse<Confirming>> ConfirmingEmailAsync(EmailRequest email);
+
+    Task<ApiResponse<Email>> ConfirmEmailAsync(ConfirmRequest confirm);
+
+    Task<ApiResponse<bool>> DeleteConnectionAsync(ExternalService type, string identity);
 }

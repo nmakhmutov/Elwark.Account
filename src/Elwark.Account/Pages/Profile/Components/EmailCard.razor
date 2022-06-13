@@ -1,0 +1,111 @@
+@using Elwark.Account.Gateways.Profile.Models
+@using Elwark.Account.Gateways.Profile.Requests
+
+<section class="border-solid border mud-border-lines-default rounded @Class">
+    <div class="d-flex flex-wrap gap-3 justify-space-between align-center">
+        <MudStack Row AlignItems="AlignItems.Center">
+            <MudAvatar Style="background: #FFB800">
+                <MudIcon Icon="@Icons.Material.Filled.AlternateEmail"/>
+            </MudAvatar>
+            <div>
+                <MudText Typo="Typo.body1">
+                    @Email.Value
+                </MudText>
+                @if (Email.IsConfirmed)
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Success">
+                        @L["Email:Confirmed"]
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Warning">
+                        @L["Email:NotConfirmed"]
+                    </MudText>
+                }
+            </div>
+        </MudStack>
+        <MudStack Row>
+            @switch (Email.IsConfirmed)
+            {
+                case false:
+                    <LoadingButton
+                        IsLoading="@_isConfirming"
+                        Text="@L["Email:Confirm"]"
+                        Variant="@Variant.Outlined"
+                        Color="@Color.Primary"
+                        OnClick="@ConfirmAsync"/>
+                    break;
+
+                case true when !Email.IsPrimary:
+                    <LoadingButton 
+                        IsLoading="@_isSettingPrimary"
+                        Text="@L["Email:SetAsPrimary"]"
+                        Variant="@Variant.Outlined" 
+                        Color="@Color.Primary"
+                        OnClick="@SetPrimaryAsync"/>
+                    break;
+            }
+
+            @if (Email.IsPrimary)
+            {
+                <MudChip Variant="Variant.Text" Label Text="@L["Email:Primary"]" Size="Size.Small" Color="Color.Primary"/>
+            }
+            else
+            {
+                <LoadingButton
+                    IsLoading="@_isDeleting"
+                    Text="@L["Email:Delete"]"
+                    Variant="Variant.Text"
+                    OnClick="@DeleteAsync"
+                    Class="mud-button-text-gray"/>
+            }
+        </MudStack>
+    </div>
+</section>
+
+@code {
+    private bool _isDeleting;
+    private bool _isConfirming;
+    private bool _isSettingPrimary;
+    
+    [Inject]
+    public IStringLocalizer<App> L { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public Email Email { get; set; } = default!;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Email> OnDelete { get; set; }
+    
+    [Parameter, EditorRequired]
+    public EventCallback<Email> OnConfirm { get; set; }
+    
+    [Parameter, EditorRequired]
+    public EventCallback<Email> OnSetPrimary { get; set; }
+
+    private async Task DeleteAsync()
+    {
+        _isDeleting = true;
+        await OnDelete.InvokeAsync(Email);
+        _isDeleting = false;
+    }
+
+    private async Task ConfirmAsync()
+    {
+        _isConfirming = true;
+        await OnConfirm.InvokeAsync(Email);
+        _isConfirming = false;
+    }
+
+    private async Task SetPrimaryAsync()
+    {
+        _isSettingPrimary = true;
+        await OnSetPrimary.InvokeAsync(Email);
+        _isSettingPrimary = false;
+    }
+
+}

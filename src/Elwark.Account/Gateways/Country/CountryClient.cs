@@ -8,5 +8,5 @@ internal sealed class CountryClient : GatewayBase,ICountryClient
         _client = client;
 
     public Task<ApiResponse<Country[]>> GetAsync() =>
-        ExecuteAsync<Country[]>(ct => _client.GetAsync("countries/all", ct));
+        ExecuteAsync<Country[]>(ct => _client.GetAsync("countries", ct));
 }

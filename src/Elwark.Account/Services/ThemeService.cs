@@ -1,7 +1,7 @@
 using Blazored.LocalStorage;
 using MudBlazor;
 
-namespace Elwark.Account;
+namespace Elwark.Account.Services;
 
 internal sealed class ThemeService
 {
@@ -12,7 +12,7 @@ internal sealed class ThemeService
     {
         Palette = new Palette
         {
-            Primary = "#5569FF",
+            Primary = "#3949AB",
             Secondary = "#584BB0",
             Tertiary = "#8560C7",
             Info = "#33C2FF",
@@ -30,7 +30,7 @@ internal sealed class ThemeService
         },
         PaletteDark = new Palette
         {
-            Primary = "#5569ff",
+            Primary = "#3949AB",
             Secondary = "#584bb0",
             Tertiary = "#8560c7",
             Info = "#33c2ff",
@@ -46,6 +46,7 @@ internal sealed class ThemeService
             AppbarBackground = "#090a0c",
             AppbarText = "rgba(255,255,255, 0.70)",
             Divider = "rgba(255, 255, 255, 0.1)",
+            LinesDefault = "rgba(255, 255, 255, 0.1)",
             TableLines = "rgba(255, 255, 255, 0.1)",
             TextPrimary = "rgba(255,255,255, 0.70)",
             TextSecondary = "rgba(255,255,255, 0.50)",

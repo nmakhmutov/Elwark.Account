@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
-            
+
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
@@ -13,17 +14,15 @@
         <value>1.3</value>
     </resheader>
     <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
     <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
-    <data name="Profile" xml:space="preserve">
-        <value>Profile</value>
-    </data>
-    <data name="Security" xml:space="preserve">
-        <value>Security</value>
-    </data>
     <data name="Connections" xml:space="preserve">
         <value>Connections</value>
     </data>
@@ -42,74 +41,44 @@
     <data name="Country" xml:space="preserve">
         <value>Country</value>
     </data>
-    <data name="Timezone" xml:space="preserve">
+    <data name="TimeZone" xml:space="preserve">
         <value>Timezone</value>
     </data>
-    <data name="Update" xml:space="preserve">
+    <data name="Account:Update" xml:space="preserve">
         <value>Update</value>
     </data>
     <data name="Loading" xml:space="preserve">
         <value>Loading</value>
     </data>
-    <data name="PrimaryEmail" xml:space="preserve">
+    <data name="Email:Primary" xml:space="preserve">
         <value>Primary email</value>
     </data>
-    <data name="None" xml:space="preserve">
-        <value>None</value>
-    </data>
-    <data name="Confirm" xml:space="preserve">
+    <data name="Email:Confirm" xml:space="preserve">
         <value>Confirm</value>
     </data>
-    <data name="Confirmed" xml:space="preserve">
+    <data name="Email:Confirmed" xml:space="preserve">
         <value>Confirmed</value>
     </data>
-    <data name="NotConfirmed" xml:space="preserve">
+    <data name="Email:NotConfirmed" xml:space="preserve">
         <value>Not confirmed</value>
     </data>
-    <data name="AddConnection" xml:space="preserve">
+    <data name="Connection:Add" xml:space="preserve">
         <value>Add connection</value>
     </data>
-    <data name="AccountUpdated" xml:space="preserve">
+    <data name="Account:Updated" xml:space="preserve">
         <value>Account updated</value>
     </data>
-    <data name="Male" xml:space="preserve">
-        <value>Male</value>
-    </data>
-    <data name="Female" xml:space="preserve">
-        <value>Female</value>
-    </data>
-    <data name="Delete" xml:space="preserve">
+    <data name="Email:Delete" xml:space="preserve">
         <value>Delete</value>
-    </data>
-    <data name="Warning" xml:space="preserve">
-        <value>Warning</value>
     </data>
     <data name="No" xml:space="preserve">
         <value>No</value>
     </data>
-    <data name="AreYouSureYouWantToDeleteYourConnection" xml:space="preserve">
-        <value>Are you sure you want to delete {0} {1} connection?</value>
+    <data name="Connection:AreYouSureYouWantToDelete" xml:space="preserve">
+        <value>Are you sure you want to delete {0} "{1}" connection?</value>
     </data>
-    <data name="Create" xml:space="preserve">
-        <value>Create</value>
-    </data>
-    <data name="Password" xml:space="preserve">
-        <value>Password</value>
-    </data>
-    <data name="ConfirmationCode" xml:space="preserve">
+    <data name="Confirmation:Code" xml:space="preserve">
         <value>Confirmation code</value>
-    </data>
-    <data name="NewPassword" xml:space="preserve">
-        <value>New password</value>
-    </data>
-    <data name="OldPassword" xml:space="preserve">
-        <value>Old password</value>
-    </data>
-    <data name="ConfirmPassword" xml:space="preserve">
-        <value>Confirm password</value>
-    </data>
-    <data name="General" xml:space="preserve">
-        <value>General</value>
     </data>
     <data name="PreferNickname" xml:space="preserve">
         <value>Prefer nickname instead of full name</value>
@@ -138,28 +107,52 @@
     <data name="DayOfWeek:Sunday" xml:space="preserve">
         <value>Sunday</value>
     </data>
-    <data name="SetAsPrimaryEmail" xml:space="preserve">
+    <data name="Email:SetAsPrimary" xml:space="preserve">
         <value>Set as primary email</value>
     </data>
-    <data name="MemberSince" xml:space="preserve">
+    <data name="Account:MemberSince" xml:space="preserve">
         <value>Member since {0}</value>
     </data>
     <data name="PreferredLanguage" xml:space="preserve">
         <value>Preferred language</value>
-    </data>
-    <data name="SomethingWentWrong" xml:space="preserve">
-        <value>Something went wrong</value>
-    </data>
-    <data name="PasswordsShouldBeEquals" xml:space="preserve">
-        <value>Passwords should be equals</value>
-    </data>
-    <data name="ConfirmationCodeSent" xml:space="preserve">
-        <value>Confirmation code sent</value>
     </data>
     <data name="DateFormat" xml:space="preserve">
         <value>Date format</value>
     </data>
     <data name="TimeFormat" xml:space="preserve">
         <value>Time format</value>
+    </data>
+    <data name="Emails" xml:space="preserve">
+        <value>Emails</value>
+    </data>
+    <data name="Email:Add" xml:space="preserve">
+        <value>Add email</value>
+    </data>
+    <data name="Account:Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Account:Details" xml:space="preserve">
+        <value>Details</value>
+    </data>
+    <data name="Account:EditUserInformation" xml:space="preserve">
+        <value>Edit User Information</value>
+    </data>
+    <data name="Account:Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Email:AddNew" xml:space="preserve">
+        <value>Add new email</value>
+    </data>
+    <data name="Email:AreYouSureYouWantToDelete" xml:space="preserve">
+        <value>Are you sure you want to delete "{0}" email?</value>
+    </data>
+    <data name="Warning" xml:space="preserve">
+        <value>Warning</value>
+    </data>
+    <data name="Connections:Empty" xml:space="preserve">
+        <value>You don't have any social network connected to your account.</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Email</value>
     </data>
 </root>

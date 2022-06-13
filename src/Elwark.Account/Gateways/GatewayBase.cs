@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Elwark.Account.Gateways.Converters;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace Elwark.Account.Gateways;
@@ -19,8 +18,7 @@ public abstract class GatewayBase
         ReferenceHandler = ReferenceHandler.IgnoreCycles,
         Converters =
         {
-            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-            new IdentityJsonConverter()
+            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
         }
     };
 

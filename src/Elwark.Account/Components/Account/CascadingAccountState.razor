@@ -1,0 +1,31 @@
+@implements IDisposable
+
+<CascadingValue TValue="AccountState" Value="@_state" ChildContent="@ChildContent"/>
+
+@code {
+    private AccountState _state = default!;
+    
+    [Inject]
+    private AccountStateProvider AccountStateProvider { get; set; } = default!;
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    protected override Task OnInitializedAsync()
+    {
+        AccountStateProvider.StateChanged += OnStateChanged;
+        _state = AccountStateProvider.GetAccount();
+        
+        return AccountStateProvider.InitAsync();
+    }
+    
+    private void OnStateChanged(AccountState state) =>
+        _ = InvokeAsync(() =>
+        {
+            _state = state;
+            StateHasChanged();
+        });
+
+    public void Dispose() =>
+        AccountStateProvider.StateChanged -= OnStateChanged;
+}

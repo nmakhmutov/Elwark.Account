@@ -1,0 +1,114 @@
+@using System.Globalization
+@using Elwark.Account.Components.Account
+@using Elwark.Account.Gateways.Country
+@using Elwark.Account.Gateways.Timezone
+
+<MudPaper Elevation="0" Class="pa-3 pa-sm-6">
+    <MudStack Row Justify="Justify.Center" Class="mb-3">
+        <MudAvatar Image="@Account.Picture" Rounded Style="width: 120px; height: 120px"/>
+    </MudStack>
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="text-normal">
+        @Account.FullName
+    </MudText>
+    <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mb-6">
+        @L["Account:MemberSince", Account.CreatedAt.ToString(Account.DateFormat)]
+    </MudText>
+
+    <MudText Typo="Typo.h6" Class="mb-3">
+        @L["Account:Details"]
+    </MudText>
+    <MudDivider Class="mb-3"/>
+
+    @foreach (var item in _items)
+    {
+        <MudStack Row Spacing="1" AlignItems="AlignItems.Center" Class="mb-3">
+            <MudText Typo="Typo.body2" Class="text-bold">
+                @L[item.Name]:
+            </MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary text-normal">
+                @item.Value
+            </MudText>
+            @if (item.Image is not null)
+            {
+                <MudImage Src="@item.Image" Width="26" Height="15"/>
+            }
+        </MudStack>
+    }
+
+    <MudStack Row Justify="Justify.Center" Class="mt-6">
+        <MudButton OnClick="@OpenDialog" Variant="Variant.Filled" Color="Color.Primary" DisableElevation>
+            @L["Account:Edit"]
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+
+    private Item[] _items = Array.Empty<Item>();
+
+    [Inject]
+    private IStringLocalizer<App> L { get; set; } = default!;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    [CascadingParameter]
+    private AccountState Account { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public Timezone[] Timezones { get; set; } = Array.Empty<Timezone>();
+
+    [Parameter, EditorRequired]
+    public Country[] Countries { get; set; } = Array.Empty<Country>();
+
+    protected override void OnParametersSet()
+    {
+        var now = DateTime.Now;
+
+        _items = new[]
+        {
+            new("Nickname", Account.Nickname),
+            new("FirstName", Account.FirstName ?? "—"),
+            new("LastName", Account.LastName ?? "—"),
+            new("PreferredLanguage", StaticData.Languages.GetValueOrDefault(Account.Language, Account.Language)),
+            GetCountryItem(Account.CountryCode),
+            new("TimeZone", Timezones.FirstOrDefault(x => x.Id == Account.TimeZone)?.Name ?? Account.TimeZone),
+            new("WeekStart", L[$"DayOfWeek:{Account.WeekStart}"]),
+            new("DateFormat", $"{now.ToString(Account.DateFormat)} ({Account.DateFormat})"),
+            new("TimeFormat", $"{now.ToString(Account.TimeFormat)} ({Account.TimeFormat})")
+        };
+    }
+
+    private Item GetCountryItem(string? code)
+    {
+        if (string.IsNullOrEmpty(code))
+            return new Item("Country", "—");
+
+        var country = Countries.FirstOrDefault(x => x.Code == code);
+        return country is null ? new Item("Country", "—") : new Item("Country", country.Name, country.Flag);
+    }
+
+    private void OpenDialog()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+            CloseButton = false,
+            FullWidth = true,
+            NoHeader = true,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        var parameters = new DialogParameters
+        {
+            [nameof(AccountEditorDialog.Countries)] = Countries,
+            [nameof(AccountEditorDialog.Timezones)] = Timezones
+        };
+
+        DialogService.Show<AccountEditorDialog>(string.Empty, parameters, options);
+    }
+
+    private sealed record Item(string Name, string Value, string? Image = null);
+
+}

@@ -1,0 +1,242 @@
+﻿@page "/"
+@using Elwark.Account.Gateways.Timezone
+@using Elwark.Account.Pages.Profile.Components
+@using Microsoft.AspNetCore.Authorization
+@using Elwark.Account.Gateways.Country
+@using Elwark.Account.Gateways.Profile
+@using Elwark.Account.Gateways.Profile.Models
+@using System.Net
+@using Elwark.Account.Gateways.Profile.Requests
+
+@attribute [Authorize]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-3 my-sm-6">
+    @if (Account.IsInitialized)
+    {
+        <MudGrid Spacing="3" Justify="Justify.Center">
+            <MudItem xs="12" lg="4">
+                <AccountCard Countries="@_countries" Timezones="@_timezones"/>
+            </MudItem>
+
+            <MudItem xs="12" lg="8">
+                <MudPaper Elevation="0" Class="pa-3 pa-sm-6 mb-6">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6" Class="text-normal">
+                            @L["Emails"]
+                        </MudText>
+                        <MudButton
+                            DisableElevation
+                            Variant="Variant.Filled"
+                            Color="Color.Primary"
+                            StartIcon="@Icons.Material.Outlined.Add"
+                            Disabled="@(Account.Emails.Any(x => !x.IsConfirmed))"
+                            OnClick="@OnAddEmail">
+                            @L["Email:Add"]
+                        </MudButton>
+                    </MudStack>
+
+                    @foreach (var email in Account.Emails)
+                    {
+                        <EmailCard
+                            Email="@email"
+                            Class="mt-3 mt-sm-6 pa-3 pa-sm-6"
+                            OnDelete="@OnDeleteEmail"
+                            OnConfirm="@OnConfirmingEmail"
+                            OnSetPrimary="@SetPrimaryEmailAsync"/>
+                    }
+                </MudPaper>
+
+                <MudPaper Elevation="0" Class="pa-3 pa-sm-6">
+                    <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6" Class="text-normal">
+                            @L["Connections"]
+                        </MudText>
+                        <MudButton
+                            DisableElevation
+                            Href="@_addConnectionHref"
+                            Variant="Variant.Filled"
+                            Color="Color.Primary"
+                            StartIcon="@Icons.Material.Outlined.Add">
+                            @L["Connection:Add"]
+                        </MudButton>
+                    </MudStack>
+
+                    @if (Account.Connections.Length > 0)
+                    {
+                        foreach (var connection in Account.Connections)
+                        {
+                            <ConnectionCard
+                                Class="mt-3 mt-sm-6 pa-3 pa-sm-6"
+                                Connection="@connection"
+                                OnDelete="@DeleteConnectionAsync"/>
+                        }
+                    }
+                    else
+                    {
+                        <MudStack Row Justify="Justify.Center" Class="mt-3 mt-sm-6 mb-3">
+                            <MudImage
+                                Fluid
+                                Alt="@L["Connections:Empty"]"
+                                Src="/images/empty_social_connections.svg"
+                                Elevation="0"
+                                Width="300"/>
+                        </MudStack>
+                        <MudText Align="Align.Center">
+                            @L["Connections:Empty"]
+                        </MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <div class="d-flex justify-content-center app-loader flex-column">
+            <div class="spinner-border" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    }
+</MudContainer>
+
+@code
+{
+    private string? _addConnectionHref;
+    private Timezone[] _timezones = Array.Empty<Timezone>();
+    private Country[] _countries = Array.Empty<Country>();
+
+    [Inject]
+    public IStringLocalizer<App> L { get; set; } = default!;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    private IConfiguration Configuration { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    private ITimezoneClient TimezoneClient { get; set; } = default!;
+
+    [Inject]
+    private ICountryClient CountryClient { get; set; } = default!;
+
+    [Inject]
+    private IAccountClient AccountClient { get; set; } = default!;
+
+    [Inject]
+    private AccountStateProvider Provider { get; set; } = default!;
+
+    [CascadingParameter]
+    private AccountState Account { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var returnUrl = WebUtility.UrlEncode(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
+        _addConnectionHref = new Uri(new Uri(Configuration["OpenIdConnect:Authority"]!), $"append?returnUrl={returnUrl}").ToString();
+
+        var timezones = await TimezoneClient.GetAsync();
+        if (timezones.IsSuccess)
+            _timezones = timezones.Data;
+
+        var countries = await CountryClient.GetAsync();
+        if (countries.IsSuccess)
+            _countries = countries.Data;
+    }
+
+    private void OnAddEmail()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = false,
+            FullWidth = true,
+            NoHeader = true,
+            MaxWidth = MaxWidth.Small
+        };
+
+        DialogService.Show<EmailAddDialog>(string.Empty, options);
+    }
+
+    private async Task OnConfirmingEmail(Email email)
+    {
+        var result = await AccountClient.ConfirmingEmailAsync(new EmailRequest(email.Value));
+        if (!result.IsSuccess)
+            return;
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = false,
+            FullWidth = true,
+            NoHeader = true,
+            MaxWidth = MaxWidth.Small
+        };
+
+        var parameters = new DialogParameters
+        {
+            [nameof(EmailConfirmDialog.Token)] = result.Data.Token
+        };
+
+        DialogService.Show<EmailConfirmDialog>(string.Empty, parameters, options);
+    }
+
+    private async Task SetPrimaryEmailAsync(Email email)
+    {
+        var result = await AccountClient.SetPrimaryEmailAsync(new EmailRequest(email.Value));
+        if (!result.IsSuccess)
+        {
+            Snackbar.Add(result.Error.Detail, Severity.Error);
+            return;
+        }
+
+        Provider.Update(result.Data);
+    }
+
+    private async Task OnDeleteEmail(Email email)
+    {
+        var dialog = await DialogService.ShowMessageBox(
+            new MessageBoxOptions
+            {
+                Title = L["Warning"],
+                Message = L["Email:AreYouSureYouWantToDelete", email.Value],
+                YesText = L["Email:Delete"],
+                NoText = L["No"]
+            });
+
+        if (dialog != true)
+            return;
+
+        var result = await AccountClient.DeleteEmailAsync(email.Value);
+        if (result.IsSuccess)
+            Provider.Delete(email);
+        else
+            Snackbar.Add(result.Error.Detail, Severity.Error);
+    }
+
+    private async Task DeleteConnectionAsync(Connection connection)
+    {
+        var dialog = await DialogService.ShowMessageBox(
+            new MessageBoxOptions
+            {
+                Title = L["Warning"],
+                Message = L["Connection:AreYouSureYouWantToDelete", connection.Type.ToString(), connection.Identity],
+                YesText = L["Email:Delete"],
+                NoText = L["No"]
+            });
+
+        if (dialog != true)
+            return;
+
+        var result = await AccountClient.DeleteConnectionAsync(connection.Type, connection.Identity);
+        if (result.IsSuccess)
+            Provider.Delete(connection);
+        else
+            Snackbar.Add(result.Error.Detail);
+    }
+}

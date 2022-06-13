@@ -1,7 +1,7 @@
 namespace Elwark.Account.Gateways.Timezone;
 
-public record Timezone(string Name, TimeSpan Offset)
+public record Timezone(string Id, string Name)
 {
     public override string ToString() =>
-        $"{Name} {Offset}";
+        $"{Id} {Name}";
 }

@@ -7,7 +7,7 @@
     Color="Color.Inherit"
     FullWidth="true"
     Label="@Get()">
-    @foreach (var (culture, name) in _cultures)
+    @foreach (var (culture, name) in StaticData.Languages)
     {
         <MudMenuItem OnClick="@(() => Set(culture))">
             @name
@@ -23,16 +23,10 @@
     [Inject]
     NavigationManager NavigationManager { get; set; } = default!;
 
-    private IReadOnlyDictionary<string, string> _cultures = new Dictionary<string, string>
-    {
-        ["en"] = "English",
-        ["ru"] = "Русский"
-    };
-
     private string Get() =>
-        _cultures.TryGetValue(CultureInfo.CurrentCulture.TwoLetterISOLanguageName, out var language)
+        StaticData.Languages.TryGetValue(CultureInfo.CurrentCulture.TwoLetterISOLanguageName, out var language)
             ? language
-            : _cultures.First().Value;
+            : StaticData.Languages.First().Value;
 
     private async Task Set(string language)
     {

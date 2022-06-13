@@ -37,3 +37,15 @@ html, body, #app {
     height: 5rem;
     margin: 0 auto;
 }
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-normal {
+    font-weight: normal;
+}
+
+.mud-button-text.mud-button-text-gray {
+    color: var(--mud-palette-text-secondary);
+}
