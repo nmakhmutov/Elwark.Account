@@ -4,7 +4,7 @@ services:
 
   account.web:
     container_name: "account_web"
-    image: elwark/account.web:${TAG:-latest}
+    image: elwark/account/web:${TAG:-latest}
     build:
       context: .
       dockerfile: Elwark.Account/Dockerfile

@@ -137,8 +137,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var returnUrl = WebUtility.UrlEncode(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
-        _addConnectionHref = new Uri(new Uri(Configuration["OpenIdConnect:Authority"]!), $"append?returnUrl={returnUrl}").ToString();
+        var host = new Uri(Configuration["OpenIdConnect:Authority"]!);
+        var url = WebUtility.UrlEncode(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
+        _addConnectionHref = new Uri(host, $"append?returnUrl={url}").ToString();
 
         var timezones = await TimezoneClient.GetAsync();
         if (timezones.IsSuccess)
@@ -203,8 +204,8 @@
         var dialog = await DialogService.ShowMessageBox(
             new MessageBoxOptions
             {
-                Title = L["Warning"],
-                Message = L["Email:AreYouSureYouWantToDelete", email.Value],
+                Title = L["Email:DeleteTitle"],
+                Message = L["Email:DeleteMessage", email.Value],
                 YesText = L["Email:Delete"],
                 NoText = L["No"]
             });
@@ -221,12 +222,13 @@
 
     private async Task DeleteConnectionAsync(Connection connection)
     {
+        var service = connection.Type.ToFastString();
         var dialog = await DialogService.ShowMessageBox(
             new MessageBoxOptions
             {
-                Title = L["Warning"],
-                Message = L["Connection:AreYouSureYouWantToDelete", connection.Type.ToString(), connection.Identity],
-                YesText = L["Email:Delete"],
+                Title = L["Connection:DeleteTitle", service],
+                Message = L["Connection:DeleteMessage", service, connection.Identity],
+                YesText = L["Connection:Delete"],
                 NoText = L["No"]
             });
 

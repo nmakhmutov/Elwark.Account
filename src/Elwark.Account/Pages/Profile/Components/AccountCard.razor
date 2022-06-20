@@ -1,11 +1,15 @@
-@using System.Globalization
-@using Elwark.Account.Components.Account
 @using Elwark.Account.Gateways.Country
 @using Elwark.Account.Gateways.Timezone
 
 <MudPaper Elevation="0" Class="pa-3 pa-sm-6">
     <MudStack Row Justify="Justify.Center" Class="mb-3">
-        <MudAvatar Image="@Account.Picture" Rounded Style="width: 120px; height: 120px"/>
+        <MudImage
+            Src="@Account.Picture"
+            Alt="@Account.FullName"
+            Width="120"
+            Class="rounded"
+            ObjectPosition="ObjectPosition.Center"
+            ObjectFit="ObjectFit.Cover"/>
     </MudStack>
     <MudText Typo="Typo.h5" Align="Align.Center" Class="text-normal">
         @Account.FullName
