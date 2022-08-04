@@ -10,5 +10,5 @@ public sealed record UpdateProfileRequest(
     string TimeZone,
     string DateFormat,
     string TimeFormat,
-    DayOfWeek WeekStart
+    DayOfWeek StartOfWeek
 );

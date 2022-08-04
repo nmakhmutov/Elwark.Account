@@ -83,7 +83,7 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudSelect Label="@L["WeekStart"]" Variant="Variant.Outlined" @bind-Value="_model.WeekStart" For="@(() => _model.WeekStart)">
+                    <MudSelect Label="@L["StartOfWeek"]" Variant="Variant.Outlined" @bind-Value="_model.StartOfWeek" For="@(() => _model.StartOfWeek)">
                         @foreach (var day in StaticData.DayOfWeeks)
                         {
                             <MudSelectItem Value="@day">
@@ -172,7 +172,7 @@
             DateFormat = state.DateFormat,
             TimeFormat = state.TimeFormat,
             TimeZone = state.TimeZone,
-            WeekStart = state.WeekStart
+            StartOfWeek = state.StartOfWeek
         };
     }
 
@@ -189,7 +189,7 @@
             _model.TimeZone,
             _model.DateFormat,
             _model.TimeFormat,
-            _model.WeekStart
+            _model.StartOfWeek
             );
 
         var result = await Client.UpdateAsync(request);

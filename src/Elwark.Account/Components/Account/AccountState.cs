@@ -24,7 +24,7 @@ internal sealed record AccountState
 
     public string TimeZone { get; init; } = string.Empty;
 
-    public DayOfWeek WeekStart { get; init; }
+    public DayOfWeek StartOfWeek { get; init; }
 
     public string DateFormat { get; init; } = string.Empty;
 

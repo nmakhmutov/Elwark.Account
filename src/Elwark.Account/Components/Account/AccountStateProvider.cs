@@ -43,7 +43,7 @@ internal sealed class AccountStateProvider
             FullName = account.FullName,
             TimeFormat = account.TimeFormat,
             TimeZone = account.TimeZone,
-            WeekStart = account.WeekStart,
+            StartOfWeek = account.StartOfWeek,
             Emails = account.Emails,
             Connections = account.Connections
         };

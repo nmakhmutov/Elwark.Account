@@ -13,7 +13,7 @@ public sealed record Account(
     string TimeZone,
     string DateFormat,
     string TimeFormat,
-    DayOfWeek WeekStart,
+    DayOfWeek StartOfWeek,
     DateTime CreatedAt,
     Email[] Emails,
     Connection[] Connections

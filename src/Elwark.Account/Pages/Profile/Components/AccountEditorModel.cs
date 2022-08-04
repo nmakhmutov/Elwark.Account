@@ -19,7 +19,7 @@ public sealed record AccountEditorModel
 
     public string TimeZone { get; set; } = string.Empty;
 
-    public DayOfWeek WeekStart { get; set; }
+    public DayOfWeek StartOfWeek { get; set; }
 
     public string DateFormat { get; set; } = string.Empty;
 

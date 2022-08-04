@@ -3,10 +3,14 @@ version: '3.7'
 services:
 
   account.web:
-    container_name: "account_web"
     image: elwark/account/web:${TAG:-latest}
+    container_name: "account_web"
     build:
       context: .
       dockerfile: Elwark.Account/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 16M
     ports:
       - "5005:80"

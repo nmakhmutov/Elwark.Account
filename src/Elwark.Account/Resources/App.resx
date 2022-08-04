@@ -129,13 +129,13 @@
     <data name="PreferredLanguage" xml:space="preserve">
         <value>Preferred language</value>
     </data>
+    <data name="StartOfWeek" xml:space="preserve">
+        <value>Start of week</value>
+    </data>
     <data name="TimeFormat" xml:space="preserve">
         <value>Time format</value>
     </data>
     <data name="TimeZone" xml:space="preserve">
         <value>Timezone</value>
-    </data>
-    <data name="WeekStart" xml:space="preserve">
-        <value>Week start</value>
     </data>
 </root>
