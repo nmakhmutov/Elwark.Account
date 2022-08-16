@@ -12,7 +12,6 @@
 
             <MudTextField
                 Label="@L["Code"]"
-                InputType="InputType.Number"
                 Clearable
                 Error="@(!string.IsNullOrEmpty(_error))"
                 ErrorText="@_error"
@@ -66,7 +65,7 @@
 
         _isLoading = true;
 
-        var result = await Client.ConfirmEmailAsync(new ConfirmRequest(Token, _model.Code.GetValueOrDefault()));
+        var result = await Client.ConfirmEmailAsync(new VerifyRequest(Token, _model.Code!));
 
         _isLoading = false;
 
@@ -86,7 +85,7 @@
     
     public sealed class Model
     {
-        public int? Code { get; set; }
+        public string? Code { get; set; }
 
         public sealed class Validator : AbstractValidator<Model>
         {
@@ -94,7 +93,6 @@
             {
                 RuleFor(x => x.Code)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(1000)
                     .WithName(l["Code"]);
             }
         }

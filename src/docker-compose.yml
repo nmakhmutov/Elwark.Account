@@ -11,6 +11,6 @@ services:
     deploy:
       resources:
         limits:
-          memory: 16M
+          memory: 512M
     ports:
       - "5005:80"

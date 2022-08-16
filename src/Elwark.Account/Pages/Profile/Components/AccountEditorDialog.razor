@@ -179,7 +179,7 @@
     private async Task OnSubmit()
     {
         _isLoading = true;
-        var request = new UpdateProfileRequest(
+        var request = new UpdateRequest(
             _model.Nickname,
             _model.FirstName,
             _model.LastName,

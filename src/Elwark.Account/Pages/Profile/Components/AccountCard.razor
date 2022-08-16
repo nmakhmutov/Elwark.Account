@@ -1,35 +1,39 @@
 @using Elwark.Account.Gateways.Country
 @using Elwark.Account.Gateways.Timezone
 
-<MudPaper Elevation="0" Class="pa-3 pa-sm-6">
-    <MudStack Row Justify="Justify.Center" Class="mb-3">
+<MudPaper Class="pa-3 pa-sm-6" Elevation="0">
+    <MudStack Class="mb-3" Row Justify="Justify.Center">
         <MudImage
+            Class="rounded"
             Src="@Account.Picture"
             Alt="@Account.FullName"
             Width="120"
-            Class="rounded"
+            Height="120"
             ObjectPosition="ObjectPosition.Center"
             ObjectFit="ObjectFit.Cover"/>
     </MudStack>
-    <MudText Typo="Typo.h5" Align="Align.Center" Class="text-normal">
+
+    <MudText Class="text-normal" Typo="Typo.h5" Align="Align.Center">
         @Account.FullName
     </MudText>
-    <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mb-6">
+
+    <MudText Class="mud-text-secondary mb-6" Typo="Typo.body2" Align="Align.Center">
         @L["Account:MemberSince", Account.CreatedAt.ToString(Account.DateFormat)]
     </MudText>
 
-    <MudText Typo="Typo.h6" Class="mb-3">
+    <MudText Class="mb-3" Typo="Typo.h6">
         @L["Account:Details"]
     </MudText>
+
     <MudDivider Class="mb-3"/>
 
     @foreach (var item in _items)
     {
-        <MudStack Row Spacing="1" AlignItems="AlignItems.Center" Class="mb-3">
-            <MudText Typo="Typo.body2" Class="text-bold">
+        <MudStack Class="mb-3" Row Spacing="1" AlignItems="AlignItems.Center">
+            <MudText Class="text-bold" Typo="Typo.body2">
                 @L[item.Name]:
             </MudText>
-            <MudText Typo="Typo.body2" Class="mud-text-secondary text-normal">
+            <MudText Class="mud-text-secondary text-normal" Typo="Typo.body2">
                 @item.Value
             </MudText>
             @if (item.Image is not null)
@@ -39,7 +43,7 @@
         </MudStack>
     }
 
-    <MudStack Row Justify="Justify.Center" Class="mt-6">
+    <MudStack Class="mt-6" Row Justify="Justify.Center">
         <MudButton OnClick="@OpenDialog" Variant="Variant.Filled" Color="Color.Primary" DisableElevation>
             @L["Account:Edit"]
         </MudButton>

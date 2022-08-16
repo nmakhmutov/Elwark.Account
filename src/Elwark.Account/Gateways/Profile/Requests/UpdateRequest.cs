@@ -1,6 +1,6 @@
 namespace Elwark.Account.Gateways.Profile.Requests;
 
-public sealed record UpdateProfileRequest(
+public sealed record UpdateRequest(
     string Nickname,
     string? FirstName, 
     string? LastName,

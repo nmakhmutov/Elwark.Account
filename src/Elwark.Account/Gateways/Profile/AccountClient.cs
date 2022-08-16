@@ -13,7 +13,7 @@ internal sealed class AccountClient : GatewayBase, IAccountClient
     public Task<ApiResponse<Models.Account>> GetAsync() =>
         ExecuteAsync<Models.Account>(ct => _client.GetAsync("accounts/me", ct));
 
-    public Task<ApiResponse<Models.Account>> UpdateAsync(UpdateProfileRequest profile) =>
+    public Task<ApiResponse<Models.Account>> UpdateAsync(UpdateRequest profile) =>
         ExecuteAsync<Models.Account>(ct => _client.PutAsync("accounts/me", CreateJson(profile), ct));
 
     public Task<ApiResponse<Email>> AddEmailAsync(EmailRequest email) =>
@@ -28,8 +28,8 @@ internal sealed class AccountClient : GatewayBase, IAccountClient
     public Task<ApiResponse<Confirming>> ConfirmingEmailAsync(EmailRequest email) =>
         ExecuteAsync<Confirming>(ct => _client.PostAsync("accounts/me/emails/verify", CreateJson(email), ct));
 
-    public Task<ApiResponse<Email>> ConfirmEmailAsync(ConfirmRequest confirm) =>
-        ExecuteAsync<Email>(ct => _client.PutAsync("accounts/me/emails/verify", CreateJson(confirm), ct));
+    public Task<ApiResponse<Email>> ConfirmEmailAsync(VerifyRequest verify) =>
+        ExecuteAsync<Email>(ct => _client.PutAsync("accounts/me/emails/verify", CreateJson(verify), ct));
 
     public Task<ApiResponse<bool>> DeleteConnectionAsync(ExternalService type, string identity)
     {
