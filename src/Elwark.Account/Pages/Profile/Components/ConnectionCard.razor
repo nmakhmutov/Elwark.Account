@@ -1,45 +1,45 @@
 @using Elwark.Account.Gateways.Profile.Models
 
-<section class="border-solid border mud-border-lines-default rounded mb-3 @Class">
-    <div class="d-flex flex-wrap gap-3 justify-space-between align-center">
-        <MudStack Row AlignItems="AlignItems.Center">
-            @switch (Connection.Type)
-            {
-                case ExternalService.Google:
-                    <MudAvatar Style="background: #DB4437">
-                        <MudIcon Icon="@Icons.Custom.Brands.Google"/>
-                    </MudAvatar>
-                    break;
+<section class="mud-paper rounded pa-3 pa-sm-6 @Class">
+    <MudStack Class="mb-3" Row AlignItems="AlignItems.Center">
+        @switch (Connection.Type)
+        {
+            case ExternalService.Google:
+                <MudAvatar Style="background: #DB4437">
+                    <MudIcon Icon="@Icons.Custom.Brands.Google"/>
+                </MudAvatar>
+                break;
 
-                case ExternalService.Microsoft:
-                    <MudAvatar Style="background: #00A4EF">
-                        <MudIcon Icon="@Icons.Custom.Brands.Microsoft"/>
-                    </MudAvatar>
-                    break;
-            }
-            <div>
-                <MudText Typo="Typo.body1">
-                    @Connection.Identity
-                </MudText>
-                <MudText Typo="Typo.body2" Class="mud-text-secondary">
-                    @Connection.FirstName @Connection.LastName
-                </MudText>
-            </div>
-        </MudStack>
-        <MudStack Row>
-            <LoadingButton
-                IsLoading="@_isDeleting"
-                Text="@L["Email:Delete"]"
-                Variant="Variant.Text"
-                Class="mud-button-text-gray"
-                OnClick="@DeleteAsync"/>
-        </MudStack>
-    </div>
+            case ExternalService.Microsoft:
+                <MudAvatar Style="background: #00A4EF">
+                    <MudIcon Icon="@Icons.Custom.Brands.Microsoft"/>
+                </MudAvatar>
+                break;
+        }
+        <div>
+            <MudText Typo="Typo.body1">
+                @Connection.Identity
+            </MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                @Connection.FirstName @Connection.LastName
+            </MudText>
+        </div>
+    </MudStack>
+    
+    <MudStack Row Justify="Justify.FlexEnd">
+        <LoadingButton
+            Class="mud-button-text-gray"
+            IsLoading="@_isDeleting"
+            Text="@L["Email:Delete"]"
+            Variant="Variant.Text"
+            StartIcon="@Icons.Outlined.Delete"
+            OnClick="@DeleteAsync"/>
+    </MudStack>
 </section>
 
 @code {
     private bool _isDeleting;
-    
+
     [Inject]
     public IStringLocalizer<App> L { get; set; } = default!;
 
@@ -48,7 +48,7 @@
 
     [Parameter, EditorRequired]
     public EventCallback<Connection> OnDelete { get; set; }
-    
+
     [Parameter]
     public string? Class { get; set; }
 

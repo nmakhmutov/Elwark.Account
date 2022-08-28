@@ -1,0 +1,32 @@
+<section class="mud-paper d-flex align-center gap-3 pa-3 pa-sm-6 @Class">
+    <MudImage
+        Class="rounded-circle"
+        Src="@Account.Picture"
+        Alt="@Account.FullName"
+        Width="80"
+        Height="80"
+        ObjectPosition="ObjectPosition.Center"
+        ObjectFit="ObjectFit.Cover"/>
+
+    <div>
+        <MudText Class="text-normal" Typo="Typo.h5">
+            @Account.FullName
+        </MudText>
+
+        <MudText Class="mud-text-secondary" Typo="Typo.body2">
+            @L["Account:MemberSince", Account.CreatedAt.ToString(Account.DateFormat)]
+        </MudText>
+    </div>
+</section>
+
+@code {
+
+    [Inject]
+    private IStringLocalizer<App> L { get; set; } = default!;
+
+    [CascadingParameter]
+    private AccountState Account { get; set; } = default!;
+
+    [Parameter]
+    public string? Class { get; set; }
+}

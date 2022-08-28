@@ -1,67 +1,146 @@
 @using Elwark.Account.Gateways.Country
+@using Elwark.Account.Gateways.Profile
+@using Elwark.Account.Gateways.Profile.Requests
 @using Elwark.Account.Gateways.Timezone
 
-<MudPaper Class="pa-3 pa-sm-6" Elevation="0">
-    <MudStack Class="mb-3" Row Justify="Justify.Center">
-        <MudImage
-            Class="rounded"
-            Src="@Account.Picture"
-            Alt="@Account.FullName"
-            Width="120"
-            Height="120"
-            ObjectPosition="ObjectPosition.Center"
-            ObjectFit="ObjectFit.Cover"/>
-    </MudStack>
+<section class="mud-paper pa-3 pa-sm-6 @Class">
+    <EditForm Model="@_model" OnValidSubmit="@OnSubmit">
+        <FluentValidationValidator/>
 
-    <MudText Class="text-normal" Typo="Typo.h5" Align="Align.Center">
-        @Account.FullName
-    </MudText>
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="6">
+                <MudTextField
+                    Label="@L["Nickname"]"
+                    Variant="Variant.Outlined"
+                    @bind-Value="@_model.Nickname"
+                    For="@(() => _model.Nickname)"/>
+            </MudItem>
+            <MudItem xs="12" md="6" Class="d-flex">
+                <MudCheckBox
+                    Label="@L["PreferNickname"]"
+                    @bind-Checked="@_model.PreferNickname"
+                    Color="Color.Primary"
+                    Dense/>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField
+                    Label="@L["FirstName"]"
+                    Variant="Variant.Outlined"
+                    @bind-Value="@_model.FirstName"
+                    For="@(() => _model.FirstName)"/>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField
+                    Label="@L["LastName"]"
+                    Variant="Variant.Outlined"
+                    @bind-Value="@_model.LastName"
+                    For="@(() => _model.LastName)"/>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect
+                    Label="@L["Country"]"
+                    Variant="Variant.Outlined"
+                    @bind-Value="@_model.CountryCode"
+                    For="@(() => _model.CountryCode)">
+                    @foreach (var country in Countries)
+                    {
+                        <MudSelectItem Value="@country.Code">
+                            <MudImage Alt="@country.Name" Src="@country.Flag" Width="26" Height="15" Class="mr-1"/>
+                            @country.Name
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudAutocomplete
+                    T="string"
+                    Clearable
+                    Label="@L["TimeZone"]"
+                    Variant="Variant.Outlined"
+                    @bind-Value="@_model.TimeZone"
+                    For="@(() => _model.TimeZone)"
+                    SearchFunc="@TimeZoneSearch"
+                    ResetValueOnEmptyText
+                    CoerceText>
+                    <ItemTemplate Context="timeZone">
+                        <MudText>
+                            @GetTimeZoneName(timeZone)
+                        </MudText>
+                    </ItemTemplate>
+                </MudAutocomplete>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@L["PreferredLanguage"]" Variant="Variant.Outlined" @bind-Value="_model.Language" For="@(() => _model.Language)">
+                    @foreach (var language in StaticData.Languages)
+                    {
+                        <MudSelectItem Value="@language.Key">
+                            @language.Value
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@L["StartOfWeek"]" Variant="Variant.Outlined" @bind-Value="_model.StartOfWeek" For="@(() => _model.StartOfWeek)">
+                    @foreach (var day in StaticData.DayOfWeeks)
+                    {
+                        <MudSelectItem Value="@day">
+                            @L[$"DayOfWeek:{day}"]
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@L["DateFormat"]" Variant="Variant.Outlined" @bind-Value="_model.DateFormat" For="@(() => _model.DateFormat)">
+                    @foreach (var format in StaticData.DateFormats)
+                    {
+                        <MudSelectItem Value="@format">
+                            @format (@_templateDate.ToString(format))
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect Label="@L["TimeFormat"]" Variant="Variant.Outlined" @bind-Value="_model.TimeFormat" For="@(() => _model.TimeFormat)">
+                    @foreach (var format in StaticData.TimeFormats)
+                    {
+                        <MudSelectItem Value="@format">
+                            @format (@_templateDate.ToString(format))
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
 
-    <MudText Class="mud-text-secondary mb-6" Typo="Typo.body2" Align="Align.Center">
-        @L["Account:MemberSince", Account.CreatedAt.ToString(Account.DateFormat)]
-    </MudText>
-
-    <MudText Class="mb-3" Typo="Typo.h6">
-        @L["Account:Details"]
-    </MudText>
-
-    <MudDivider Class="mb-3"/>
-
-    @foreach (var item in _items)
-    {
-        <MudStack Class="mb-3" Row Spacing="1" AlignItems="AlignItems.Center">
-            <MudText Class="text-bold" Typo="Typo.body2">
-                @L[item.Name]:
-            </MudText>
-            <MudText Class="mud-text-secondary text-normal" Typo="Typo.body2">
-                @item.Value
-            </MudText>
-            @if (item.Image is not null)
-            {
-                <MudImage Src="@item.Image" Width="26" Height="15"/>
-            }
-        </MudStack>
-    }
-
-    <MudStack Class="mt-6" Row Justify="Justify.Center">
-        <MudButton OnClick="@OpenDialog" Variant="Variant.Filled" Color="Color.Primary" DisableElevation>
-            @L["Account:Edit"]
-        </MudButton>
-    </MudStack>
-</MudPaper>
+            <MudItem xs="12">
+                <MudStack Row Justify="Justify.FlexEnd">
+                    <LoadingButton
+                        DisableElevation
+                        IsLoading="@_isLoading"
+                        Text="@L["Account:Update"]"
+                        Variant="Variant.Filled"
+                        Color="Color.Primary"
+                        ButtonType="ButtonType.Submit"/>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+</section>
 
 @code {
-
-    private Item[] _items = Array.Empty<Item>();
+    private bool _isLoading;
+    private AccountEditorModel _model = default!;
+    private readonly DateTime _templateDate = DateTime.Now;
 
     [Inject]
     private IStringLocalizer<App> L { get; set; } = default!;
 
     [Inject]
-    private IDialogService DialogService { get; set; } = default!;
+    private IAccountClient Client { get; set; } = default!;
 
-    [CascadingParameter]
-    private AccountState Account { get; set; } = default!;
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
+
+    [Inject]
+    private AccountStateProvider Provider { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public Timezone[] Timezones { get; set; } = Array.Empty<Timezone>();
@@ -69,54 +148,71 @@
     [Parameter, EditorRequired]
     public Country[] Countries { get; set; } = Array.Empty<Country>();
 
+    [Parameter]
+    public string? Class { get; set; }
+
     protected override void OnParametersSet()
     {
-        var now = DateTime.Now;
-
-        _items = new[]
+        var state = Provider.GetAccount();
+        _model = new AccountEditorModel
         {
-            new("Nickname", Account.Nickname),
-            new("FirstName", Account.FirstName ?? "—"),
-            new("LastName", Account.LastName ?? "—"),
-            new("PreferredLanguage", StaticData.Languages.GetValueOrDefault(Account.Language, Account.Language)),
-            GetCountryItem(Account.CountryCode),
-            new("TimeZone", Timezones.FirstOrDefault(x => x.Id == Account.TimeZone)?.Name ?? Account.TimeZone),
-            new("StartOfWeek", L[$"DayOfWeek:{Account.StartOfWeek}"]),
-            new("DateFormat", $"{now.ToString(Account.DateFormat)} ({Account.DateFormat})"),
-            new("TimeFormat", $"{now.ToString(Account.TimeFormat)} ({Account.TimeFormat})")
+            Nickname = state.Nickname,
+            FirstName = state.FirstName,
+            LastName = state.LastName,
+            PreferNickname = state.PreferNickname,
+            Language = state.Language,
+            CountryCode = state.CountryCode,
+            DateFormat = state.DateFormat,
+            TimeFormat = state.TimeFormat,
+            TimeZone = state.TimeZone,
+            StartOfWeek = state.StartOfWeek
         };
     }
 
-    private Item GetCountryItem(string? code)
+    private async Task OnSubmit()
     {
-        if (string.IsNullOrEmpty(code))
-            return new Item("Country", "—");
+        _isLoading = true;
+        var request = new UpdateRequest(
+            _model.Nickname,
+            _model.FirstName,
+            _model.LastName,
+            _model.PreferNickname,
+            _model.Language,
+            _model.CountryCode,
+            _model.TimeZone,
+            _model.DateFormat,
+            _model.TimeFormat,
+            _model.StartOfWeek
+            );
 
-        var country = Countries.FirstOrDefault(x => x.Code == code);
-        return country is null ? new Item("Country", "—") : new Item("Country", country.Name, country.Flag);
+        var result = await Client.UpdateAsync(request);
+        _isLoading = false;
+
+        if (result.IsSuccess)
+        {
+            Provider.Update(result.Data);
+
+            Snackbar.Add(L["Account:Updated"], Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(result.Error.Detail, Severity.Error);
+        }
     }
 
-    private void OpenDialog()
+    private Task<IEnumerable<string>> TimeZoneSearch(string? arg)
     {
-        var options = new DialogOptions
-        {
-            CloseOnEscapeKey = true,
-            DisableBackdropClick = true,
-            CloseButton = false,
-            FullWidth = true,
-            NoHeader = true,
-            MaxWidth = MaxWidth.Medium
-        };
+        if (string.IsNullOrEmpty(arg))
+            return Task.FromResult(Timezones.Select(x => x.Id));
 
-        var parameters = new DialogParameters
-        {
-            [nameof(AccountEditorDialog.Countries)] = Countries,
-            [nameof(AccountEditorDialog.Timezones)] = Timezones
-        };
+        var result = Timezones
+            .Where(x => x.ToString().Contains(arg, StringComparison.InvariantCultureIgnoreCase))
+            .Select(x => x.Id);
 
-        DialogService.Show<AccountEditorDialog>(string.Empty, parameters, options);
+        return Task.FromResult(result);
     }
 
-    private sealed record Item(string Name, string Value, string? Image = null);
+    private string GetTimeZoneName(string id) =>
+        Timezones.FirstOrDefault(x => x.Id == id)?.ToString() ?? string.Empty;
 
 }

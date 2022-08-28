@@ -4,13 +4,22 @@ internal static class StaticData
 {
     internal static readonly string[] DateFormats =
     {
-        "dd/MM/yyyy",
         "dd.MM.yyyy",
+        "dd.MM.yy",
+        "d.M.yyyy",
+        "d.M.yy",
         "dd-MM-yyyy",
+        "dd-MM-yy",
+        "d-M-yyyy",
+        "d-M-yy",
+        "dd/MM/yyyy",
+        "dd/MM/yy",
+        "d/M/yyyy",
+        "d/M/yy",
         "yyyy-MM-dd",
-        "MM/dd/yyyy",
         "MM.dd.yyyy",
-        "MM-dd-yyyy"
+        "MM-dd-yyyy",
+        "MM/dd/yyyy"
     };
 
     internal static readonly string[] TimeFormats =
