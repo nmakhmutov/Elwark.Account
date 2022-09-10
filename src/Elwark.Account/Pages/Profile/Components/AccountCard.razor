@@ -15,7 +15,7 @@
                     @bind-Value="@_model.Nickname"
                     For="@(() => _model.Nickname)"/>
             </MudItem>
-            <MudItem xs="12" md="6" Class="d-flex">
+            <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudCheckBox
                     Label="@L["PreferNickname"]"
                     @bind-Checked="@_model.PreferNickname"
@@ -114,6 +114,7 @@
                 <MudStack Row Justify="Justify.FlexEnd">
                     <LoadingButton
                         DisableElevation
+                        Disabled="@(_hash == _model.GetHashCode())"
                         IsLoading="@_isLoading"
                         Text="@L["Account:Update"]"
                         Variant="Variant.Filled"
@@ -129,6 +130,7 @@
     private bool _isLoading;
     private AccountEditorModel _model = default!;
     private readonly DateTime _templateDate = DateTime.Now;
+    private int _hash;
 
     [Inject]
     private IStringLocalizer<App> L { get; set; } = default!;
@@ -167,6 +169,7 @@
             TimeZone = state.TimeZone,
             StartOfWeek = state.StartOfWeek
         };
+        _hash = _model.GetHashCode();
     }
 
     private async Task OnSubmit()
