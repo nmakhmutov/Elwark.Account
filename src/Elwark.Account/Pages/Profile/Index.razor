@@ -180,7 +180,7 @@
             [nameof(EmailConfirmDialog.Token)] = result.Data.Token
         };
 
-        DialogService.Show<EmailConfirmDialog>(string.Empty, parameters, options);
+        await DialogService.ShowAsync<EmailConfirmDialog>(string.Empty, parameters, options);
     }
 
     private async Task SetPrimaryEmailAsync(Email email)

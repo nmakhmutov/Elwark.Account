@@ -1,13 +1,12 @@
-version: '3.7'
+version: '3.9'
 
 services:
-
   account.web:
     image: elwark/account/web:${TAG:-latest}
     container_name: "account_web"
     build:
       context: .
-      dockerfile: Elwark.Account/Dockerfile
+      dockerfile: src/Elwark.Account/Dockerfile
     deploy:
       resources:
         limits:

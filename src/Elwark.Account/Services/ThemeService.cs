@@ -10,7 +10,7 @@ internal sealed class ThemeService
 
     public readonly MudTheme Theme = new()
     {
-        Palette = new Palette
+        Palette = new PaletteLight
         {
             Primary = "#3949AB",
             Secondary = "#584BB0",
@@ -28,7 +28,7 @@ internal sealed class ThemeService
             TableLines = "#E8E8E8",
             OverlayLight = "rgba(255, 255, 255, 0.7)"
         },
-        PaletteDark = new Palette
+        PaletteDark = new PaletteDark
         {
             Primary = "#3949AB",
             Secondary = "#584bb0",
@@ -65,7 +65,7 @@ internal sealed class ThemeService
     public bool IsDarkMode { get; private set; }
 
     public string Icon =>
-        IsDarkMode ? Icons.Outlined.LightMode : Icons.Outlined.DarkMode;
+        IsDarkMode ? Icons.Material.Outlined.LightMode : Icons.Material.Outlined.DarkMode;
 
     public event Func<Task> OnChange = () => Task.CompletedTask;
 

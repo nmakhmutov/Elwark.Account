@@ -11,12 +11,12 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         AccountStateProvider.StateChanged += OnStateChanged;
-        _state = AccountStateProvider.GetAccount();
+        await AccountStateProvider.InitAsync();
         
-        return AccountStateProvider.InitAsync();
+        _state = AccountStateProvider.GetAccount();
     }
     
     private void OnStateChanged(AccountState state) =>

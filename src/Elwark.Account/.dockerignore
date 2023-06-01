@@ -1,0 +1,29 @@
+# .NET project specific files
+**/bin
+**/obj
+
+# MacOS specific files
+.DS_Store
+.localized
+
+# Git specific files
+.git/
+.gitignore
+
+# Rider specific files
+.idea/
+.editorconfig
+
+# Visual Studio specific files
+*.suo
+*.user
+
+# Visual Studio Code specific files
+.vs/
+.vscode/
+
+# Github specific files
+*.github/
+
+**/.env
+**/.toolstarget

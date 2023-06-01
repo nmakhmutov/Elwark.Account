@@ -3,7 +3,6 @@
 <MudButton
     Class="@Class"
     Color="@Color"
-    Command="@Command"
     Disabled="@(Disabled || IsLoading)"
     Href="@Href"
     Size="@Size"
@@ -12,7 +11,6 @@
     Target="@Target"
     Variant="@Variant"
     ButtonType="@ButtonType"
-    CommandParameter="@CommandParameter"
     DisableElevation="@DisableElevation"
     DisableRipple="@DisableRipple"
     EndIcon="@EndIcon"
@@ -22,7 +20,9 @@
     IconColor="@IconColor"
     OnClick="@OnClick"
     StartIcon="@StartIcon"
-    UserAttributes="@UserAttributes">
+    UserAttributes="@UserAttributes"
+    Rel="@Rel"
+    IconSize="@IconSize">
 
     @if (IsLoading)
     {

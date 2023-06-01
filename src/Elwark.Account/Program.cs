@@ -44,7 +44,12 @@ var policy = builder.HostEnvironment.IsDevelopment()
         .WaitAndRetryAsync(new[] { TimeSpan.Zero, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5) });
 
 builder.Services
-    .AddOidcAuthentication(options => builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions));
+    .AddOidcAuthentication(options =>
+    {
+        builder.Configuration.Bind("OpenIdConnect", options.ProviderOptions);
+        
+        options.ProviderOptions.DefaultScopes.Add("elwark.people.profile");
+    });
 
 builder.Services
     .AddScoped<ThemeService>()
