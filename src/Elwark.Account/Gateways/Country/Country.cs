@@ -1,10 +1,10 @@
 namespace Elwark.Account.Gateways.Country;
 
-public sealed record Country(string Code, string Name)
+public sealed record Country(string Alpha2, string Alpha3, string Region, string Name)
 {
     public string Flag =>
-        $"https://flagcdn.com/{Code.ToLowerInvariant()}.svg";
+        $"https://flagcdn.com/{Alpha2.ToLowerInvariant()}.svg";
     
     public override string ToString() =>
-        $"{Name} ({Code})";
+        $"{Name} ({Alpha2})";
 }

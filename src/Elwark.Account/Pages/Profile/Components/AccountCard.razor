@@ -44,7 +44,7 @@
                     For="@(() => _model.CountryCode)">
                     @foreach (var country in Countries)
                     {
-                        <MudSelectItem Value="@country.Code">
+                        <MudSelectItem Value="@country.Alpha2">
                             <MudImage Alt="@country.Name" Src="@country.Flag" Width="26" Height="15" Class="mr-1"/>
                             @country.Name
                         </MudSelectItem>
