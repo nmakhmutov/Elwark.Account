@@ -1,4 +1,3 @@
-@using Microsoft.AspNetCore.Components
 @using FluentValidation
 @using Elwark.Account.Gateways.Profile
 @using Elwark.Account.Gateways.Profile.Requests
@@ -28,7 +27,7 @@
                     ButtonType="ButtonType.Submit"
                     DisableElevation/>
 
-                <MudButton OnClick="OnCancel" DisableElevation>
+                <MudButton OnClick="@OnCancel" DisableElevation>
                     @L["Account:Cancel"]
                 </MudButton>
             </MudStack>

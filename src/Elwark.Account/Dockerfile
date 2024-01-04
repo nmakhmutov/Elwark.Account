@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
-RUN apt-get update -y
-RUN apt-get install -y python3
-RUN dotnet workload install wasm-tools
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+#RUN apt-get update -y
+#RUN apt-get install -y python3
+#RUN dotnet workload install wasm-tools
 
 COPY "src/Elwark.Account" "src/Elwark.Account"
 WORKDIR /src/Elwark.Account
