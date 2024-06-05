@@ -1,4 +1,10 @@
 version: '3.9'
+name: account
+
+networks:
+  elwarknetwork:
+    name: elwark_network
+    external: true
 
 services:
   account.web:
@@ -13,3 +19,5 @@ services:
           memory: 128M
     ports:
       - "5005:80"
+    networks:
+      - elwarknetwork

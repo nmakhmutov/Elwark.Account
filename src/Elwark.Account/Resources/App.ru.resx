@@ -1,141 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <data name="Account:Cancel" xml:space="preserve">
-        <value>Отмена</value>
-    </data>
-    <data name="Account:Details" xml:space="preserve">
-        <value>Детали</value>
-    </data>
-    <data name="Account:Edit" xml:space="preserve">
-        <value>Редактировать</value>
-    </data>
-    <data name="Account:EditUserInformation" xml:space="preserve">
-        <value>Основное</value>
-    </data>
-    <data name="Account:MemberSince" xml:space="preserve">
-        <value>Участник с {0}</value>
-    </data>
-    <data name="Account:Update" xml:space="preserve">
-        <value>Обновить</value>
-    </data>
-    <data name="Account:Updated" xml:space="preserve">
-        <value>Аккаунт обновлен</value>
-    </data>
-    <data name="Confirmation:Code" xml:space="preserve">
-        <value>Код подтверждения</value>
-    </data>
-    <data name="Connection:Add" xml:space="preserve">
-        <value>Добавить</value>
-    </data>
-    <data name="Connection:Delete" xml:space="preserve">
-        <value>Удалить</value>
-    </data>
-    <data name="Connection:DeleteMessage" xml:space="preserve">
-        <value>Вы действительно хотите удалить подключение к социальной сети {0} "{1}"?</value>
-    </data>
-    <data name="Connection:DeleteTitle" xml:space="preserve">
-        <value>Удалить подключение {0}?</value>
-    </data>
-    <data name="Connections" xml:space="preserve">
-        <value>Подключения</value>
-    </data>
-    <data name="Connections:Empty" xml:space="preserve">
-        <value>К вашему аккаунту не подключена ни одна социальная сеть.</value>
-    </data>
-    <data name="Country" xml:space="preserve">
-        <value>Страна</value>
-    </data>
-    <data name="DateFormat" xml:space="preserve">
-        <value>Формат даты</value>
-    </data>
-    <data name="DayOfWeek:Friday" xml:space="preserve">
-        <value>Пятница</value>
-    </data>
-    <data name="DayOfWeek:Monday" xml:space="preserve">
-        <value>Понедельник</value>
-    </data>
-    <data name="DayOfWeek:Saturday" xml:space="preserve">
-        <value>Суббота</value>
-    </data>
-    <data name="DayOfWeek:Sunday" xml:space="preserve">
-        <value>Воскресенье</value>
-    </data>
-    <data name="DayOfWeek:Thursday" xml:space="preserve">
-        <value>Четверг</value>
-    </data>
-    <data name="DayOfWeek:Tuesday" xml:space="preserve">
-        <value>Вторник</value>
-    </data>
-    <data name="DayOfWeek:Wednesday" xml:space="preserve">
-        <value>Среда</value>
-    </data>
-    <data name="Email" xml:space="preserve">
-        <value>Почта</value>
-    </data>
-    <data name="Email:Add" xml:space="preserve">
-        <value>Добавить</value>
-    </data>
-    <data name="Email:AddNew" xml:space="preserve">
-        <value>Добавить почту</value>
-    </data>
-    <data name="Email:Confirm" xml:space="preserve">
-        <value>Подтвердить</value>
-    </data>
-    <data name="Email:Confirmed" xml:space="preserve">
-        <value>Подтверждено</value>
-    </data>
-    <data name="Email:Delete" xml:space="preserve">
-        <value>Удалить</value>
-    </data>
-    <data name="Email:DeleteMessage" xml:space="preserve">
-        <value>Вы действительно хотите удалить почту "{0}"?</value>
-    </data>
-    <data name="Email:DeleteTitle" xml:space="preserve">
-        <value>Удалить почту?</value>
-    </data>
-    <data name="Email:NotConfirmed" xml:space="preserve">
-        <value>Не подтвержден</value>
-    </data>
-    <data name="Email:Primary" xml:space="preserve">
-        <value>Основная почта</value>
-    </data>
-    <data name="Email:SetAsPrimary" xml:space="preserve">
-        <value>Сделать основным</value>
-    </data>
-    <data name="Emails" xml:space="preserve">
-        <value>Почта</value>
-    </data>
-    <data name="FirstName" xml:space="preserve">
-        <value>Имя</value>
-    </data>
-    <data name="Language" xml:space="preserve">
-        <value>Язык</value>
-    </data>
-    <data name="LastName" xml:space="preserve">
-        <value>Фамилия</value>
-    </data>
-    <data name="Loading" xml:space="preserve">
-        <value>Загрузка</value>
-    </data>
-    <data name="Nickname" xml:space="preserve">
-        <value>Ник</value>
-    </data>
-    <data name="No" xml:space="preserve">
-        <value>Нет</value>
-    </data>
-    <data name="PreferNickname" xml:space="preserve">
-        <value>Предпочитать ник вместо полного имени</value>
-    </data>
-    <data name="PreferredLanguage" xml:space="preserve">
-        <value>Предпочитаемый язык</value>
-    </data>
-    <data name="StartOfWeek" xml:space="preserve">
-        <value>Первый день недели</value>
-    </data>
-    <data name="TimeFormat" xml:space="preserve">
-        <value>Формат время</value>
-    </data>
-    <data name="TimeZone" xml:space="preserve">
-        <value>Часовой пояс</value>
-    </data>
+  <data name="Account:Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Account:Details" xml:space="preserve">
+    <value>Детали</value>
+  </data>
+  <data name="Account:Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Account:EditUserInformation" xml:space="preserve">
+    <value>Основное</value>
+  </data>
+  <data name="Account:MemberSince" xml:space="preserve">
+    <value>Участник с {0}</value>
+  </data>
+  <data name="Account:Update" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Account:Updated" xml:space="preserve">
+    <value>Аккаунт обновлен</value>
+  </data>
+  <data name="Confirmation:Code" xml:space="preserve">
+    <value>Код подтверждения</value>
+  </data>
+  <data name="Connection:Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Connection:Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Connection:DeleteMessage" xml:space="preserve">
+    <value>Вы действительно хотите удалить подключение к социальной сети {0} "{1}"?</value>
+  </data>
+  <data name="Connection:DeleteTitle" xml:space="preserve">
+    <value>Удалить подключение {0}?</value>
+  </data>
+  <data name="Connections" xml:space="preserve">
+    <value>Подключения</value>
+  </data>
+  <data name="Connections:Empty" xml:space="preserve">
+    <value>К вашему аккаунту не подключена ни одна социальная сеть.</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="DateFormat" xml:space="preserve">
+    <value>Формат даты</value>
+  </data>
+  <data name="DayOfWeek:Friday" xml:space="preserve">
+    <value>Пятница</value>
+  </data>
+  <data name="DayOfWeek:Monday" xml:space="preserve">
+    <value>Понедельник</value>
+  </data>
+  <data name="DayOfWeek:Saturday" xml:space="preserve">
+    <value>Суббота</value>
+  </data>
+  <data name="DayOfWeek:Sunday" xml:space="preserve">
+    <value>Воскресенье</value>
+  </data>
+  <data name="DayOfWeek:Thursday" xml:space="preserve">
+    <value>Четверг</value>
+  </data>
+  <data name="DayOfWeek:Tuesday" xml:space="preserve">
+    <value>Вторник</value>
+  </data>
+  <data name="DayOfWeek:Wednesday" xml:space="preserve">
+    <value>Среда</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Почта</value>
+  </data>
+  <data name="Email:Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Email:AddNew" xml:space="preserve">
+    <value>Добавить почту</value>
+  </data>
+  <data name="Email:Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Email:Confirmed" xml:space="preserve">
+    <value>Подтверждено</value>
+  </data>
+  <data name="Email:Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Email:DeleteMessage" xml:space="preserve">
+    <value>Вы действительно хотите удалить почту "{0}"?</value>
+  </data>
+  <data name="Email:DeleteTitle" xml:space="preserve">
+    <value>Удалить почту?</value>
+  </data>
+  <data name="Email:NotConfirmed" xml:space="preserve">
+    <value>Не подтвержден</value>
+  </data>
+  <data name="Email:Primary" xml:space="preserve">
+    <value>Основная почта</value>
+  </data>
+  <data name="Email:SetAsPrimary" xml:space="preserve">
+    <value>Сделать основным</value>
+  </data>
+  <data name="Emails" xml:space="preserve">
+    <value>Почта</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка</value>
+  </data>
+  <data name="Nickname" xml:space="preserve">
+    <value>Ник</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="PreferNickname" xml:space="preserve">
+    <value>Предпочитать ник вместо полного имени</value>
+  </data>
+  <data name="PreferredLanguage" xml:space="preserve">
+    <value>Предпочитаемый язык</value>
+  </data>
+  <data name="StartOfWeek" xml:space="preserve">
+    <value>Первый день недели</value>
+  </data>
+  <data name="TimeFormat" xml:space="preserve">
+    <value>Формат время</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Часовой пояс</value>
+  </data>
 </root>
