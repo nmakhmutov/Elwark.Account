@@ -30,7 +30,6 @@
                 
                 <div class="mb-3 mb-sm-6">
                     <MudButton
-                        DisableElevation
                         Color="Color.Primary"
                         Variant="Variant.Outlined"
                         StartIcon="@Icons.Material.Outlined.Add"
@@ -55,7 +54,6 @@
                 
                 <div class="mb-3 mb-sm-6">
                     <MudButton
-                        DisableElevation
                         Href="@_addConnectionHref"
                         Variant="Variant.Outlined"
                         Color="Color.Primary"
@@ -98,8 +96,8 @@
 @code
 {
     private string? _addConnectionHref;
-    private Timezone[] _timezones = Array.Empty<Timezone>();
-    private Country[] _countries = Array.Empty<Country>();
+    private Timezone[] _timezones = [];
+    private Country[] _countries = [];
 
     [Inject]
     public IStringLocalizer<App> L { get; set; } = default!;
@@ -188,7 +186,7 @@
         var result = await AccountClient.SetPrimaryEmailAsync(new EmailRequest(email.Value));
         if (!result.IsSuccess)
         {
-            Snackbar.Add(result.Error.Detail, Severity.Error);
+            Snackbar.Add(result.Error.Message, Severity.Error);
             return;
         }
 
@@ -213,7 +211,7 @@
         if (result.IsSuccess)
             Provider.Delete(email);
         else
-            Snackbar.Add(result.Error.Detail, Severity.Error);
+            Snackbar.Add(result.Error.Message, Severity.Error);
     }
 
     private async Task DeleteConnectionAsync(Connection connection)
@@ -235,6 +233,6 @@
         if (result.IsSuccess)
             Provider.Delete(connection);
         else
-            Snackbar.Add(result.Error.Detail);
+            Snackbar.Add(result.Error.Message);
     }
 }

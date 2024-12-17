@@ -39,9 +39,9 @@ builder.Services
 var gatewayUrl = builder.Configuration.GetValue<Uri>("Urls:Gateway")!;
 var policy = builder.HostEnvironment.IsDevelopment()
     ? HttpPolicyExtensions.HandleTransientHttpError()
-        .WaitAndRetryAsync(new[] { TimeSpan.Zero })
+        .WaitAndRetryAsync([TimeSpan.Zero])
     : HttpPolicyExtensions.HandleTransientHttpError()
-        .WaitAndRetryAsync(new[] { TimeSpan.Zero, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5) });
+        .WaitAndRetryAsync([TimeSpan.Zero, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5)]);
 
 builder.Services
     .AddOidcAuthentication(options =>
@@ -60,7 +60,7 @@ builder.Services
                 provider.GetRequiredService<IAccessTokenProvider>(),
                 provider.GetRequiredService<NavigationManager>()
             )
-            .ConfigureHandler(new[] { gatewayUrl.ToString() })
+            .ConfigureHandler([gatewayUrl.ToString()])
     );
 
 builder.Services

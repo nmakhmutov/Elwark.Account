@@ -51,7 +51,14 @@
 
         @if (Email.IsPrimary)
         {
-            <MudChip Variant="Variant.Text" Label Text="@L["Email:Primary"]" Size="Size.Small" Color="Color.Primary"/>
+            <MudChip
+                T="string"
+                Variant="Variant.Text"
+                Text="@L["Email:Primary"]"
+                Value="@L["Email:Primary"]"
+                Size="Size.Small"
+                Color="Color.Primary"
+                Label="true"/>
         }
         else
         {

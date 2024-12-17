@@ -10,7 +10,7 @@ internal sealed class ThemeService
 
     public readonly MudTheme Theme = new()
     {
-        Palette = new PaletteLight
+        PaletteLight = new PaletteLight
         {
             Primary = "#3949AB",
             Secondary = "#584BB0",
@@ -21,7 +21,7 @@ internal sealed class ThemeService
             Error = "#FF1943",
             Black = "#272C34",
             Background = "#F6F6F6",
-            BackgroundGrey = "#E3E5E7",
+            BackgroundGray = "#E3E5E7",
             AppbarBackground = "#3949AB",
             Divider = "#E8E8E8",
             DividerLight = "#ECECEC",
@@ -39,7 +39,7 @@ internal sealed class ThemeService
             Error = "#ff1943",
             Black = "#27272f",
             Background = "#1c1c1c",
-            BackgroundGrey = "#27272f",
+            BackgroundGray = "#27272f",
             Surface = "#252525",
             DrawerBackground = "#090a0c",
             DrawerText = "rgba(255,255,255, 0.50)",

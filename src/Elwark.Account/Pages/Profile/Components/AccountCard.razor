@@ -18,7 +18,7 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudCheckBox
                     Label="@L["PreferNickname"]"
-                    @bind-Checked="@_model.PreferNickname"
+                    @bind-Value="@_model.PreferNickname"
                     Color="Color.Primary"
                     Dense/>
             </MudItem>
@@ -145,10 +145,10 @@
     private AccountStateProvider Provider { get; set; } = default!;
 
     [Parameter, EditorRequired]
-    public Timezone[] Timezones { get; set; } = Array.Empty<Timezone>();
+    public Timezone[] Timezones { get; set; } = [];
 
     [Parameter, EditorRequired]
-    public Country[] Countries { get; set; } = Array.Empty<Country>();
+    public Country[] Countries { get; set; } = [];
 
     [Parameter]
     public string? Class { get; set; }
@@ -199,11 +199,11 @@
         }
         else
         {
-            Snackbar.Add(result.Error.Detail, Severity.Error);
+            Snackbar.Add(result.Error.Message, Severity.Error);
         }
     }
 
-    private Task<IEnumerable<string>> TimeZoneSearch(string? arg)
+    private Task<IEnumerable<string>> TimeZoneSearch(string arg, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(arg))
             return Task.FromResult(Timezones.Select(x => x.Id));

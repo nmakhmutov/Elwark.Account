@@ -24,10 +24,9 @@
                     Text="@L["Email:Add"]"
                     Variant="Variant.Filled"
                     Color="Color.Primary"
-                    ButtonType="ButtonType.Submit"
-                    DisableElevation/>
+                    ButtonType="ButtonType.Submit"/>
 
-                <MudButton OnClick="@OnCancel" DisableElevation>
+                <MudButton OnClick="@OnCancel">
                     @L["Account:Cancel"]
                 </MudButton>
             </MudStack>
@@ -39,7 +38,7 @@
     private bool _isLoading;
     private string? _error;
     private readonly Model _model = new();
-    
+
     [Inject]
     private IStringLocalizer<App> L { get; set; } = default!;
 
@@ -48,13 +47,13 @@
 
     [Inject]
     private AccountStateProvider Provider { get; set; } = default!;
-    
+
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public string Token { get; set; } = string.Empty;
-    
+
     private async Task OnSubmit(EditContext context)
     {
         _error = null;
@@ -78,10 +77,10 @@
 
         _error = result.Error.Detail;
     }
-    
+
     private void OnCancel() =>
         MudDialog.Cancel();
-    
+
     public sealed class Model
     {
         public string? Code { get; set; }
@@ -96,4 +95,5 @@
             }
         }
     }
+
 }

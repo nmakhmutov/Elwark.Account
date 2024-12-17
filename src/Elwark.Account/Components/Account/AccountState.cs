@@ -32,7 +32,7 @@ internal sealed record AccountState
 
     public DateTime CreatedAt { get; init; }
 
-    public Email[] Emails { get; init; } = Array.Empty<Email>();
+    public Email[] Emails { get; init; } = [];
 
-    public Connection[] Connections { get; init; } = Array.Empty<Connection>();
+    public Connection[] Connections { get; init; } = [];
 }
