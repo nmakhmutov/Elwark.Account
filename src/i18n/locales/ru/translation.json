@@ -1,0 +1,108 @@
+{
+  "common": {
+    "save": "Сохранить изменения",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "add": "Добавить",
+    "confirm": "Подтвердить",
+    "no": "Нет",
+    "signOut": "Выйти",
+    "update": "Обновить",
+    "loading": "Загрузка..."
+  },
+  "nav": {
+    "account": "Аккаунт",
+    "profile": "Профиль",
+    "emails": "Электронная почта",
+    "connections": "Подключения"
+  },
+  "theme": {
+    "system": "Системная",
+    "light": "Светлая",
+    "dark": "Тёмная"
+  },
+  "profile": {
+    "title": "Профиль",
+    "subtitle": "Управление личной информацией и настройками",
+    "personalInfo": "Личная информация",
+    "preferences": "Настройки",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "nickname": "Никнейм",
+    "preferNickname": "Использовать никнейм",
+    "country": "Страна",
+    "timezone": "Часовой пояс",
+    "language": "Предпочитаемый язык",
+    "startOfWeek": "Начало недели",
+    "dateFormat": "Формат даты",
+    "timeFormat": "Формат времени",
+    "memberSince": "Участник с {{date}}",
+    "updated": "Профиль обновлён",
+    "loadingCountries": "Загрузка списка стран…",
+    "loadingTimezones": "Загрузка часовых поясов…",
+    "validation": {
+      "nicknameMin": "Никнейм должен содержать не менее 3 символов",
+      "nicknameMax": "Никнейм должен содержать не более 64 символов",
+      "firstNameMax": "Имя должно содержать не более 128 символов",
+      "lastNameMax": "Фамилия должна содержать не более 128 символов",
+      "languageRequired": "Язык обязателен для заполнения",
+      "timezoneRequired": "Часовой пояс обязателен для заполнения",
+      "dateFormatRequired": "Формат даты обязателен для заполнения",
+      "timeFormatRequired": "Формат времени обязателен для заполнения"
+    }
+  },
+  "emails": {
+    "title": "Электронная почта",
+    "subtitle": "Управление адресами электронной почты",
+    "add": "Добавить адрес",
+    "addEmail": "Добавить адрес",
+    "addAnother": "Добавить ещё один адрес",
+    "addNew": "Добавить новый адрес",
+    "email": "Электронная почта",
+    "confirmed": "Подтверждён",
+    "notConfirmed": "Не подтверждён",
+    "pending": "В ожидании",
+    "unconfirmed": "Не подтверждён",
+    "confirm": "Подтвердить",
+    "setAsPrimary": "Сделать основным",
+    "makePrimary": "Сделать основным",
+    "primary": "Основной",
+    "moreOptions": "Действия с адресом",
+    "requestVerification": "Запросить подтверждение",
+    "primaryAccountNotice": "Основной адрес нельзя удалить",
+    "deleteTitle": "Удалить адрес",
+    "deleteMessage": "Вы уверены, что хотите удалить {{email}}?",
+    "confirmEmail": "Подтверждение адреса",
+    "code": "Код",
+    "codeRequired": "Код обязателен для заполнения",
+    "invalidEmail": "Введите корректный адрес электронной почты",
+    "validation": {
+      "required": "Это поле обязательно для заполнения",
+      "invalidEmail": "Введите корректный адрес электронной почты"
+    }
+  },
+  "connections": {
+    "title": "Подключения",
+    "subtitle": "Управление подключёнными аккаунтами",
+    "add": "Добавить подключение",
+    "addConnection": "Добавить подключение",
+    "addAnother": "Добавить ещё одно подключение",
+    "moreOptions": "Действия с подключением",
+    "serviceGoogle": "Google",
+    "serviceMicrosoft": "Microsoft",
+    "serviceUnknown": "Подключено",
+    "empty": "Нет подключённых аккаунтов",
+    "noDisplayName": "Имя не указано",
+    "deleteTitle": "Удалить подключение {{service}}",
+    "deleteMessage": "Вы уверены, что хотите удалить подключение {{service}} для {{identity}}?"
+  },
+  "days": {
+    "monday": "Понедельник",
+    "tuesday": "Вторник",
+    "wednesday": "Среда",
+    "thursday": "Четверг",
+    "friday": "Пятница",
+    "saturday": "Суббота",
+    "sunday": "Воскресенье"
+  }
+}
