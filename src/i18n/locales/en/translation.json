@@ -1,0 +1,110 @@
+{
+  "common": {
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "add": "Add",
+    "confirm": "Confirm",
+    "no": "No",
+    "signOut": "Sign out",
+    "update": "Update",
+    "loading": "Loading...",
+    "language": "Language"
+  },
+  "nav": {
+    "account": "Account",
+    "profile": "Profile",
+    "emails": "Emails",
+    "connections": "Connections"
+  },
+  "theme": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your personal information and preferences",
+    "personalInfo": "Personal information",
+    "preferences": "Preferences",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "nickname": "Nickname",
+    "preferNickname": "Prefer nickname",
+    "country": "Country",
+    "timezone": "Timezone",
+    "language": "Preferred language",
+    "startOfWeek": "Start of week",
+    "dateFormat": "Date format",
+    "timeFormat": "Time format",
+    "memberSince": "Member since {{date}}",
+    "updated": "Profile updated",
+    "loadingCountries": "Loading countries…",
+    "loadingTimezones": "Loading time zones…",
+    "validation": {
+      "nicknameMin": "Nickname must be at least 3 characters",
+      "nicknameMax": "Nickname must be at most 64 characters",
+      "firstNameMax": "First name must be at most 128 characters",
+      "lastNameMax": "Last name must be at most 128 characters",
+      "languageRequired": "Language is required",
+      "countryRequired": "Country is required",
+      "timezoneRequired": "Timezone is required",
+      "dateFormatRequired": "Date format is required",
+      "timeFormatRequired": "Time format is required"
+    }
+  },
+  "emails": {
+    "title": "Emails",
+    "subtitle": "Manage your email addresses",
+    "add": "Add email",
+    "addEmail": "Add email",
+    "addAnother": "Add another email address",
+    "addNew": "Add new email",
+    "email": "Email",
+    "confirmed": "Confirmed",
+    "notConfirmed": "Not confirmed",
+    "pending": "Pending",
+    "unconfirmed": "Unconfirmed",
+    "confirm": "Confirm",
+    "setAsPrimary": "Set as primary",
+    "makePrimary": "Make primary",
+    "primary": "Primary",
+    "moreOptions": "Email options",
+    "requestVerification": "Request verification",
+    "primaryAccountNotice": "Primary address cannot be deleted",
+    "deleteTitle": "Delete email",
+    "deleteMessage": "Are you sure you want to delete {{email}}?",
+    "confirmEmail": "Confirm email",
+    "code": "Code",
+    "codeRequired": "Code is required",
+    "invalidEmail": "Please enter a valid email address",
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid email address"
+    }
+  },
+  "connections": {
+    "title": "Connections",
+    "subtitle": "Manage your connected accounts",
+    "add": "Add connection",
+    "addConnection": "Add connection",
+    "addAnother": "Add another connection",
+    "moreOptions": "Connection options",
+    "serviceGoogle": "Google",
+    "serviceMicrosoft": "Microsoft",
+    "serviceUnknown": "Connected",
+    "empty": "No social connections",
+    "noDisplayName": "No name",
+    "deleteTitle": "Delete {{service}} connection",
+    "deleteMessage": "Are you sure you want to delete {{service}} connection for {{identity}}?"
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  }
+}

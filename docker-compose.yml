@@ -1,17 +1,15 @@
 name: account
 
 networks:
-  elwarknetwork:
-    name: elwark_network
+  elwark_network:
     external: true
 
 services:
   account.web:
     image: elwark/account/web:${TAG:-latest}
-    container_name: "account_web"
+    container_name: "elwark_account_web"
     build:
       context: .
-      dockerfile: src/Elwark.Account/Dockerfile
     deploy:
       resources:
         limits:
@@ -19,4 +17,4 @@ services:
     ports:
       - "5005:80"
     networks:
-      - elwarknetwork
+      - elwark_network
