@@ -314,6 +314,25 @@ export function createAppTheme(mode: 'light' | 'dark') {
       MuiSelect: {
         defaultProps: { size: 'small' },
       },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: ({ theme }) =>
+            theme.palette.mode === 'dark'
+              ? {
+                  backgroundColor: zinc[900],
+                  color: zinc[50],
+                  border: `1px solid ${zinc[700]}`,
+                }
+              : {
+                  backgroundColor: alpha(zinc[900], 0.92),
+                  color: '#ffffff',
+                },
+          arrow: ({ theme }) =>
+            theme.palette.mode === 'dark'
+              ? { color: zinc[900] }
+              : { color: alpha(zinc[900], 0.92) },
+        },
+      },
     },
   });
 }

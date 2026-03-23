@@ -164,7 +164,7 @@ export function ProfilePage() {
       </Box>
 
       <form onSubmit={handleSubmit}>
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{ mb: 3, bgcolor: 'transparent' }}>
           <CardContent sx={{ px: 0 }}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               {t('profile.personalInfo')}
