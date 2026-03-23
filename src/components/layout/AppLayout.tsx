@@ -1,21 +1,23 @@
 import { useState } from 'react';
-import {
-  AppBar,
-  Box,
-  Drawer,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Box, Drawer, IconButton, Toolbar } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { Outlet } from 'react-router-dom';
+import { useAccount } from '../../api/hooks/useAccount';
 import { Sidebar } from './Sidebar';
+import { AppBrandMark } from './AppBrandMark';
+import { LanguageMenuControl } from './LanguageMenuControl';
+import { LoadingScreen } from '../LoadingScreen';
 
 const SIDEBAR_WIDTH = 240;
 const TOPBAR_HEIGHT = 56;
 
 export function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isLoading, data: account } = useAccount();
+
+  if (isLoading || !account) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -47,7 +49,12 @@ export function AppLayout() {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { width: SIDEBAR_WIDTH },
+          '& .MuiDrawer-paper': {
+            width: SIDEBAR_WIDTH,
+            maxWidth: '100%',
+            boxSizing: 'border-box',
+            overflow: 'hidden',
+          },
         }}
       >
         <Sidebar onClose={() => setMobileOpen(false)} />
@@ -67,17 +74,26 @@ export function AppLayout() {
             color: 'text.primary',
           }}
         >
-          <Toolbar sx={{ height: TOPBAR_HEIGHT }}>
+          <Toolbar
+            sx={{
+              height: TOPBAR_HEIGHT,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              minWidth: 0,
+            }}
+          >
             <IconButton
               onClick={() => setMobileOpen(true)}
               edge="start"
-              sx={{ mr: 2 }}
+              sx={{ mr: 0.5 }}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="subtitle1" fontWeight={500}>
-              Elwark
-            </Typography>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <AppBrandMark logoHeight={28} titleVariant="subtitle1" />
+            </Box>
+            <LanguageMenuControl size="medium" />
           </Toolbar>
         </AppBar>
 

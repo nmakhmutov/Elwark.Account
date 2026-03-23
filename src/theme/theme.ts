@@ -271,7 +271,19 @@ export function createAppTheme(mode: 'light' | 'dark') {
         styleOverrides: {
           root: {
             borderRadius: 8,
+            border: 'none',
+            boxShadow: 'none',
           },
+        },
+      },
+      MuiCardContent: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
+            '&:last-child': {
+              paddingBottom: theme.spacing(2),
+            },
+          }),
         },
       },
       MuiPaper: {

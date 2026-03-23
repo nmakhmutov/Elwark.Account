@@ -9,22 +9,8 @@ import type {
   UpdateRequest,
   VerifyRequest,
 } from '../types';
-import { isAxiosError } from 'axios';
 
 const ACCOUNT_KEY = ['account', 'me'] as const;
-
-function extractError(err: unknown): ApiError {
-  if (isAxiosError<ApiError>(err) && err.response?.data) {
-    return err.response.data;
-  }
-  return {
-    title: 'Unexpected error',
-    type: 'unknown',
-    detail: null,
-    status: 500,
-    errors: {},
-  };
-}
 
 export function useAccount() {
   const client = useApiClient();
@@ -35,6 +21,7 @@ export function useAccount() {
       const { data } = await client.get<Account>('accounts/me');
       return data;
     },
+    staleTime: Infinity,
   });
 }
 
@@ -50,7 +37,6 @@ export function useUpdateAccount() {
     onSuccess: (data) => {
       queryClient.setQueryData<Account>(ACCOUNT_KEY, data);
     },
-    onError: (_, __, ctx) => extractError(ctx),
   });
 }
 
@@ -69,7 +55,6 @@ export function useAddEmail() {
         return { ...prev, emails: [...prev.emails, email] };
       });
     },
-    onError: (err) => extractError(err),
   });
 }
 
@@ -87,7 +72,6 @@ export function useDeleteEmail() {
         return { ...prev, emails: prev.emails.filter((e) => e.value !== email) };
       });
     },
-    onError: (err) => extractError(err),
   });
 }
 
@@ -106,7 +90,6 @@ export function useSetPrimaryEmail() {
         return { ...prev, emails };
       });
     },
-    onError: (err) => extractError(err),
   });
 }
 
@@ -118,7 +101,6 @@ export function useRequestEmailVerification() {
       const { data } = await client.post<Confirming>('accounts/me/emails/verify', request);
       return data;
     },
-    onError: (err) => extractError(err),
   });
 }
 
@@ -140,7 +122,6 @@ export function useConfirmEmail() {
         };
       });
     },
-    onError: (err) => extractError(err),
   });
 }
 
@@ -169,6 +150,5 @@ export function useDeleteConnection() {
         };
       });
     },
-    onError: (err) => extractError(err),
   });
 }

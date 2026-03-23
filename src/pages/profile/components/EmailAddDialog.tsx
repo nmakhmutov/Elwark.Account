@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { LoadingButton } from '../../../components/LoadingButton';
+import { formatApiError } from '../../../api/apiError';
 import { useAddEmail } from '../../../api/hooks/useAccount';
 
 interface Props {
@@ -43,7 +44,7 @@ export function EmailAddDialog({ open, onClose }: Props) {
           onClose();
         },
         onError: (err) => {
-          setError(err.detail ?? err.title);
+          setError(formatApiError(err));
         },
       }
     );

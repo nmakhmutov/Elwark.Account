@@ -1,23 +1,18 @@
 import { useState, type MouseEvent } from 'react';
 import {
-  alpha,
   Avatar,
   Box,
+  ButtonBase,
   Divider,
   ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
+  Popover,
   Typography,
-  useTheme,
 } from '@mui/material';
 import {
   Person as PersonIcon,
   Email as EmailIcon,
   Link as LinkIcon,
   Logout as LogoutIcon,
-  Translate as TranslateIcon,
   KeyboardArrowDown,
 } from '@mui/icons-material';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -25,8 +20,22 @@ import { useAuth } from 'react-oidc-context';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from '../../api/hooks/useAccount';
 import { ThemeSegmentedControl } from './ThemeSegmentedControl';
+import { LanguageMenuControl } from './LanguageMenuControl';
+import { AppBrandMark } from './AppBrandMark';
 
-const LANGUAGES: Record<string, string> = { en: 'English', ru: 'Русский' };
+/** Locale-aware date in the user's profile timezone (IANA id). */
+function formatAccountCreatedDisplay(iso: string, timeZone: string, locale: string): string | null {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      dateStyle: 'long',
+      timeZone,
+    }).format(date);
+  } catch {
+    return null;
+  }
+}
 
 interface Props {
   onClose?: () => void;
@@ -35,19 +44,33 @@ interface Props {
 /** Fallback avatar tint (visible on light grey sidebar cards). */
 const AVATAR_FALLBACK_BG = '#7c3aed';
 
+/** Full-width row hover (edge-to-edge inside popover). */
+const accountMenuRowSx = {
+  borderRadius: 0,
+  py: 1.25,
+  px: 2,
+  minHeight: 44,
+  width: '100%',
+  mx: 0,
+  alignItems: 'center',
+  gap: 0,
+  '&:hover': {
+    bgcolor: 'action.hover',
+  },
+} as const;
+
 export function Sidebar({ onClose }: Props) {
-  const theme = useTheme();
   const auth = useAuth();
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const { data: account } = useAccount();
-
-  const [langAnchor, setLangAnchor] = useState<HTMLElement | null>(null);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const userMenuOpen = Boolean(userMenuAnchor);
 
   const navItems = [
-    { path: '/', label: t('nav.profile'), icon: <PersonIcon sx={{ fontSize: 20 }} /> },
-    { path: '/emails', label: t('nav.emails'), icon: <EmailIcon sx={{ fontSize: 20 }} /> },
-    { path: '/connections', label: t('nav.connections'), icon: <LinkIcon sx={{ fontSize: 20 }} /> },
+    { path: '/', label: t('nav.profile'), icon: <PersonIcon sx={{ fontSize: 22 }} /> },
+    { path: '/emails', label: t('nav.emails'), icon: <EmailIcon sx={{ fontSize: 22 }} /> },
+    { path: '/connections', label: t('nav.connections'), icon: <LinkIcon sx={{ fontSize: 22 }} /> },
   ];
 
   const displayName =
@@ -62,44 +85,75 @@ export function Sidebar({ onClose }: Props) {
 
   const initials = displayName ? displayName[0].toUpperCase() : '?';
 
-  const handleLangOpen = (e: MouseEvent<HTMLElement>) => {
-    setLangAnchor(e.currentTarget);
+  const memberSinceLine =
+    account &&
+    (() => {
+      const date = formatAccountCreatedDisplay(
+        account.createdAt,
+        account.timeZone,
+        i18n.language
+      );
+      if (!date) return null;
+      return t('profile.memberSince', { date });
+    })();
+
+  const openUserMenu = (e: MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(e.currentTarget);
   };
 
-  const handleLangClose = () => {
-    setLangAnchor(null);
+  const closeUserMenu = () => {
+    setUserMenuAnchor(null);
   };
 
-  const handleLangSelect = (lang: string) => {
-    i18n.changeLanguage(lang);
-    handleLangClose();
+  const handleSignOut = () => {
+    closeUserMenu();
+    onClose?.();
+    auth.signoutRedirect();
   };
 
   return (
     <Box
       sx={{
-        width: 240,
+        width: '100%',
+        maxWidth: '100%',
+        minWidth: 0,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        p: 2,
-        overflowX: 'hidden',
+        p: 1.25,
+        boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
-      {/* User profile block — distinct surface in light mode (same issue as theme control: white-on-white) */}
-      <Box
+      <ButtonBase
+        onClick={openUserMenu}
+        aria-haspopup="dialog"
+        aria-expanded={userMenuOpen ? 'true' : undefined}
+        aria-label={displayName || primaryEmail || t('nav.account')}
+        disableRipple
         sx={{
+          alignSelf: 'stretch',
           display: 'flex',
           alignItems: 'center',
-          gap: 1.5,
-          p: 1.5,
-          borderRadius: 2,
-          border: '1px solid',
-          borderColor: 'divider',
-          bgcolor:
-            theme.palette.mode === 'light'
-              ? theme.palette.grey[100]
-              : alpha(theme.palette.common.white, 0.06),
+          gap: 1,
+          mt: -1.25,
+          mx: -1.25,
+          mb: 0,
+          pt: 2,
+          pb: 0.75,
+          px: 1.25,
+          borderRadius: 0,
+          textAlign: 'left',
+          color: 'inherit',
+          boxSizing: 'border-box',
+          '&:hover': {
+            bgcolor: 'action.hover',
+          },
+          ...(userMenuOpen
+            ? {
+                bgcolor: 'action.selected',
+              }
+            : {}),
         }}
       >
         <Avatar
@@ -109,21 +163,22 @@ export function Sidebar({ onClose }: Props) {
             width: 40,
             height: 40,
             fontSize: '1rem',
-            fontWeight: 600,
+            fontWeight: 500,
             color: '#ffffff',
             bgcolor: account?.picture ? 'transparent' : AVATAR_FALLBACK_BG,
+            flexShrink: 0,
           }}
         >
           {initials}
         </Avatar>
-        <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
+        <Box sx={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
           <Typography
             variant="body2"
             fontWeight={600}
             noWrap
             sx={{ color: 'text.primary', lineHeight: 1.3 }}
           >
-            {displayName}
+            {displayName || '—'}
           </Typography>
           <Typography
             variant="caption"
@@ -131,32 +186,104 @@ export function Sidebar({ onClose }: Props) {
             display="block"
             sx={{ color: 'text.secondary', mt: 0.25 }}
           >
-            {primaryEmail}
+            {primaryEmail || '—'}
           </Typography>
         </Box>
-      </Box>
+        <KeyboardArrowDown
+          aria-hidden
+          sx={{
+            flexShrink: 0,
+            fontSize: 22,
+            color: 'text.secondary',
+            opacity: 0.85,
+            transition: 'transform 0.2s ease',
+            transform: userMenuOpen ? 'rotate(180deg)' : 'none',
+          }}
+        />
+      </ButtonBase>
 
-      {/* Theme switcher — right below user block */}
-      <Box sx={{ mt: 1, mb: 2 }}>
-        <ThemeSegmentedControl />
-      </Box>
-
-      {/* Navigation — compact, no flex:1 */}
-      <Typography
-        variant="caption"
-        color="text.disabled"
-        sx={{
-          px: 1.5,
-          pb: 0.5,
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          fontWeight: 500,
+      <Popover
+        open={userMenuOpen}
+        anchorEl={userMenuAnchor}
+        onClose={closeUserMenu}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{
+          paper: {
+            elevation: 8,
+            sx: {
+              width: 300,
+              maxWidth: 'min(300px, calc(100vw - 24px))',
+              p: 0,
+              overflow: 'hidden',
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider',
+              mt: 0.5,
+              boxSizing: 'border-box',
+            },
+          },
         }}
       >
-        {t('nav.account')}
-      </Typography>
+        <Box sx={{ py: 1.5, px: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <AppBrandMark logoHeight={24} titleVariant="subtitle1" />
+        </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.5,
+            py: 2,
+            px: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
+        >
+          <Avatar
+            src={account?.picture}
+            imgProps={{ alt: '' }}
+            sx={{
+              width: 48,
+              height: 48,
+              fontSize: '1.125rem',
+              fontWeight: 600,
+              color: '#ffffff',
+              bgcolor: account?.picture ? 'transparent' : AVATAR_FALLBACK_BG,
+              flexShrink: 0,
+            }}
+          >
+            {initials}
+          </Avatar>
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography variant="subtitle2" fontWeight={600} noWrap>
+              {displayName || '—'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" display="block" noWrap sx={{ mt: 0.25 }}>
+              {primaryEmail || '—'}
+            </Typography>
+            {memberSinceLine ? (
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.75 }}>
+                {memberSinceLine}
+              </Typography>
+            ) : null}
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 0 }} />
+
+        <ListItemButton onClick={handleSignOut} sx={{ ...accountMenuRowSx, color: 'error.main' }}>
+          <LogoutIcon sx={{ fontSize: 20, mr: 1.5, flexShrink: 0 }} />
+          <Typography variant="body2" fontWeight={500}>
+            {t('common.signOut')}
+          </Typography>
+        </ListItemButton>
+      </Popover>
+
+      <Divider sx={{ mx: -1.25, my: 0, mb: 1.5 }} />
+
+      {/* Navigation */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.375 }}>
         {navItems.map(({ path, label, icon }) => {
           const active = location.pathname === path;
           return (
@@ -167,11 +294,11 @@ export function Sidebar({ onClose }: Props) {
               onClick={onClose}
               selected={active}
               sx={{
-                borderRadius: 2,
-                gap: 1.5,
+                borderRadius: 1.5,
+                gap: 1.25,
                 py: 0.75,
-                px: 1.5,
-                minHeight: 0,
+                px: 1.25,
+                minHeight: 40,
                 '&.Mui-selected': {
                   bgcolor: 'action.selected',
                   color: 'primary.main',
@@ -189,7 +316,7 @@ export function Sidebar({ onClose }: Props) {
               >
                 {icon}
               </Box>
-              <Typography variant="body2" fontWeight={active ? 500 : 400}>
+              <Typography variant="body2" fontWeight={active ? 500 : 400} sx={{ fontSize: '0.9375rem' }}>
                 {label}
               </Typography>
             </ListItemButton>
@@ -200,67 +327,22 @@ export function Sidebar({ onClose }: Props) {
       {/* Spacer pushes bottom section down */}
       <Box sx={{ flex: 1 }} />
 
-      {/* Bottom section */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-        {/* Language dropdown */}
-        <ListItemButton
-          onClick={handleLangOpen}
+      {/* Bottom: language + theme */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+        <Box sx={{ mb: 1.25, alignSelf: 'stretch' }}>
+          <LanguageMenuControl variant="row" onLanguageSelected={onClose} />
+        </Box>
+        <Box
           sx={{
-            borderRadius: 2,
-            py: 0.75,
-            px: 1.5,
-            minHeight: 0,
+            mx: -1.25,
+            mb: -1.25,
+            alignSelf: 'stretch',
+            minWidth: 0,
+            overflow: 'hidden',
           }}
         >
-          <ListItemIcon sx={{ minWidth: 0, mr: 1.5, color: 'text.secondary' }}>
-            <TranslateIcon sx={{ fontSize: 20 }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={LANGUAGES[i18n.language] ?? i18n.language}
-            primaryTypographyProps={{ variant: 'body2' }}
-          />
-          <KeyboardArrowDown sx={{ fontSize: 18, color: 'text.secondary' }} />
-        </ListItemButton>
-        <Menu
-          anchorEl={langAnchor}
-          open={Boolean(langAnchor)}
-          onClose={handleLangClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-          transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        >
-          {Object.entries(LANGUAGES).map(([code, name]) => (
-            <MenuItem
-              key={code}
-              selected={i18n.language === code}
-              onClick={() => handleLangSelect(code)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Menu>
-
-        <Divider sx={{ my: 0.5 }} />
-
-        {/* Sign out */}
-        <ListItemButton
-          onClick={() => auth.signoutRedirect()}
-          sx={{
-            borderRadius: 2,
-            py: 0.75,
-            px: 1.5,
-            minHeight: 0,
-            color: 'error.main',
-            '&:hover': { bgcolor: 'error.main', color: 'error.contrastText' },
-          }}
-        >
-          <ListItemIcon sx={{ minWidth: 0, mr: 1.5, color: 'inherit' }}>
-            <LogoutIcon sx={{ fontSize: 18 }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={t('common.signOut')}
-            primaryTypographyProps={{ variant: 'body2' }}
-          />
-        </ListItemButton>
+          <ThemeSegmentedControl />
+        </Box>
       </Box>
     </Box>
   );

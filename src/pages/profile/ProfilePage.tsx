@@ -19,6 +19,7 @@ import { useTimezones } from '../../api/hooks/useWorld';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { LoadingButton } from '../../components/LoadingButton';
 import { useSnackbar } from '../../components/SnackbarProvider';
+import { apiErrorSnackbarPayload } from '../../api/apiError';
 import type { Account, Country, DayOfWeek, Timezone, UpdateRequest } from '../../api/types';
 import { getCountryFlag, formatTimezone } from '../../api/types';
 import {
@@ -112,7 +113,10 @@ export function ProfilePage() {
     if (currentForm.lastName && currentForm.lastName.length > 128)
       e.lastName = t('profile.validation.lastNameMax');
     if (!currentForm.language) e.language = t('profile.validation.languageRequired');
-    if (!currentForm.timeZone) e.timeZone = t('profile.validation.timezoneRequired');
+    if (!currentForm.countryCode?.trim())
+      e.countryCode = t('profile.validation.countryRequired');
+    if (!currentForm.timeZone?.trim())
+      e.timeZone = t('profile.validation.timezoneRequired');
     if (!currentForm.dateFormat) e.dateFormat = t('profile.validation.dateFormatRequired');
     if (!currentForm.timeFormat) e.timeFormat = t('profile.validation.timeFormatRequired');
     setErrors(e);
@@ -129,7 +133,7 @@ export function ProfilePage() {
       lastName: currentForm.lastName || null,
       preferNickname: currentForm.preferNickname,
       language: currentForm.language,
-      countryCode: currentForm.countryCode || null,
+      countryCode: currentForm.countryCode.trim(),
       timeZone: currentForm.timeZone,
       dateFormat: currentForm.dateFormat,
       timeFormat: currentForm.timeFormat,
@@ -142,7 +146,7 @@ export function ProfilePage() {
         showSnackbar(t('profile.updated'), 'success');
       },
       onError: (err) => {
-        showSnackbar(err.detail ?? err.title, 'error');
+        showSnackbar(apiErrorSnackbarPayload(err), 'error');
       },
     });
   };
@@ -160,14 +164,9 @@ export function ProfilePage() {
       </Box>
 
       <form onSubmit={handleSubmit}>
-        {/* Personal information card */}
         <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ p: 3 }}>
-            <Typography
-              variant="body2"
-              fontWeight={500}
-              sx={{ mb: 2, pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}
-            >
+          <CardContent sx={{ px: 0 }}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               {t('profile.personalInfo')}
             </Typography>
             <Box
@@ -214,17 +213,8 @@ export function ProfilePage() {
                 helperText={errors.lastName}
               />
             </Box>
-          </CardContent>
-        </Card>
 
-        {/* Preferences card */}
-        <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ p: 3 }}>
-            <Typography
-              variant="body2"
-              fontWeight={500}
-              sx={{ mb: 2, pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}
-            >
+            <Typography variant="subtitle1" fontWeight={600} sx={{ mt: 4, mb: 2 }}>
               {t('profile.preferences')}
             </Typography>
             <Box
@@ -253,24 +243,33 @@ export function ProfilePage() {
                     <span>{option.name}</span>
                   </Box>
                 )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('profile.country')}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {countriesPending ? (
-                            <CircularProgress color="inherit" size={20} sx={{ mr: 0.5 }} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                    aria-busy={countriesPending}
-                  />
-                )}
+                renderInput={(params) => {
+                  const { InputProps, inputProps, InputLabelProps, ...rest } = params;
+                  return (
+                    <TextField
+                      {...rest}
+                      label={t('profile.country')}
+                      error={Boolean(errors.countryCode)}
+                      helperText={errors.countryCode}
+                      slotProps={{
+                        inputLabel: InputLabelProps,
+                        input: {
+                          ...InputProps,
+                          endAdornment: (
+                            <>
+                              {countriesPending ? (
+                                <CircularProgress color="inherit" size={20} sx={{ mr: 0.5 }} />
+                              ) : null}
+                              {InputProps.endAdornment}
+                            </>
+                          ),
+                        },
+                        htmlInput: inputProps,
+                      }}
+                      aria-busy={countriesPending}
+                    />
+                  );
+                }}
                 isOptionEqualToValue={(a, b) => a.alpha2 === b.alpha2}
               />
               <Autocomplete
@@ -279,26 +278,33 @@ export function ProfilePage() {
                 value={timezonesPending ? null : timezoneValue}
                 onChange={(_, v) => update({ timeZone: v?.id ?? '' })}
                 getOptionLabel={(opt: Timezone) => formatTimezone(opt)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('profile.timezone')}
-                    error={Boolean(errors.timeZone)}
-                    helperText={errors.timeZone}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {timezonesPending ? (
-                            <CircularProgress color="inherit" size={20} sx={{ mr: 0.5 }} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                    aria-busy={timezonesPending}
-                  />
-                )}
+                renderInput={(params) => {
+                  const { InputProps, inputProps, InputLabelProps, ...rest } = params;
+                  return (
+                    <TextField
+                      {...rest}
+                      label={t('profile.timezone')}
+                      error={Boolean(errors.timeZone)}
+                      helperText={errors.timeZone}
+                      slotProps={{
+                        inputLabel: InputLabelProps,
+                        input: {
+                          ...InputProps,
+                          endAdornment: (
+                            <>
+                              {timezonesPending ? (
+                                <CircularProgress color="inherit" size={20} sx={{ mr: 0.5 }} />
+                              ) : null}
+                              {InputProps.endAdornment}
+                            </>
+                          ),
+                        },
+                        htmlInput: inputProps,
+                      }}
+                      aria-busy={timezonesPending}
+                    />
+                  );
+                }}
                 isOptionEqualToValue={(opt, val) => opt.id === val.id}
               />
               <TextField
@@ -360,20 +366,19 @@ export function ProfilePage() {
                 ))}
               </TextField>
             </Box>
+
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              <LoadingButton
+                loading={updateAccount.isPending}
+                type="submit"
+                variant="contained"
+                size="medium"
+              >
+                {t('common.save')}
+              </LoadingButton>
+            </Box>
           </CardContent>
         </Card>
-
-        {/* Save button */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <LoadingButton
-            loading={updateAccount.isPending}
-            type="submit"
-            variant="contained"
-            size="medium"
-          >
-            {t('common.save')}
-          </LoadingButton>
-        </Box>
       </form>
     </Box>
   );

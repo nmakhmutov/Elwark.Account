@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useDeleteEmail, useRequestEmailVerification, useSetPrimaryEmail } from '../../api/hooks/useAccount';
@@ -9,6 +9,7 @@ import { EmailCard } from './components/EmailCard';
 import { EmailAddDialog } from '../profile/components/EmailAddDialog';
 import { EmailConfirmDialog } from '../profile/components/EmailConfirmDialog';
 import { DeleteConfirmDialog } from '../profile/components/DeleteConfirmDialog';
+import { apiErrorSnackbarPayload } from '../../api/apiError';
 import type { Email } from '../../api/types';
 
 export function EmailsPage() {
@@ -56,7 +57,7 @@ export function EmailsPage() {
       {
         onSuccess: () => setSettingPrimaryEmail(null),
         onError: (err) => {
-          showSnackbar(err.detail ?? err.title, 'error');
+          showSnackbar(apiErrorSnackbarPayload(err), 'error');
           setSettingPrimaryEmail(null);
         },
       }
@@ -72,7 +73,7 @@ export function EmailsPage() {
         setDeleteEmailTarget(null);
       },
       onError: (err) => {
-        showSnackbar(err.detail ?? err.title, 'error');
+        showSnackbar(apiErrorSnackbarPayload(err), 'error');
         setDeletingEmail(null);
         setDeleteEmailTarget(null);
       },
@@ -84,25 +85,13 @@ export function EmailsPage() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
-        <Box>
-          <Typography variant="h6" fontWeight={500} sx={{ fontSize: { xs: 16, md: 18 } }}>
-            {t('emails.title')}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t('emails.subtitle')}
-          </Typography>
-        </Box>
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<AddIcon />}
-          size="small"
-          disabled={addDisabled}
-          onClick={() => setAddEmailOpen(true)}
-        >
-          {t('emails.addEmail')}
-        </Button>
+      <Box>
+        <Typography variant="h6" fontWeight={500} sx={{ fontSize: { xs: 16, md: 18 } }}>
+          {t('emails.title')}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {t('emails.subtitle')}
+        </Typography>
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -120,43 +109,29 @@ export function EmailsPage() {
         ))}
       </Box>
 
-      {hasEmails && (
-        <Paper
-          variant="outlined"
-          onClick={() => !addDisabled && setAddEmailOpen(true)}
-          role="button"
-          aria-disabled={addDisabled}
-          tabIndex={addDisabled ? -1 : 0}
-          onKeyDown={(e) => {
-            if (!addDisabled && (e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              setAddEmailOpen(true);
-            }
-          }}
-          sx={{
-            p: 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1,
-            cursor: addDisabled ? 'not-allowed' : 'pointer',
-            borderStyle: 'dashed',
-            borderColor: addDisabled ? 'action.disabled' : 'primary.main',
-            color: addDisabled ? 'action.disabled' : 'primary.main',
-            bgcolor: addDisabled ? 'action.hover' : 'transparent',
-            '&:hover': addDisabled
-              ? undefined
-              : {
-                  borderColor: 'primary.main',
-                  color: 'primary.main',
-                  bgcolor: 'action.hover',
-                },
-          }}
-        >
-          <AddIcon sx={{ fontSize: 18 }} />
-          <Typography variant="body2">{t('emails.addAnother')}</Typography>
-        </Paper>
-      )}
+      <Button
+        variant="outlined"
+        fullWidth
+        disabled={addDisabled}
+        onClick={() => setAddEmailOpen(true)}
+        startIcon={<AddIcon sx={{ fontSize: 18 }} />}
+        sx={{
+          py: 1.5,
+          borderStyle: 'dashed',
+          borderColor: addDisabled ? 'action.disabled' : 'primary.main',
+          color: addDisabled ? 'action.disabled' : 'primary.main',
+          bgcolor: addDisabled ? 'action.hover' : 'transparent',
+          '&:hover': addDisabled
+            ? undefined
+            : {
+                borderColor: 'primary.main',
+                color: 'primary.main',
+                bgcolor: 'action.hover',
+              },
+        }}
+      >
+        {hasEmails ? t('emails.addAnother') : t('emails.addEmail')}
+      </Button>
 
       <EmailAddDialog open={addEmailOpen} onClose={() => setAddEmailOpen(false)} />
       <EmailConfirmDialog

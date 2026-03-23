@@ -5,10 +5,10 @@ type Props = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'width' | 'height
   size?: number;
 };
 
-export function MicrosoftIcon({ size = 28, style, ...rest }: Props) {
+export function AppleLogo({ size = 28, style, ...rest }: Props) {
   return (
     <img
-      src={brandImageSrc('microsoft')}
+      src={brandImageSrc('apple')}
       width={size}
       height={size}
       alt=""

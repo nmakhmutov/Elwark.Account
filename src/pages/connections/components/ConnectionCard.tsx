@@ -63,7 +63,7 @@ function ConnectionAvatar({ connection }: { connection: Connection }) {
   if (type === 'microsoft') {
     return (
       <Box sx={providerLogoSlotSx}>
-        <MicrosoftIcon sx={{ fontSize: 28 }} />
+        <MicrosoftIcon size={28} />
       </Box>
     );
   }
@@ -129,11 +129,11 @@ export function ConnectionCard({ connection, onDelete, isDeleting }: Props) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              gap: 0.5,
+              gap: 0.25,
             }}
           >
             <Typography
-              variant="body2"
+              variant="body1"
               fontWeight={500}
               noWrap
               sx={{ minWidth: 0, width: '100%' }}
@@ -141,30 +141,37 @@ export function ConnectionCard({ connection, onDelete, isDeleting }: Props) {
             >
               {titleText}
             </Typography>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={0.75}
-              flexWrap="wrap"
-              useFlexGap
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              noWrap
+              sx={{ minWidth: 0, width: '100%' }}
             >
-              <Chip
-                size="small"
-                label={t(serviceLabelKey(connection.type))}
-                color="primary"
-                variant="outlined"
-              />
-            </Stack>
+              ({connection.identity})
+            </Typography>
           </Box>
         </Stack>
 
-        <IconButton
-          aria-label={t('connections.moreOptions')}
-          onClick={(e) => setAnchorEl(e.currentTarget)}
-          sx={{ flexShrink: 0, mt: -0.25 }}
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={{ flexShrink: 0, alignSelf: { xs: 'flex-start', sm: 'center' } }}
         >
-          <MoreVert sx={{ fontSize: 30 }} />
-        </IconButton>
+          <Chip
+            size="small"
+            label={t(serviceLabelKey(connection.type))}
+            color="primary"
+            variant="outlined"
+          />
+          <IconButton
+            aria-label={t('connections.moreOptions')}
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+            sx={{ mt: -0.25 }}
+          >
+            <MoreVert sx={{ fontSize: 30 }} />
+          </IconButton>
+        </Stack>
       </Stack>
 
       <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleCloseMenu}>

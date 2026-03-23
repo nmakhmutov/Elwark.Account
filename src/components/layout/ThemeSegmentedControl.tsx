@@ -13,6 +13,7 @@ const options: { value: ThemeMode; Icon: React.ElementType; labelKey: string }[]
   { value: 'dark', Icon: DarkModeIcon, labelKey: 'theme.dark' },
 ];
 
+/** Full-width strip for sidebar (edge-to-edge via parent `mx: -padding`). */
 export function ThemeSegmentedControl() {
   const { mode, setMode } = useThemeMode();
   const { t } = useTranslation();
@@ -27,12 +28,16 @@ export function ThemeSegmentedControl() {
     <Box
       sx={{
         display: 'flex',
-        border: '1px solid',
-        borderColor: 'divider',
-        borderRadius: 2,
-        p: 0.5,
+        width: '100%',
+        minWidth: 0,
+        maxWidth: '100%',
+        borderRadius: 0,
+        py: 0.5,
+        px: 0.75,
         gap: 0.25,
         bgcolor: trackBg,
+        boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
       {options.map(({ value, Icon, labelKey }) => {
@@ -44,6 +49,7 @@ export function ThemeSegmentedControl() {
               onClick={() => setMode(value)}
               sx={{
                 flex: 1,
+                minWidth: 0,
                 py: 0.75,
                 borderRadius: 1.5,
                 color: selected ? 'primary.main' : 'text.secondary',

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Avatar,
   Box,
   Chip,
   CircularProgress,
@@ -14,8 +13,90 @@ import {
 import { DeleteOutline, MoreVert, StarOutline } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import type { Email } from '../../../api/types';
-import { getEmailAvatarColor, getEmailAvatarLetter } from '../../../utils/emailAvatar';
+import { AppleLogo } from '../../../components/AppleLogo';
+import { GoogleLogo } from '../../../components/GoogleLogo';
+import { MicrosoftIcon } from '../../../components/MicrosoftIcon';
+import { ProtonLogo } from '../../../components/ProtonLogo';
+import { YahooLogo } from '../../../components/YahooLogo';
+import { getStringAvatarColor, getStringAvatarLetter } from '../../../utils/emailAvatar';
+import { getEmailDomain, getEmailProviderKind } from '../../../utils/emailProviderDomain';
 import { getEmailStatus, statusStyles, type EmailStatus } from '../../../utils/emailStatus';
+
+/** Same bordered tile as ConnectionCard / Identity social buttons. */
+const providerLogoSlotSx = {
+  width: 48,
+  height: 48,
+  flexShrink: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 2,
+  border: '1px solid',
+  borderColor: 'divider',
+  bgcolor: 'background.paper',
+} as const;
+
+function EmailDomainAvatar({ email }: { email: string }) {
+  const kind = getEmailProviderKind(email);
+  const domain = getEmailDomain(email);
+
+  switch (kind) {
+    case 'google':
+      return (
+        <Box sx={providerLogoSlotSx}>
+          <GoogleLogo size={28} />
+        </Box>
+      );
+    case 'microsoft':
+      return (
+        <Box sx={providerLogoSlotSx}>
+          <MicrosoftIcon size={28} />
+        </Box>
+      );
+    case 'yahoo':
+      return (
+        <Box sx={providerLogoSlotSx}>
+          <YahooLogo size={28} />
+        </Box>
+      );
+    case 'apple':
+      return (
+        <Box sx={providerLogoSlotSx}>
+          <AppleLogo size={28} />
+        </Box>
+      );
+    case 'proton':
+      return (
+        <Box sx={providerLogoSlotSx}>
+          <ProtonLogo size={28} />
+        </Box>
+      );
+    case 'other': {
+      const key = domain || email;
+      const avatarColors = getStringAvatarColor(key);
+      return (
+        <Box
+          sx={{
+            ...providerLogoSlotSx,
+            bgcolor: avatarColors.bg,
+          }}
+        >
+          <Typography
+            component="span"
+            sx={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              lineHeight: 1,
+              color: avatarColors.text,
+            }}
+          >
+            {getStringAvatarLetter(key)}
+          </Typography>
+        </Box>
+      );
+    }
+  }
+}
 
 interface Props {
   email: Email;
@@ -53,7 +134,6 @@ export function EmailCard({
 
   const status = getEmailStatus(email, isConfirming);
   const style = statusStyles[status];
-  const avatarColors = getEmailAvatarColor(email.value);
 
   const handleCloseMenu = () => setAnchorEl(null);
 
@@ -62,9 +142,13 @@ export function EmailCard({
       elevation={0}
       sx={{
         p: { xs: 1.5, sm: 2 },
-        borderLeftWidth: email.isPrimary ? 4 : 0,
-        borderLeftStyle: email.isPrimary ? 'solid' : undefined,
-        borderLeftColor: email.isPrimary ? 'primary.main' : undefined,
+        ...(email.isPrimary
+          ? {
+              borderLeftWidth: 4,
+              borderLeftStyle: 'solid',
+              borderLeftColor: 'primary.main',
+            }
+          : {}),
         ...style.cardSx,
       }}
     >
@@ -81,19 +165,7 @@ export function EmailCard({
           spacing={1.5}
           sx={{ flex: 1, minWidth: 0 }}
         >
-          <Avatar
-            sx={{
-              width: 48,
-              height: 48,
-              flexShrink: 0,
-              bgcolor: avatarColors.bg,
-              color: avatarColors.text,
-              fontSize: '1.25rem',
-              fontWeight: 600,
-            }}
-          >
-            {getEmailAvatarLetter(email.value)}
-          </Avatar>
+          <EmailDomainAvatar email={email.value} />
           <Box
             sx={{
               minWidth: 0,

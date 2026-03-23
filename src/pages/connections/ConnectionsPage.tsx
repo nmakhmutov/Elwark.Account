@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { apiErrorSnackbarPayload } from '../../api/apiError';
 import { useAccount, useDeleteConnection } from '../../api/hooks/useAccount';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { useSnackbar } from '../../components/SnackbarProvider';
@@ -41,7 +42,7 @@ export function ConnectionsPage() {
           setDeleteConnTarget(null);
         },
         onError: (err) => {
-          showSnackbar(err.detail ?? err.title, 'error');
+          showSnackbar(apiErrorSnackbarPayload(err), 'error');
           setDeletingConn(null);
           setDeleteConnTarget(null);
         },
@@ -57,24 +58,13 @@ export function ConnectionsPage() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
-        <Box>
-          <Typography variant="h6" fontWeight={500} sx={{ fontSize: { xs: 16, md: 18 } }}>
-            {t('connections.title')}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t('connections.subtitle')}
-          </Typography>
-        </Box>
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<AddIcon />}
-          size="small"
-          href={addConnectionHref}
-        >
-          {t('connections.addConnection')}
-        </Button>
+      <Box>
+        <Typography variant="h6" fontWeight={500} sx={{ fontSize: { xs: 16, md: 18 } }}>
+          {t('connections.title')}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {t('connections.subtitle')}
+        </Typography>
       </Box>
 
       {hasConnections ? (
@@ -107,33 +97,33 @@ export function ConnectionsPage() {
         </Paper>
       )}
 
-      {hasConnections && (
-        <Paper
-          component="a"
-          href={addConnectionHref}
-          variant="outlined"
-          sx={{
-            p: 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1,
-            cursor: 'pointer',
-            borderStyle: 'dashed',
+      <Paper
+        component="a"
+        href={addConnectionHref}
+        variant="outlined"
+        sx={{
+          p: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 1,
+          cursor: 'pointer',
+          borderStyle: 'dashed',
+          borderColor: 'primary.main',
+          color: 'primary.main',
+          textDecoration: 'none',
+          '&:hover': {
             borderColor: 'primary.main',
             color: 'primary.main',
-            textDecoration: 'none',
-            '&:hover': {
-              borderColor: 'primary.main',
-              color: 'primary.main',
-              bgcolor: 'action.hover',
-            },
-          }}
-        >
-          <AddIcon sx={{ fontSize: 18 }} />
-          <Typography variant="body2">{t('connections.addAnother')}</Typography>
-        </Paper>
-      )}
+            bgcolor: 'action.hover',
+          },
+        }}
+      >
+        <AddIcon sx={{ fontSize: 18 }} />
+        <Typography variant="body2">
+          {hasConnections ? t('connections.addAnother') : t('connections.addConnection')}
+        </Typography>
+      </Paper>
 
       <DeleteConfirmDialog
         open={Boolean(deleteConnTarget)}

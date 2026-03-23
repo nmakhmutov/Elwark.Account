@@ -8,7 +8,8 @@
     "no": "No",
     "signOut": "Sign out",
     "update": "Update",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "language": "Language"
   },
   "nav": {
     "account": "Account",
@@ -46,6 +47,7 @@
       "firstNameMax": "First name must be at most 128 characters",
       "lastNameMax": "Last name must be at most 128 characters",
       "languageRequired": "Language is required",
+      "countryRequired": "Country is required",
       "timezoneRequired": "Timezone is required",
       "dateFormatRequired": "Date format is required",
       "timeFormatRequired": "Time format is required"

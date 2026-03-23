@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { LoadingButton } from '../../../components/LoadingButton';
+import { formatApiError } from '../../../api/apiError';
 import { useConfirmEmail } from '../../../api/hooks/useAccount';
 
 interface Props {
@@ -40,7 +41,7 @@ export function EmailConfirmDialog({ open, token, onClose }: Props) {
           onClose();
         },
         onError: (err) => {
-          setError(err.detail ?? err.title);
+          setError(formatApiError(err));
         },
       }
     );

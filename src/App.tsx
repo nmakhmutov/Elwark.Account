@@ -4,6 +4,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import { AuthGuard } from './auth/AuthGuard';
 import { CallbackPage } from './auth/CallbackPage';
 import { AppLayout } from './components/layout/AppLayout';
+import { RouteErrorFallback } from './components/RouteErrorFallback';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { EmailsPage } from './pages/emails/EmailsPage';
 import { ConnectionsPage } from './pages/connections/ConnectionsPage';
@@ -20,10 +21,13 @@ const queryClient = new QueryClient({
   },
 });
 
+const routeErrorElement = <RouteErrorFallback />;
+
 const router = createBrowserRouter([
   {
     path: '/authentication/login-callback',
     element: <CallbackPage />,
+    errorElement: routeErrorElement,
   },
   {
     path: '/',
@@ -34,6 +38,7 @@ const router = createBrowserRouter([
         </ApiClientProvider>
       </AuthGuard>
     ),
+    errorElement: routeErrorElement,
     children: [
       { index: true, element: <ProfilePage /> },
       { path: 'emails', element: <EmailsPage /> },
