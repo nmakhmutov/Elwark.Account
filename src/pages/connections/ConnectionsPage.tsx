@@ -6,21 +6,45 @@ import { apiErrorSnackbarPayload } from '../../api/apiError';
 import { useAccount, useDeleteConnection } from '../../api/hooks/useAccount';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { useSnackbar } from '../../components/SnackbarProvider';
+import { ErrorScreen } from '../../components/ErrorScreen';
 import { ConnectionCard } from './components/ConnectionCard';
 import { DeleteConfirmDialog } from '../profile/components/DeleteConfirmDialog';
 import type { Connection } from '../../api/types';
+import { formatApiError } from '../../api/apiError';
 
 export function ConnectionsPage() {
   const { t } = useTranslation();
-  const { data: account, isLoading } = useAccount();
+  const { data: account, isLoading, isError, error, refetch } = useAccount();
   const { showSnackbar } = useSnackbar();
   const deleteConnection = useDeleteConnection();
 
   const [deleteConnTarget, setDeleteConnTarget] = useState<Connection | null>(null);
   const [deletingConn, setDeletingConn] = useState<string | null>(null);
 
-  if (isLoading || !account) {
+  if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorScreen
+        title="Unable to load connections"
+        message={formatApiError(error)}
+        actionLabel="Try again"
+        onAction={() => void refetch()}
+      />
+    );
+  }
+
+  if (!account) {
+    return (
+      <ErrorScreen
+        title="Unable to load connections"
+        message="The account response was empty."
+        actionLabel="Reload page"
+        onAction={() => window.location.reload()}
+      />
+    );
   }
 
   const addConnectionHref = (() => {
@@ -32,6 +56,10 @@ export function ConnectionsPage() {
   const confirmDeleteConnection = () => {
     if (!deleteConnTarget) return;
     const service = deleteConnTarget.type;
+    if (service === 'unknown') {
+      setDeleteConnTarget(null);
+      return;
+    }
     const connKey = `${service}:${deleteConnTarget.identity}`;
     setDeletingConn(connKey);
     deleteConnection.mutate(

@@ -1,4 +1,4 @@
-import { useState, useMemo, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import {
   Box,
   Card,
@@ -19,7 +19,8 @@ import { useTimezones } from '../../api/hooks/useWorld';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { LoadingButton } from '../../components/LoadingButton';
 import { useSnackbar } from '../../components/SnackbarProvider';
-import { apiErrorSnackbarPayload } from '../../api/apiError';
+import { ErrorScreen } from '../../components/ErrorScreen';
+import { apiErrorSnackbarPayload, formatApiError } from '../../api/apiError';
 import type { Account, Country, DayOfWeek, Timezone, UpdateRequest } from '../../api/types';
 import { getCountryFlag, formatTimezone } from '../../api/types';
 import {
@@ -37,11 +38,11 @@ const filterCountries = createFilterOptions<Country>({
 
 interface FormState {
   nickname: string;
-  preferNickname: boolean;
+  useNickname: boolean;
   firstName: string;
   lastName: string;
   countryCode: string;
-  timeZone: string;
+  timezone: string;
   language: string;
   startOfWeek: DayOfWeek;
   dateFormat: string;
@@ -51,11 +52,11 @@ interface FormState {
 function accountToForm(a: Account): FormState {
   return {
     nickname: a.nickname,
-    preferNickname: a.preferNickname,
+    useNickname: a.useNickname,
     firstName: a.firstName ?? '',
     lastName: a.lastName ?? '',
     countryCode: a.countryCode ?? '',
-    timeZone: a.timeZone,
+    timezone: a.timezone,
     language: a.language,
     startOfWeek: a.startOfWeek,
     dateFormat: a.dateFormat,
@@ -65,9 +66,27 @@ function accountToForm(a: Account): FormState {
 
 export function ProfilePage() {
   const { t } = useTranslation();
-  const { data: account, isLoading: accountLoading } = useAccount();
-  const { data: countries, isPending: countriesPending } = useCountries();
-  const { data: timezones, isPending: timezonesPending } = useTimezones();
+  const {
+    data: account,
+    isLoading: accountLoading,
+    isError: accountError,
+    error: accountErrorValue,
+    refetch: refetchAccount,
+  } = useAccount();
+  const {
+    data: countries,
+    isPending: countriesPending,
+    isError: countriesError,
+    error: countriesErrorValue,
+    refetch: refetchCountries,
+  } = useCountries();
+  const {
+    data: timezones,
+    isPending: timezonesPending,
+    isError: timezonesError,
+    error: timezonesErrorValue,
+    refetch: refetchTimezones,
+  } = useTimezones();
   const countriesList = countries ?? [];
   const timezonesList = timezones ?? [];
   const updateAccount = useUpdateAccount();
@@ -78,24 +97,61 @@ export function ProfilePage() {
 
   const currentForm = form ?? (account ? accountToForm(account) : null);
 
-  const timezoneValue = useMemo(
-    () =>
-      currentForm
-        ? timezonesList.find((tz) => tz.id === currentForm.timeZone) ?? null
-        : null,
-    [timezonesList, currentForm?.timeZone]
-  );
+  const timezoneValue = currentForm
+    ? timezonesList.find((tz) => tz.id === currentForm.timezone) ?? null
+    : null;
 
-  const countryValue = useMemo(
-    () =>
-      currentForm && !countriesPending
-        ? countriesList.find((c) => c.alpha2 === currentForm.countryCode) ?? null
-        : null,
-    [countriesList, countriesPending, currentForm?.countryCode]
-  );
+  const countryValue =
+    currentForm && !countriesPending
+      ? countriesList.find((c) => c.alpha2 === currentForm.countryCode) ?? null
+      : null;
 
-  if (accountLoading || !account || !currentForm) {
+  if (accountLoading) {
     return <LoadingScreen />;
+  }
+
+  if (accountError) {
+    return (
+      <ErrorScreen
+        title="Unable to load profile"
+        message={formatApiError(accountErrorValue)}
+        actionLabel="Try again"
+        onAction={() => void refetchAccount()}
+      />
+    );
+  }
+
+  if (countriesError) {
+    return (
+      <ErrorScreen
+        title="Unable to load countries"
+        message={formatApiError(countriesErrorValue)}
+        actionLabel="Try again"
+        onAction={() => void refetchCountries()}
+      />
+    );
+  }
+
+  if (timezonesError) {
+    return (
+      <ErrorScreen
+        title="Unable to load time zones"
+        message={formatApiError(timezonesErrorValue)}
+        actionLabel="Try again"
+        onAction={() => void refetchTimezones()}
+      />
+    );
+  }
+
+  if (!account || !currentForm) {
+    return (
+      <ErrorScreen
+        title="Unable to load profile"
+        message="The profile response was empty."
+        actionLabel="Reload page"
+        onAction={() => window.location.reload()}
+      />
+    );
   }
 
   const update = (patch: Partial<FormState>) => {
@@ -115,8 +171,8 @@ export function ProfilePage() {
     if (!currentForm.language) e.language = t('profile.validation.languageRequired');
     if (!currentForm.countryCode?.trim())
       e.countryCode = t('profile.validation.countryRequired');
-    if (!currentForm.timeZone?.trim())
-      e.timeZone = t('profile.validation.timezoneRequired');
+    if (!currentForm.timezone?.trim())
+      e.timezone = t('profile.validation.timezoneRequired');
     if (!currentForm.dateFormat) e.dateFormat = t('profile.validation.dateFormatRequired');
     if (!currentForm.timeFormat) e.timeFormat = t('profile.validation.timeFormatRequired');
     setErrors(e);
@@ -131,10 +187,10 @@ export function ProfilePage() {
       nickname: currentForm.nickname,
       firstName: currentForm.firstName || null,
       lastName: currentForm.lastName || null,
-      preferNickname: currentForm.preferNickname,
+      useNickname: currentForm.useNickname,
       language: currentForm.language,
       countryCode: currentForm.countryCode.trim(),
-      timeZone: currentForm.timeZone,
+      timeZone: currentForm.timezone,
       dateFormat: currentForm.dateFormat,
       timeFormat: currentForm.timeFormat,
       startOfWeek: currentForm.startOfWeek,
@@ -188,12 +244,12 @@ export function ProfilePage() {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={currentForm.preferNickname}
-                      onChange={(e) => update({ preferNickname: e.target.checked })}
+                      checked={currentForm.useNickname}
+                      onChange={(e) => update({ useNickname: e.target.checked })}
                       color="primary"
                     />
                   }
-                  label={t('profile.preferNickname')}
+                  label={t('profile.useNickname')}
                 />
               </Box>
               <TextField
@@ -276,7 +332,7 @@ export function ProfilePage() {
                 options={timezonesList}
                 disabled={timezonesPending}
                 value={timezonesPending ? null : timezoneValue}
-                onChange={(_, v) => update({ timeZone: v?.id ?? '' })}
+                onChange={(_, v) => update({ timezone: v?.id ?? '' })}
                 getOptionLabel={(opt: Timezone) => formatTimezone(opt)}
                 renderInput={(params) => {
                   const { InputProps, inputProps, InputLabelProps, ...rest } = params;
@@ -284,8 +340,8 @@ export function ProfilePage() {
                     <TextField
                       {...rest}
                       label={t('profile.timezone')}
-                      error={Boolean(errors.timeZone)}
-                      helperText={errors.timeZone}
+                      error={Boolean(errors.timezone)}
+                      helperText={errors.timezone}
                       slotProps={{
                         inputLabel: InputLabelProps,
                         input: {

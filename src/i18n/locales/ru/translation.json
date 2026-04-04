@@ -30,7 +30,7 @@
     "firstName": "Имя",
     "lastName": "Фамилия",
     "nickname": "Никнейм",
-    "preferNickname": "Использовать никнейм",
+    "useNickname": "Использовать никнейм",
     "country": "Страна",
     "timezone": "Часовой пояс",
     "language": "Предпочитаемый язык",

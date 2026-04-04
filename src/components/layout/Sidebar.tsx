@@ -24,13 +24,13 @@ import { LanguageMenuControl } from './LanguageMenuControl';
 import { AppBrandMark } from './AppBrandMark';
 
 /** Locale-aware date in the user's profile timezone (IANA id). */
-function formatAccountCreatedDisplay(iso: string, timeZone: string, locale: string): string | null {
+function formatAccountCreatedDisplay(iso: string, timezone: string, locale: string): string | null {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return null;
   try {
     return new Intl.DateTimeFormat(locale, {
       dateStyle: 'long',
-      timeZone,
+      timeZone: timezone,
     }).format(date);
   } catch {
     return null;
@@ -90,7 +90,7 @@ export function Sidebar({ onClose }: Props) {
     (() => {
       const date = formatAccountCreatedDisplay(
         account.createdAt,
-        account.timeZone,
+        account.timezone,
         i18n.language
       );
       if (!date) return null;
@@ -158,7 +158,7 @@ export function Sidebar({ onClose }: Props) {
       >
         <Avatar
           src={account?.picture}
-          imgProps={{ alt: '' }}
+          slotProps={{ img: { alt: '' } }}
           sx={{
             width: 40,
             height: 40,
@@ -242,7 +242,7 @@ export function Sidebar({ onClose }: Props) {
         >
           <Avatar
             src={account?.picture}
-            imgProps={{ alt: '' }}
+            slotProps={{ img: { alt: '' } }}
             sx={{
               width: 48,
               height: 48,

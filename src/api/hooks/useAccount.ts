@@ -132,7 +132,7 @@ export function useDeleteConnection() {
   return useMutation<
     void,
     ApiError,
-    { service: string; identity: string }
+    { service: Exclude<Account['connections'][number]['type'], 'unknown'>; identity: string }
   >({
     mutationFn: async ({ service, identity }) => {
       await client.delete(

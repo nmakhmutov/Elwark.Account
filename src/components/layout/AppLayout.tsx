@@ -7,16 +7,40 @@ import { Sidebar } from './Sidebar';
 import { AppBrandMark } from './AppBrandMark';
 import { LanguageMenuControl } from './LanguageMenuControl';
 import { LoadingScreen } from '../LoadingScreen';
+import { ErrorScreen } from '../ErrorScreen';
+import { formatApiError } from '../../api/apiError';
 
 const SIDEBAR_WIDTH = 240;
 const TOPBAR_HEIGHT = 56;
 
 export function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { isLoading, data: account } = useAccount();
+  const { isLoading, isError, error, data: account, refetch } = useAccount();
 
-  if (isLoading || !account) {
+  if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorScreen
+        title="Unable to load account"
+        message={formatApiError(error)}
+        actionLabel="Try again"
+        onAction={() => void refetch()}
+      />
+    );
+  }
+
+  if (!account) {
+    return (
+      <ErrorScreen
+        title="Unable to load account"
+        message="The account response was empty."
+        actionLabel="Reload page"
+        onAction={() => window.location.reload()}
+      />
+    );
   }
 
   return (

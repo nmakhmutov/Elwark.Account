@@ -11,6 +11,7 @@ import { ConnectionsPage } from './pages/connections/ConnectionsPage';
 import { ThemeContextProvider } from './theme/ThemeContext';
 import { SnackbarProvider } from './components/SnackbarProvider';
 import { ApiClientProvider } from './api/ApiClientProvider';
+import { AppErrorBoundary } from './components/AppErrorBoundary';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,14 +50,16 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <ThemeContextProvider>
-      <SnackbarProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
-        </QueryClientProvider>
-      </SnackbarProvider>
-    </ThemeContextProvider>
+    <AppErrorBoundary>
+      <ThemeContextProvider>
+        <SnackbarProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <RouterProvider router={router} />
+            </AuthProvider>
+          </QueryClientProvider>
+        </SnackbarProvider>
+      </ThemeContextProvider>
+    </AppErrorBoundary>
   );
 }

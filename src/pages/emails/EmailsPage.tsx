@@ -5,16 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useAccount, useDeleteEmail, useRequestEmailVerification, useSetPrimaryEmail } from '../../api/hooks/useAccount';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { useSnackbar } from '../../components/SnackbarProvider';
+import { ErrorScreen } from '../../components/ErrorScreen';
 import { EmailCard } from './components/EmailCard';
 import { EmailAddDialog } from '../profile/components/EmailAddDialog';
 import { EmailConfirmDialog } from '../profile/components/EmailConfirmDialog';
 import { DeleteConfirmDialog } from '../profile/components/DeleteConfirmDialog';
-import { apiErrorSnackbarPayload } from '../../api/apiError';
+import { apiErrorSnackbarPayload, formatApiError } from '../../api/apiError';
 import type { Email } from '../../api/types';
 
 export function EmailsPage() {
   const { t } = useTranslation();
-  const { data: account, isLoading } = useAccount();
+  const { data: account, isLoading, isError, error, refetch } = useAccount();
   const { showSnackbar } = useSnackbar();
 
   const deleteEmail = useDeleteEmail();
@@ -29,8 +30,30 @@ export function EmailsPage() {
   const [settingPrimaryEmail, setSettingPrimaryEmail] = useState<string | null>(null);
   const [deletingEmail, setDeletingEmail] = useState<string | null>(null);
 
-  if (isLoading || !account) {
+  if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorScreen
+        title="Unable to load emails"
+        message={formatApiError(error)}
+        actionLabel="Try again"
+        onAction={() => void refetch()}
+      />
+    );
+  }
+
+  if (!account) {
+    return (
+      <ErrorScreen
+        title="Unable to load emails"
+        message="The account response was empty."
+        actionLabel="Reload page"
+        onAction={() => window.location.reload()}
+      />
+    );
   }
 
   const handleConfirmEmail = (email: Email) => {
