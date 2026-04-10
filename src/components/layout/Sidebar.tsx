@@ -91,7 +91,7 @@ export function Sidebar({ onClose }: Props) {
       const date = formatAccountCreatedDisplay(
         account.createdAt,
         account.timezone,
-        i18n.language
+        i18n.resolvedLanguage || i18n.language
       );
       if (!date) return null;
       return t('profile.memberSince', { date });

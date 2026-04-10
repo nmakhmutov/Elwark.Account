@@ -33,10 +33,7 @@
     "useNickname": "Prefer nickname",
     "country": "Country",
     "timezone": "Timezone",
-    "language": "Preferred language",
-    "startOfWeek": "Start of week",
-    "dateFormat": "Date format",
-    "timeFormat": "Time format",
+    "locale": "Locale",
     "memberSince": "Member since {{date}}",
     "updated": "Profile updated",
     "loadingCountries": "Loading countries…",
@@ -46,11 +43,9 @@
       "nicknameMax": "Nickname must be at most 64 characters",
       "firstNameMax": "First name must be at most 128 characters",
       "lastNameMax": "Last name must be at most 128 characters",
-      "languageRequired": "Language is required",
+      "localeRequired": "Locale is required",
       "countryRequired": "Country is required",
-      "timezoneRequired": "Timezone is required",
-      "dateFormatRequired": "Date format is required",
-      "timeFormatRequired": "Time format is required"
+      "timezoneRequired": "Timezone is required"
     }
   },
   "emails": {
@@ -97,14 +92,5 @@
     "noDisplayName": "No name",
     "deleteTitle": "Delete {{service}} connection",
     "deleteMessage": "Are you sure you want to delete {{service}} connection for {{identity}}?"
-  },
-  "days": {
-    "monday": "Monday",
-    "tuesday": "Tuesday",
-    "wednesday": "Wednesday",
-    "thursday": "Thursday",
-    "friday": "Friday",
-    "saturday": "Saturday",
-    "sunday": "Sunday"
   }
 }

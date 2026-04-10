@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +12,8 @@ export function ApiClientProvider({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation();
 
   const client = useMemo(
-    () => createApiClient(() => auth.user?.access_token, i18n.language),
-    [auth.user?.access_token, i18n.language]
+    () => createApiClient(() => auth.user?.access_token, i18n.resolvedLanguage ?? i18n.language),
+    [auth.user?.access_token, i18n.language, i18n.resolvedLanguage]
   );
 
   return (

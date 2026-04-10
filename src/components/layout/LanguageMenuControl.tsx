@@ -12,8 +12,10 @@ import {
 import type { SxProps, Theme } from '@mui/material/styles';
 import { KeyboardArrowDown, Translate as TranslateIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-
-const LANGUAGES: Record<string, string> = { en: 'English', ru: 'Русский' };
+import {
+  LANGUAGE_OPTIONS,
+  resolveSupportedLanguage,
+} from '../../i18n/languageConfig';
 
 type Props = {
   /** Called after choosing a language (e.g. close mobile drawer). */
@@ -34,8 +36,9 @@ export function LanguageMenuControl({
 }: Props) {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const { i18n, t } = useTranslation();
-
-  const currentLabel = LANGUAGES[i18n.language] ?? i18n.language;
+  const currentLanguage = resolveSupportedLanguage(i18n.resolvedLanguage ?? i18n.language);
+  const currentOption = LANGUAGE_OPTIONS.find((option) => option.value === currentLanguage);
+  const currentLabel = currentOption?.label ?? currentLanguage;
 
   const handleOpen = (e: MouseEvent<HTMLElement>) => {
     setAnchor(e.currentTarget);
@@ -55,10 +58,6 @@ export function LanguageMenuControl({
   const chevronSize = size === 'small' ? 18 : 20;
 
   if (variant === 'row') {
-    const resolved = i18n.resolvedLanguage ?? i18n.language;
-    const base = resolved.split('-')[0];
-    const value = base in LANGUAGES ? base : 'en';
-
     const handleChange = (e: SelectChangeEvent<string>) => {
       i18n.changeLanguage(e.target.value);
       onLanguageSelected?.();
@@ -71,7 +70,7 @@ export function LanguageMenuControl({
           <Select
             variant="standard"
             disableUnderline
-            value={value}
+            value={currentLanguage}
             onChange={handleChange}
             inputProps={{ 'aria-label': t('common.language') }}
             sx={{
@@ -84,9 +83,9 @@ export function LanguageMenuControl({
               },
             }}
           >
-            {Object.entries(LANGUAGES).map(([code, name]) => (
-              <MenuItem key={code} value={code}>
-                {name}
+            {LANGUAGE_OPTIONS.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </Select>
@@ -139,9 +138,13 @@ export function LanguageMenuControl({
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{ paper: { sx: { minWidth: 140 } } }}
       >
-        {Object.entries(LANGUAGES).map(([code, name]) => (
-          <MenuItem key={code} selected={i18n.language === code} onClick={() => handleSelect(code)}>
-            {name}
+        {LANGUAGE_OPTIONS.map((option) => (
+          <MenuItem
+            key={option.value}
+            selected={currentLanguage === option.value}
+            onClick={() => handleSelect(option.value)}
+          >
+            {option.label}
           </MenuItem>
         ))}
       </Menu>

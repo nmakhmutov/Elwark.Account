@@ -5,14 +5,11 @@ export interface Account {
     firstName: string | null;
     lastName: string | null;
     fullName: string;
-    language: string;
+    locale: string;
     picture: string;
     regionCode: string | null;
     countryCode: string | null;
     timezone: string;
-    dateFormat: string;
-    timeFormat: string;
-    startOfWeek: DayOfWeek;
     createdAt: string;
     emails: Email[];
     connections: Connection[];
@@ -32,15 +29,6 @@ export interface Connection {
 }
 
 export type ExternalService = 'unknown' | 'google' | 'microsoft';
-
-export type DayOfWeek =
-    | 'sunday'
-    | 'monday'
-    | 'tuesday'
-    | 'wednesday'
-    | 'thursday'
-    | 'friday'
-    | 'saturday';
 
 export interface Country {
     alpha2: string;
@@ -64,12 +52,9 @@ export interface UpdateRequest {
     firstName: string | null;
     lastName: string | null;
     useNickname: boolean;
-    language: string;
+    locale: string;
     countryCode: string;
     timeZone: string;
-    dateFormat: string;
-    timeFormat: string;
-    startOfWeek: DayOfWeek;
 }
 
 export interface EmailRequest {

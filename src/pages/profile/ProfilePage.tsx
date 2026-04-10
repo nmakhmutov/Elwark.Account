@@ -21,16 +21,9 @@ import { LoadingButton } from '../../components/LoadingButton';
 import { useSnackbar } from '../../components/SnackbarProvider';
 import { ErrorScreen } from '../../components/ErrorScreen';
 import { apiErrorSnackbarPayload, formatApiError } from '../../api/apiError';
-import type { Account, Country, DayOfWeek, Timezone, UpdateRequest } from '../../api/types';
+import type { Account, Country, Timezone, UpdateRequest } from '../../api/types';
 import { getCountryFlag, formatTimezone } from '../../api/types';
-import {
-  DATE_FORMATS,
-  TIME_FORMATS,
-  DAYS_OF_WEEK,
-  formatDateExample,
-} from '../../staticData';
-
-const LANGUAGES: Record<string, string> = { en: 'English', ru: 'Русский' };
+import { getLocaleOptions } from '../../i18n/languageConfig';
 
 const filterCountries = createFilterOptions<Country>({
   stringify: (option) => `${option.name} ${option.alpha2} ${option.alpha3} ${option.region}`,
@@ -43,10 +36,7 @@ interface FormState {
   lastName: string;
   countryCode: string;
   timezone: string;
-  language: string;
-  startOfWeek: DayOfWeek;
-  dateFormat: string;
-  timeFormat: string;
+  locale: string;
 }
 
 function accountToForm(a: Account): FormState {
@@ -57,15 +47,13 @@ function accountToForm(a: Account): FormState {
     lastName: a.lastName ?? '',
     countryCode: a.countryCode ?? '',
     timezone: a.timezone,
-    language: a.language,
-    startOfWeek: a.startOfWeek,
-    dateFormat: a.dateFormat,
-    timeFormat: a.timeFormat,
+    locale: a.locale,
   };
 }
 
 export function ProfilePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const displayLanguage = i18n.resolvedLanguage ?? i18n.language;
   const {
     data: account,
     isLoading: accountLoading,
@@ -105,6 +93,12 @@ export function ProfilePage() {
     currentForm && !countriesPending
       ? countriesList.find((c) => c.alpha2 === currentForm.countryCode) ?? null
       : null;
+  const localeOptions = currentForm
+    ? getLocaleOptions({
+        currentLocale: currentForm.locale,
+        displayLanguage,
+      })
+    : [];
 
   if (accountLoading) {
     return <LoadingScreen />;
@@ -168,13 +162,12 @@ export function ProfilePage() {
       e.firstName = t('profile.validation.firstNameMax');
     if (currentForm.lastName && currentForm.lastName.length > 128)
       e.lastName = t('profile.validation.lastNameMax');
-    if (!currentForm.language) e.language = t('profile.validation.languageRequired');
+    if (!currentForm.locale?.trim())
+      e.locale = t('profile.validation.localeRequired');
     if (!currentForm.countryCode?.trim())
       e.countryCode = t('profile.validation.countryRequired');
     if (!currentForm.timezone?.trim())
       e.timezone = t('profile.validation.timezoneRequired');
-    if (!currentForm.dateFormat) e.dateFormat = t('profile.validation.dateFormatRequired');
-    if (!currentForm.timeFormat) e.timeFormat = t('profile.validation.timeFormatRequired');
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -188,12 +181,9 @@ export function ProfilePage() {
       firstName: currentForm.firstName || null,
       lastName: currentForm.lastName || null,
       useNickname: currentForm.useNickname,
-      language: currentForm.language,
+      locale: currentForm.locale.trim(),
       countryCode: currentForm.countryCode.trim(),
       timeZone: currentForm.timezone,
-      dateFormat: currentForm.dateFormat,
-      timeFormat: currentForm.timeFormat,
-      startOfWeek: currentForm.startOfWeek,
     };
 
     updateAccount.mutate(request, {
@@ -366,58 +356,15 @@ export function ProfilePage() {
               <TextField
                 fullWidth
                 select
-                label={t('profile.language')}
-                value={currentForm.language}
-                onChange={(e) => update({ language: e.target.value })}
-                error={Boolean(errors.language)}
-                helperText={errors.language}
+                label={t('profile.locale')}
+                value={currentForm.locale}
+                onChange={(e) => update({ locale: e.target.value })}
+                error={Boolean(errors.locale)}
+                helperText={errors.locale}
               >
-                {Object.entries(LANGUAGES).map(([code, name]) => (
-                  <MenuItem key={code} value={code}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                fullWidth
-                select
-                label={t('profile.startOfWeek')}
-                value={currentForm.startOfWeek}
-                onChange={(e) => update({ startOfWeek: e.target.value as DayOfWeek })}
-              >
-                {DAYS_OF_WEEK.map((day) => (
-                  <MenuItem key={day} value={day}>
-                    {t(`days.${day}`)}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                fullWidth
-                select
-                label={t('profile.dateFormat')}
-                value={currentForm.dateFormat}
-                onChange={(e) => update({ dateFormat: e.target.value })}
-                error={Boolean(errors.dateFormat)}
-                helperText={errors.dateFormat}
-              >
-                {DATE_FORMATS.map((fmt) => (
-                  <MenuItem key={fmt} value={fmt}>
-                    {fmt} ({formatDateExample(fmt)})
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                fullWidth
-                select
-                label={t('profile.timeFormat')}
-                value={currentForm.timeFormat}
-                onChange={(e) => update({ timeFormat: e.target.value })}
-                error={Boolean(errors.timeFormat)}
-                helperText={errors.timeFormat}
-              >
-                {TIME_FORMATS.map((fmt) => (
-                  <MenuItem key={fmt} value={fmt}>
-                    {fmt} ({formatDateExample(fmt)})
+                {localeOptions.map((locale) => (
+                  <MenuItem key={locale.value} value={locale.value}>
+                    {locale.label}
                   </MenuItem>
                 ))}
               </TextField>

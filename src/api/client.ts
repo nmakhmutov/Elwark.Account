@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from 'axios';
 
 export function createApiClient(
   getAccessToken: () => string | undefined,
-  language: string
+  locale: string
 ): AxiosInstance {
   const client = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -13,7 +13,7 @@ export function createApiClient(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    config.headers['Accept-Language'] = language;
+    config.headers['Accept-Language'] = locale;
     return config;
   });
 
